@@ -735,19 +735,8 @@ function explode(outwards) {
 
 function explodeToFactor(fac) {
 
-  var direction = (fac > exp);
-
-  setTimeout(
-    function () {
-      exp = exp + (direction ? xfac : -xfac);
-      setTimeout(function () { viewerLeft.explode(exp); }, 0);
-      setTimeout(function () { viewerRight.explode(exp); }, 0);
-      if ((direction && exp < fac) ||
-        (!direction && exp > fac))
-        explodeToFactor(fac);
-    },
-    50
-  );
+  setTimeout(function () { viewerLeft.explode(fac); }, 0);
+  setTimeout(function () { viewerRight.explode(fac); }, 0);
 }
 
 function zoomAlongCameraDirection(viewer, factor) {
