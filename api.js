@@ -27,8 +27,8 @@ var request = require('request');
 exports.getToken = function (req, res) {
 
   var params = {
-    client_id: os.environ['CONSUMER_KEY'],
-    client_secret: os.environ['CONSUMER_SECRET'],
+    client_id: process.env.CONSUMER_KEY,
+    client_secret: process.env.CONSUMER_SECRET,
     grant_type: 'client_credentials'
   }
 
