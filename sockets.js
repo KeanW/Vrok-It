@@ -9,13 +9,14 @@ var router = express.Router();
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
+
 router.get('/', function(req, res) {
 
     var rootPath = path.join(
         __dirname,
-        '../views/showcase');
+        '.');
 
-    res.sendFile('showcase.html', { root: rootPath });
+    res.sendFile('index.html', { root: rootPath });
 });
 
 ///////////////////////////////////////////////////////////////////////////////

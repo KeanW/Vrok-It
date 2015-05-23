@@ -36,13 +36,16 @@ app.get('/api/token', api.getToken);
 
 //console.log('Listening on port 5000...');
 
+var port = process.env.PORT || 5000;
 var serverApp = app.listen(
 
-    app.get('port'),
+    port,
+    //app.get('port'),
 
     function() {
         console.log('Express server listening on port ' +
-            serverApp.address().port);
+            port /*serverApp.address().port*/
+        );
     });
 
 sockets.initializeSocket(serverApp);
