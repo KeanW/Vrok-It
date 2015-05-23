@@ -11,7 +11,7 @@ var wasFlipped;
 
 var buttons = {
   'connect' : function () {
-    launchViewer('dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=');
+    launchViewer();//'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=');
   },
 };
 
@@ -190,7 +190,9 @@ function initialize() {
       launchViewer(msg.value);
     }
     else if (msg.name == "explode") {
-      explodeToFactor(parseFloat(msg.value));
+      var fac = parseFloat(msg.value);
+      xfac = Math.abs(fac - exp) / 10;
+      explodeToFactor(fac);
     }
     else if (msg.name == "isolate") {
       if (viewerLeft) {
@@ -343,8 +345,7 @@ function launchViewer(docId, upVec, zoomFunc) {
 
       Autodesk.Viewing.Initializer(options, function () {
         viewerLeft.initialize();
-        if (options.document)
-          loadDocument(viewerLeft, options.document);
+        loadDocument(viewerLeft, options.document);
       });
 
       elem = document.getElementById('viewRight');
@@ -352,8 +353,7 @@ function launchViewer(docId, upVec, zoomFunc) {
 
       Autodesk.Viewing.Initializer(options, function () {
         viewerRight.initialize();
-        if (options.document)
-          loadDocument(viewerRight, options.document);
+        loadDocument(viewerRight, options.document);
       });
     }
   );
@@ -378,38 +378,40 @@ function loadDocument(viewer, docId) {
   if (docId.substring(0, 4) !== 'urn:')
     docId = 'urn:' + docId;
 
-  Autodesk.Viewing.Document.load(docId,
-    function (document) {
-
-      // Boilerplate code to load the contents
-
-      var geometryItems = [];
-
-      if (geometryItems.length == 0) {
-        geometryItems =
-          Autodesk.Viewing.Document.getSubItemsWithProperties(
-            document.getRootItem(),
-            { 'type': 'geometry', 'role': '3d' },
-            true
-          );
+  if (docId != null) {
+    Autodesk.Viewing.Document.load(docId,
+      function (document) {
+  
+        // Boilerplate code to load the contents
+  
+        var geometryItems = [];
+  
+        if (geometryItems.length == 0) {
+          geometryItems =
+            Autodesk.Viewing.Document.getSubItemsWithProperties(
+              document.getRootItem(),
+              { 'type': 'geometry', 'role': '3d' },
+              true
+            );
+        }
+        if (geometryItems.length > 0) {
+          viewer.load(document.getViewablePath(geometryItems[0]));
+        }
+  
+        // Add our custom progress listener and set the loaded
+        // flags to false
+  
+        leftLoaded = rightLoaded = cleanedModel = false;
+        viewer.addEventListener('progress', progressListener);
+      },
+      function (errorMsg, httpErrorCode) {
+        var container = document.getElementById('viewerLeft');
+        if (container) {
+          alert('Load error ' + errorMsg);
+        }
       }
-      if (geometryItems.length > 0) {
-        viewer.load(document.getViewablePath(geometryItems[0]));
-      }
-
-      // Add our custom progress listener and set the loaded
-      // flags to false
-
-      leftLoaded = rightLoaded = cleanedModel = false;
-      viewer.addEventListener('progress', progressListener);
-    },
-    function (errorMsg, httpErrorCode) {
-      var container = document.getElementById('viewerLeft');
-      if (container) {
-        alert('Load error ' + errorMsg);
-      }
-    }
-  );
+    );
+  }
 }
 
 // Progress listener to set the view once the data has started
