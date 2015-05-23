@@ -1,0 +1,59 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>VR Party</title>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
+        <script type="text/javascript" src="js/socket.io.js"></script>
+    </head>
+    <body onload="initialize();">
+        <p>Client connect:</p>
+        <div id="url"></div>
+        <div id="qrcode"></div>
+        <br>
+        <p>Commands:</p>
+
+        <form id="load">
+            <button>Load</button> URN: <input id="load-value" autocomplete="off" value="dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng="/>
+        </form>
+
+        <form id="explode">
+            <button>Explode</button> Factor: <input id="explode-value" autocomplete="off" value="1.0"/>
+        </form>
+
+        <form id="isolate">
+            <button>Isolate</button> IDs (comma separated): <input id="isolate-value" autocomplete="off" value="1,2,3"/>
+        </form>
+    </body>
+</html>
+
+<script type="text/javascript">
+
+function initialize() {
+
+    var base_url = window.location.origin;
+    var url = base_url + '/participant.html';
+    $('#url').html(url);
+    $('#qrcode').qrcode(url);
+
+    var socket = io();
+
+    $('#load').submit(function() {
+        socket.emit('lmv-command', { name: 'load', value: $('#load-value').val() });
+        return false;
+    });
+
+    $('#explode').submit(function() {
+        socket.emit('lmv-command', { name: 'explode', value: JSON.parse($('#explode-value').val()) });
+        return false;
+    });
+
+    $('#isolate').submit(function() {
+        socket.emit('lmv-command', { name: 'isolate', value: JSON.parse('[' + $('#isolate-value').val() + ']') });
+        return false;
+    });
+
+}
+
+</script>
