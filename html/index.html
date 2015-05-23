@@ -10,11 +10,11 @@
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
         <script type="text/javascript" src="js/socket.io.js"></script>
-        <script
-        src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=v1.2.13"></script> <!-- ?v=v1.2.13 -->
+        <script type='text/javascript' src='js/Autodesk.ADN.Toolkit.ViewData.js'></script>
+        <script type='text/javascript' src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=v1.2.13"></script>
     </head>
     <body onload="initialize();">
-        
+
         <table>
             <tr style="width:100%; height=100%;">
                 <td style="width:20%; height=100%;">
@@ -22,15 +22,21 @@
                     <div id="qrcode"></div>
                     <br>
                     <p>Commands:</p>
-            
+
+                    <div>
+                        <input type="file" id="fileElem" style="display:none" onchange="onUpload(this.files)"/>
+                        <button type="button" onclick="onFileSelect();">Upload file!</button>
+                    </div>
+                    <br>
+
                     <form id="load">
                         <button>Load</button> URN: <input id="load-value" autocomplete="off" value="dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng="/>
                     </form>
-            
+
                     <form id="explode">
                         <button>Explode</button> Factor: <input id="explode-value" autocomplete="off" value="1.0"/>
                     </form>
-            
+
                     <form id="isolate">
                         <button>Isolate</button> IDs (comma separated): <input id="isolate-value" autocomplete="off" value="1,2,3"/>
                     </form>
@@ -39,7 +45,7 @@
                     <div id='3dViewDiv' style="height: 80%;overflow: hidden;">
                     </div>
                 </td>
-            </tr>            
+            </tr>
         </table>
     </body>
 </html>
@@ -67,13 +73,14 @@ function onExplode() {
     socket.emit('lmv-command', { name: 'explode', value: JSON.parse($('#explode-value').val()) });
 }
 
-function initialize() {
+var view_data_bucket = 'steambuck';
 
+function initialize() {
     var base_url = window.location.origin;
     var url = base_url + '/participant.html';
     $('#url').html("<a href=\"" + url + "\" target=\"_blank\">Participant page</a><br/><br/>");
     $('#qrcode').qrcode(url);
-    
+
     launchUrn();
 
     socket = io();
@@ -81,9 +88,9 @@ function initialize() {
     $('#load').submit(function() {
         var urn = $('#load-value').val();
         socket.emit('lmv-command', { name: 'load', value: urn });
-        
-        launchUrn(urn);        
-        
+
+        launchUrn(urn);
+
         return false;
     });
 
@@ -96,9 +103,10 @@ function initialize() {
         socket.emit('lmv-command', { name: 'isolate', value: JSON.parse('[' + $('#isolate-value').val() + ']') });
         return false;
     });
-}   
+}
 
-function launchUrn(urn) {       
+
+function launchUrn(urn) {
   $.get(
     window.location.protocol + '//' +
     window.location.host + '/api/token',
@@ -109,7 +117,7 @@ function launchUrn(urn) {
       options.accessToken = accessToken;
       if (urn)
         options.document = urn;
-           
+
       var elem = document.getElementById('3dViewDiv');
       viewer = new Autodesk.Viewing.Private.GuiViewer3D(elem, {});
 
@@ -120,6 +128,7 @@ function launchUrn(urn) {
     }
   );
 }
+
 
 function loadDocument(viewer, docId) {
 
@@ -140,11 +149,11 @@ function loadDocument(viewer, docId) {
 
     Autodesk.Viewing.Document.load(docId,
       function (document) {
-  
+
         // Boilerplate code to load the contents
-  
+
         var geometryItems = [];
-  
+
         if (geometryItems.length == 0) {
           geometryItems =
             Autodesk.Viewing.Document.getSubItemsWithProperties(
@@ -156,10 +165,10 @@ function loadDocument(viewer, docId) {
         if (geometryItems.length > 0) {
           viewer.load(document.getViewablePath(geometryItems[0]));
         }
-  
+
         // Add our custom progress listener and set the loaded
         // flags to false
-  
+
         viewer.addEventListener(
             Autodesk.Viewing.ISOLATE_EVENT,
             onIsolate);
@@ -167,6 +176,8 @@ function loadDocument(viewer, docId) {
         viewer.addEventListener(
             Autodesk.Viewing.EXPLODE_CHANGE_EVENT,
             onExplode);
+
+        //viewer.addEventListener('progress', progressListener);
       },
       function (errorMsg, httpErrorCode) {
         var container = document.getElementById('viewerLeft');
@@ -177,5 +188,113 @@ function loadDocument(viewer, docId) {
     );
   }
 }
+
+
+function onFileSelect() {
+    var el = document.getElementById("fileElem");
+    if (el) {
+        el.click();
+    }
+}
+
+
+function onUpload(files) {
+    $.get(
+        window.location.origin + '/api/token',
+        function(accessTokenResponse) {
+            var viewDataClient = new Autodesk.ADN.Toolkit.ViewData.AdnViewDataClient(
+                'https://developer.api.autodesk.com',
+                accessTokenResponse
+            );
+            viewDataClient.getBucketDetailsAsync(
+                view_data_bucket,
+                function(bucketResponse) {
+                    //onSuccess
+                    console.log('Bucket details successful:');
+                    console.log(bucketResponse);
+                    uploadFiles(viewDataClient, view_data_bucket, files);
+                },
+                function(error) {
+                    //onError
+                    console.log("Bucket doesn't exist");
+                    console.log("Attempting to create...");
+                }
+            );
+        }
+    );
+}
+
+
+function uploadFiles(viewDataClient, bucket, files) {
+    for (var i = 0; i < files.length; ++i) {
+        var file = files[i];
+        console.log('Uploading file: ' + file.name + ' ...');
+        viewDataClient.uploadFileAsync(
+            file,
+            bucket,
+            file.name,
+            function(response) {
+                //onSuccess
+                console.log('File upload successful:');
+                console.log(response);
+                var fileId = response.objects[0].id;
+                var registerResponse = viewDataClient.register(fileId);
+
+                if (registerResponse.Result === "Success" ||
+                    registerResponse.Result === "Created") {
+                    console.log("Registration result: " + registerResponse.Result);
+                    console.log('Starting translation: ' + fileId);
+
+                    checkTranslationStatus(
+                        viewDataClient,
+                        fileId,
+                        1000 * 60 * 5, //5 mins timeout
+                        function(viewable) {
+                            //onSuccess
+                            console.log("Translation successful: " + response.file.name);
+                            console.log("Viewable: ");
+                            console.log(viewable);
+
+                            // TODO KEEAN
+                            // adnViewerMng = new Autodesk.ADN.Toolkit.Viewer.AdnViewerManager(
+                            //     $('#token').val(),
+                            //     document.getElementById('viewer'));
+
+                            // adnViewerMng.loadDocument(viewable.urn);
+                        });
+                }
+            },
+
+            //onError
+            function (error) {
+                console.log('File upload failed:');
+                console.log(error);
+            });
+    }
+}
+
+
+function checkTranslationStatus(viewDataClient, fileId, timeout, onSuccess) {
+    var startTime = new Date().getTime();
+    var timer = setInterval(function() {
+        var dt = (new Date().getTime() - startTime) / timeout;
+        if (dt >= 1.0) {
+            clearInterval(timer);
+        } else {
+            viewDataClient.getViewableAsync(
+                fileId,
+                function(response) {
+                    console.log('Translation Progess ' + fileId + ': ' + response.progress);
+
+                    if (response.progress === 'complete') {
+                        clearInterval(timer);
+                        onSuccess(response);
+                        }
+                },
+                function(error) {}
+            );
+        }
+    }, 2000);
+};
 
 </script>

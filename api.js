@@ -37,7 +37,7 @@ exports.getToken = function (req, res) {
     function (error, response, body) {
       if (!error && response.statusCode == 200) {
         var authResponse = JSON.parse(body);
-        res.send(authResponse.access_token);
+        res.send(authResponse);
       }
       else {
         console.log("Token error: " + response.statusCode);
