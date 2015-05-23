@@ -30,7 +30,8 @@ io.on('connection', function(socket) {
         console.log('user disconnected');
     });
 
-    socket.on('lmv-command', function(msg) {
-        socket.broadcast.emit('lmv-command', msg);
+    socket.on('lmv-command', function(command) {
+        console.log(command);
+        socket.broadcast.emit('lmv-command', command);
     });
 });

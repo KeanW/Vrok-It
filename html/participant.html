@@ -17,8 +17,9 @@
 
 function initialize() {
     var socket = io();
-    socket.on('lmv-command', function(msg){
-      $('#command-list').append($('<li>').text(msg));
+    socket.on('lmv-command', function(command) {
+        console.log(command);
+        $('#command-list').append($('<li>').text(command.name + ' ' + command.value));
     });
 }
 
