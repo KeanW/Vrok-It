@@ -10,6 +10,12 @@ var deg2rad = Math.PI / 180;
 var wasFlipped;
 
 var buttons = {
+  'connect' : function () {
+    launchViewer();
+  },
+};
+
+var buttons2 = {
   'robot arm' : function () {
     launchViewer(
       'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng='    
@@ -177,6 +183,24 @@ var faceUps = {
 };
 
 function initialize() {
+  
+  var socket = io();
+  socket.on('lmv-command', function(msg){
+    if (msg.name == "load") {    
+      launchViewer(msg.value);
+    }
+    else if (msg.name == "explode") {
+      explodeToFactor(parseFloat(msg.value));
+    }
+    else if (msg.name == "isolate") {
+      if (viewerLeft) {
+        viewerLeft.isolateById(msg.value);
+      }
+      if (viewerRight) {
+        viewerRight.isolateById(msg.value);
+      }
+    }
+  });
 
   // Populate our initial UI with a set of buttons, one for each
   // function in the Buttons object
@@ -202,7 +226,7 @@ function initialize() {
     panel.appendChild(document.createTextNode('\u00a0'));
   }
   
-  if (annyang) {
+  if (false){ //annyang) {
 
     // Add our buttons and commands to annyang
 
@@ -309,7 +333,8 @@ function launchViewer(docId, upVec, zoomFunc) {
       var options = {};
       options.env = 'AutodeskProduction';
       options.accessToken = accessToken;
-      options.document = docId;
+      if (docId)
+        options.document = docId;
 
       // Create and initialize our two 3D viewers
 
@@ -318,7 +343,8 @@ function launchViewer(docId, upVec, zoomFunc) {
 
       Autodesk.Viewing.Initializer(options, function () {
         viewerLeft.initialize();
-        loadDocument(viewerLeft, options.document);
+        if (options.document)
+          loadDocument(viewerLeft, options.document);
       });
 
       elem = document.getElementById('viewRight');
@@ -326,7 +352,8 @@ function launchViewer(docId, upVec, zoomFunc) {
 
       Autodesk.Viewing.Initializer(options, function () {
         viewerRight.initialize();
-        loadDocument(viewerRight, options.document);
+        if (options.document)
+          loadDocument(viewerRight, options.document);
       });
     }
   );
@@ -699,6 +726,23 @@ function explode(outwards) {
       if ((direction && exp < targExp * expFac) ||
         (!direction && exp > targExp * expFac))
         explode(direction);
+    },
+    50
+  );
+}
+
+function explodeToFactor(fac) {
+
+  var direction = (fac > exp);
+
+  setTimeout(
+    function () {
+      exp = exp + (direction ? xfac : -xfac);
+      setTimeout(function () { viewerLeft.explode(exp); }, 0);
+      setTimeout(function () { viewerRight.explode(exp); }, 0);
+      if ((direction && exp < fac) ||
+        (!direction && exp > fac))
+        explodeToFactor(fac);
     },
     50
   );
