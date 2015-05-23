@@ -45,7 +45,7 @@ function initialize() {
     });
 
     $('#explode').submit(function() {
-        socket.emit('lmv-command', { name: 'explode', value: $('#explode-value').val() });
+        socket.emit('lmv-command', { name: 'explode', value: JSON.parse($('#explode-value').val()) });
         return false;
     });
 
