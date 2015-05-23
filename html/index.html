@@ -67,10 +67,7 @@ function onIsolate(event) {
 
 function onExplode() {
 
-    var data = {
-        explodeScale: viewer.getExplodeScale()
-    };
-    socket.emit('lmv-command', { name: 'explode', value: JSON.parse($('#explode-value').val()) });
+    socket.emit('lmv-command', { name: 'explode', value: viewer.getExplodeScale() });
 }
 
 var view_data_bucket = 'steambuck';
