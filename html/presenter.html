@@ -8,28 +8,37 @@
         <script type="text/javascript" src="js/socket.io.js"></script>
     </head>
     <body onload="initialize();">
-        <p>Enter your commands:</p>
-        <form action="">
-            <input id="m" autocomplete="off" /><button>Send</button>
-        </form>
-        <div id="pings"></div>
+        <p>Client connect:</p>
         <div id="url"></div>
         <div id="qrcode"></div>
+        <br>
+        <p>Enter your commands:</p>
+        <form action="">
+            <input id="m" autocomplete="off" />
+            <button>Send</button>
+            <button value="Submit">Explode</button>
+        </form>
     </body>
 </html>
 
 <script type="text/javascript">
 
 function initialize() {
+
+    var base_url = window.location.origin;
+    var url = base_url + '/participant.html';
+    $('#url').html(url);
+    $('#qrcode').qrcode(url);
+
     var socket = io();
-    $('form').submit(function() {
-      socket.emit('lmv-command', $('#m').val());
-      $('#m').val('');
-      return false;
+    $('form').submit(function(bla) {
+        socket.emit('lmv-command', $('#m').val());
+        $('#m').val('');
+        return false;
     });
 
     socket.on('lmv-command', function(msg){
-      $('#messages').append($('<li>').text(msg));
+        $('#messages').append($('<li>').text(msg));
     });
 }
 
