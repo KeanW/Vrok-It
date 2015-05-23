@@ -1,7 +1,8 @@
 var express = require('express');
-//var multer = require('multer');
 var morgan = require('morgan');
 var api = require('./api');
+
+var sockets = require('./sockets');
 
 var app = express();
 
@@ -31,6 +32,17 @@ app.get('/api/token', api.getToken);
 //
 //
 /////////////////////////////////////////////////////////////////////////////////
-app.listen(process.env.PORT || 5000);
+//app.listen(process.env.PORT || 5000);
 
-console.log('Listening on port 5000...');
+//console.log('Listening on port 5000...');
+
+var serverApp = app.listen(
+
+    app.get('port'),
+
+    function() {
+        console.log('Express server listening on port ' +
+            serverApp.address().port);
+    });
+
+sockets.initializeSocket(serverApp);
