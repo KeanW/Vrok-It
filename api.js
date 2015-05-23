@@ -16,7 +16,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 ///////////////////////////////////////////////////////////////////
 
-var credentials = require('./credentials');
 var BASE_URL = 'https://developer.api.autodesk.com';
 
 var request = require('request');
@@ -28,8 +27,8 @@ var request = require('request');
 exports.getToken = function (req, res) {
 
   var params = {
-    client_id: credentials.CONSUMER_KEY,
-    client_secret: credentials.CONSUMER_SECRET,
+    client_id: os.environ['CONSUMER_KEY'],
+    client_secret: os.environ['CONSUMER_SECRET'],
     grant_type: 'client_credentials'
   }
 
