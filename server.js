@@ -6,8 +6,6 @@ var sockets = require('./sockets');
 
 var app = express();
 
-var done = false;
-
 app.use(morgan('dev', { immediate: true }));
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -48,4 +46,4 @@ var serverApp = app.listen(
         );
     });
 
-sockets.initializeSocket(serverApp);
+//sockets.initializeSocket(serverApp);

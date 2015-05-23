@@ -39,6 +39,9 @@ exports.getToken = function (req, res) {
         var authResponse = JSON.parse(body);
         res.send(authResponse.access_token);
       }
+      else {
+        console.log("Token error: " + response.statusCode);
+      }
     }
   );
 };
