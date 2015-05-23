@@ -11,7 +11,7 @@
         <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
         <script type="text/javascript" src="js/socket.io.js"></script>
         <script
-        src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=v1.2.14"></script> <!-- ?v=v1.2.13 -->
+        src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=v1.2.13"></script> <!-- ?v=v1.2.13 -->
     </head>
     <body onload="initialize();">
         
@@ -46,6 +46,27 @@
 
 <script type="text/javascript">
 
+var viewer;
+var socket;
+
+function onIsolate(event) {
+
+    var ids = [];
+    for(var i=0; i<event.nodeIdArray.length; ++i) {
+        ids.push(event.nodeIdArray[i].dbId);
+    }
+
+    socket.emit('lmv-command', { name: 'isolate', value: ids });
+}
+
+function onExplode() {
+
+    var data = {
+        explodeScale: viewer.getExplodeScale()
+    };
+    socket.emit('lmv-command', { name: 'explode', value: JSON.parse($('#explode-value').val()) });
+}
+
 function initialize() {
 
     var base_url = window.location.origin;
@@ -55,7 +76,7 @@ function initialize() {
     
     launchUrn();
 
-    var socket = io();
+    socket = io();
 
     $('#load').submit(function() {
         var urn = $('#load-value').val();
@@ -139,7 +160,13 @@ function loadDocument(viewer, docId) {
         // Add our custom progress listener and set the loaded
         // flags to false
   
-        //viewer.addEventListener('progress', progressListener);
+        viewer.addEventListener(
+            Autodesk.Viewing.ISOLATE_EVENT,
+            onIsolate);
+
+        viewer.addEventListener(
+            Autodesk.Viewing.EXPLODE_CHANGE_EVENT,
+            onExplode);
       },
       function (errorMsg, httpErrorCode) {
         var container = document.getElementById('viewerLeft');
