@@ -18,7 +18,7 @@ var buttons = {
 var buttons2 = {
   'robot arm' : function () {
     launchViewer(
-      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng='    
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng='
     );
   },
   'differential' : function () {
@@ -123,7 +123,7 @@ var commands = {
     if (checkViewers()) {
       expFac = 0;
       explode(false);
-      
+
       if (initLeftPos) {
         var trg = viewerLeft.navigation.getTarget();
         var up = viewerLeft.navigation.getCameraUpVector();
@@ -183,10 +183,10 @@ var faceUps = {
 };
 
 function initialize() {
-  
+
   var socket = io();
   socket.on('lmv-command', function(msg){
-    if (msg.name == "load") {    
+    if (msg.name == "load") {
       launchViewer(msg.value);
     }
     else if (msg.name == "explode") {
@@ -225,7 +225,7 @@ function initialize() {
     panel.appendChild(button);
     panel.appendChild(document.createTextNode('\u00a0'));
   }
-  
+
   if (false){ //annyang) {
 
     // Add our buttons and commands to annyang
@@ -326,13 +326,13 @@ function launchViewer(docId, upVec, zoomFunc) {
   $.get(
     window.location.protocol + '//' +
     window.location.host + '/api/token',
-    function (accessToken) {
+    function (accessTokenResponse) {
 
       // Specify our options, including the provided document ID
 
       var options = {};
       options.env = 'AutodeskProduction';
-      options.accessToken = accessToken;
+      options.accessToken = accessTokenResponse.access_token;
       if (docId)
         options.document = docId;
 
@@ -458,7 +458,7 @@ function progressListener(e) {
 
         initZoom();
       }
-        
+
       setTimeout(
         function () {
           initLeftPos = viewerLeft.navigation.getPosition();
@@ -659,7 +659,7 @@ function offsetCameraPos(source, pos, trg, leftToRight) {
   // Use a small fraction of the distance for the camera offset
 
   var disp = getDistance(pos, trg) * 0.04;
-  
+
   // Clone the camera and return its X translated position
 
   var clone = source.autocamCamera.clone();
@@ -677,7 +677,7 @@ function orbitViews(vert, horiz) {
 
   var pos = leftPos.clone();
   var trg = viewerLeft.navigation.getTarget();
-  
+
   // Start by applying the left/right orbit
   // (we need to check the up/down value, though)
 
@@ -749,7 +749,7 @@ function explodeToFactor(fac) {
 }
 
 function zoomAlongCameraDirection(viewer, factor) {
-    
+
   var pos = leftPos.clone();
   var trg = viewer.navigation.getTarget();
 

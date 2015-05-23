@@ -6,6 +6,7 @@
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
         <script type="text/javascript" src="js/socket.io.js"></script>
+        <script type='text/javascript' src='js/Autodesk.ADN.Toolkit.ViewData.js'></script>
     </head>
     <body onload="initialize();">
         <p>Client connect:</p>
@@ -13,6 +14,12 @@
         <div id="qrcode"></div>
         <br>
         <p>Commands:</p>
+
+        <div>
+            <input type="file" id="fileElem" style="display:none" onchange="onUpload(this.files)"/>
+            <button type="button" onclick="onFileSelect();">Upload file!</button>
+        </div>
+        <br>
 
         <form id="load">
             <button>Load</button> URN: <input id="load-value" autocomplete="off" value="dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng="/>
@@ -30,8 +37,9 @@
 
 <script type="text/javascript">
 
-function initialize() {
+var view_data_bucket = 'steambuck';
 
+function initialize() {
     var base_url = window.location.origin;
     var url = base_url + '/participant.html';
     $('#url').html(url);
@@ -53,7 +61,111 @@ function initialize() {
         socket.emit('lmv-command', { name: 'isolate', value: JSON.parse('[' + $('#isolate-value').val() + ']') });
         return false;
     });
-
 }
+
+
+function onFileSelect() {
+    var el = document.getElementById("fileElem");
+    if (el) {
+        el.click();
+    }
+}
+
+function onUpload(files) {
+    $.get(
+        window.location.origin + '/api/token',
+        function(accessTokenResponse) {
+            var viewDataClient = new Autodesk.ADN.Toolkit.ViewData.AdnViewDataClient(
+                'https://developer.api.autodesk.com',
+                accessTokenResponse
+            );
+            viewDataClient.getBucketDetailsAsync(
+                view_data_bucket,
+                function(bucketResponse) {
+                    //onSuccess
+                    console.log('Bucket details successful:');
+                    console.log(bucketResponse);
+                    uploadFiles(viewDataClient, view_data_bucket, files);
+                },
+                function(error) {
+                    //onError
+                    console.log("Bucket doesn't exist");
+                    console.log("Attempting to create...");
+                }
+            );
+        }
+    );
+}
+
+function uploadFiles(viewDataClient, bucket, files) {
+    for (var i = 0; i < files.length; ++i) {
+        var file = files[i];
+        console.log('Uploading file: ' + file.name + ' ...');
+        viewDataClient.uploadFileAsync(
+            file,
+            bucket,
+            file.name,
+            function(response) {
+                //onSuccess
+                console.log('File upload successful:');
+                console.log(response);
+                var fileId = response.objects[0].id;
+                var registerResponse = viewDataClient.register(fileId);
+
+                if (registerResponse.Result === "Success" ||
+                    registerResponse.Result === "Created") {
+                    console.log("Registration result: " + registerResponse.Result);
+                    console.log('Starting translation: ' + fileId);
+
+                    checkTranslationStatus(
+                        viewDataClient,
+                        fileId,
+                        1000 * 60 * 5, //5 mins timeout
+                        function(viewable) {
+                            //onSuccess
+                            console.log("Translation successful: " + response.file.name);
+                            console.log("Viewable: ");
+                            console.log(viewable);
+
+                            // TODO KEEAN
+                            // adnViewerMng = new Autodesk.ADN.Toolkit.Viewer.AdnViewerManager(
+                            //     $('#token').val(),
+                            //     document.getElementById('viewer'));
+
+                            // adnViewerMng.loadDocument(viewable.urn);
+                        });
+                }
+            },
+
+            //onError
+            function (error) {
+                console.log('File upload failed:');
+                console.log(error);
+            });
+    }
+}
+
+function checkTranslationStatus(viewDataClient, fileId, timeout, onSuccess) {
+    var startTime = new Date().getTime();
+    var timer = setInterval(function() {
+        var dt = (new Date().getTime() - startTime) / timeout;
+        if (dt >= 1.0) {
+            clearInterval(timer);
+        } else {
+            viewDataClient.getViewableAsync(
+                fileId,
+                function(response) {
+                    console.log('Translation Progess ' + fileId + ': ' + response.progress);
+
+                    if (response.progress === 'complete') {
+                        clearInterval(timer);
+                        onSuccess(response);
+                        }
+                },
+                function(error) {}
+            );
+        }
+    }, 2000);
+};
 
 </script>
