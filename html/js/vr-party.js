@@ -11,7 +11,7 @@ var wasFlipped;
 
 var buttons = {
   'connect' : function () {
-    launchViewer();
+    launchViewer('dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=');
   },
 };
 
