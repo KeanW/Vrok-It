@@ -1,0 +1,36 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>VR Party</title>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
+        <script type="text/javascript" src="js/socket.io.js"></script>
+    </head>
+    <body onload="initialize();">
+        <p>Enter your commands:</p>
+        <form action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+        </form>
+        <div id="pings"></div>
+        <div id="url"></div>
+        <div id="qrcode"></div>
+    </body>
+</html>
+
+<script type="text/javascript">
+
+function initialize() {
+    var socket = io();
+    $('form').submit(function() {
+      socket.emit('lmv-command', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
+
+    socket.on('lmv-command', function(msg){
+      $('#messages').append($('<li>').text(msg));
+    });
+}
+
+</script>

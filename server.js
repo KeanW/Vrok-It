@@ -1,36 +1,36 @@
 var express = require('express');
-//var multer = require('multer');
-var morgan = require('morgan');
 var api = require('./api');
+var http = require('http');
 
+// CONFIG
+var port = process.env.PORT || 5000
+
+// WEB SERVER
 var app = express();
 
-var done = false;
-
-app.use(morgan('dev', { immediate: true }));
-
-/////////////////////////////////////////////////////////////////////////////////
-//  Webpages server
-//
-/////////////////////////////////////////////////////////////////////////////////
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+    next();
 });
-
 app.use('/', express.static(__dirname + '/html'));
-
-/////////////////////////////////////////////////////////////////////////////////
-//  Rest API
-//
-/////////////////////////////////////////////////////////////////////////////////
 app.get('/api/token', api.getToken);
 
-/////////////////////////////////////////////////////////////////////////////////
-//
-//
-/////////////////////////////////////////////////////////////////////////////////
-app.listen(process.env.PORT || 5000);
+var server = http.createServer(app)
+server.listen(port)
+console.log('Listening on port ' + port + '...');
 
-console.log('Listening on port 5000...');
+
+// WEB SOCKETS
+var io = require('socket.io')(server);
+io.on('connection', function(socket) {
+    console.log('a user connected');
+
+    socket.on('disconnect', function() {
+        console.log('user disconnected');
+    });
+
+    socket.on('lmv-command', function(msg) {
+        socket.broadcast.emit('lmv-command', msg);
+    });
+});

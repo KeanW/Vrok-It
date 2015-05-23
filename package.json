@@ -14,7 +14,7 @@
 		"postdepoly": "echo VRPartyServer Deployed"
 	},
 	"dependencies": {
-		"socket.io": "0.9.x",
+		"socket.io": "*",
 		"express": "4.x",
 		"morgan": "1.x",
     "request": "*"
