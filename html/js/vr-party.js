@@ -828,7 +828,8 @@ function zoomAlongCameraDirection2(viewer, factor) {
     updatingCameras = true;
     viewer.navigation.setPosition(pos);
     viewer.navigation.setCameraUpVector(up);
-    updatingCameras = false;
+    viewer.navigation.setWorldUpVector(new THREE.Vector3(0,1,0), true);
+    setTimeout(function () { updatingCameras = false; }, 500);
   }
 
   return pos;
