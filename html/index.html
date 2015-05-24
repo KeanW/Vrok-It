@@ -5,9 +5,9 @@
         <title>VR Party</title>
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <link
-          rel="stylesheet"
-          href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css?v=v1.2.14"
-          type="text/css">
+            rel="stylesheet"
+            href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css?v=v1.2.14"
+            type="text/css">
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
         <script type="text/javascript" src="js/socket.io.js"></script>
@@ -15,10 +15,9 @@
         <script type='text/javascript' src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=v1.2.14"></script>
     </head>
     <body onload="initialize();">
-
-        <table>
-            <tr style="width:100%; height=100%;">
-                <td style="width:20%; height=100%;">
+        <table cellpadding="10px">
+            <tr>
+                <td style="width:20%;">
                     <div id="url"></div>
                     <div id="qrcode"></div>
                     <br>
@@ -28,30 +27,9 @@
                         <div id="upload_progress"></div>
                     </div>
                     <br>
-                    <!--
-                    <p>Commands:</p>
-
-                    <br>
-
-                    <form id="load">
-                        <button>Load</button> URN: <input id="load-value" autocomplete="off" value="dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng="/>
-                    </form>
-
-                    <form id="explode">
-                        <button>Explode</button> Factor: <input id="explode-value" autocomplete="off" value="1.0"/>
-                    </form>
-
-                    <form id="isolate">
-                        <button>Isolate</button> IDs (comma separated): <input id="isolate-value" autocomplete="off" value="1,2,3"/>
-                    </form-->
-                    <center>
-                      <div id="control"></div>
-                    </center>
+                    <center><div id="control"></div></center>
                 </td>
-                <td style="valign:top; width:80%; height=100%;">
-                    <div id='3dViewDiv' style="height: 80%;overflow: hidden;">
-                    </div>
-                </td>
+                <td valign="top"  style="height:20%;"><div id="3dViewDiv"></div></td>
             </tr>
         </table>
     </body>
@@ -123,15 +101,15 @@ var buttonsSmall = {
 function addButton(panel, buttonName, loadFunction) {
     var button = document.createElement('div');
     button.classList.add('cmd-btn-small');
-  
+
     // Replace any underscores with spaces before setting the
     // visible name
     button.innerHTML = buttonName;
     button.onclick = (function (buttonName) {
         return function () { buttonName(); };
     })(loadFunction);
-  
-    // Add the button with a space under it 
+
+    // Add the button with a space under it
     panel.appendChild(button);
     panel.appendChild(document.createTextNode('\u00a0'));
 }
@@ -159,16 +137,16 @@ function onSection(event) {
 var view_data_bucket = 'steambuck';
 
 function initialize() {
-  
+
     // Populate our initial UI with a set of buttons, one for each
     // function in the Buttons object
-  
+
     var panel = document.getElementById('control');
     for (var name in buttonsSmall) {
       var fn = buttonsSmall[name];
       addButton(panel, name, fn);
     }
-  
+
     var base_url = window.location.origin;
     var url = base_url + '/participant.html';
     $('#url').html("<a href=\"" + url + "\" target=\"_blank\">Participant page</a><br/><br/>");
@@ -213,6 +191,8 @@ function launchUrn(urn) {
 
       var elem = document.getElementById('3dViewDiv');
       viewer = new Autodesk.Viewing.Private.GuiViewer3D(elem, {});
+      viewer.container.style.width = $('#3dViewDiv').width() + 'px';
+      viewer.container.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
 
       Autodesk.Viewing.Initializer(options, function () {
         viewer.initialize();
@@ -225,8 +205,7 @@ function launchUrn(urn) {
 
 function loadDocument(viewer, docId) {
 
-  viewer.container.style.width = '80%';
-  viewer.resize();
+
 
   // Let's zoom in and out of the pivot - the screen
   // real estate is fairly limited - and reverse the
