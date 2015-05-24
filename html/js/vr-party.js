@@ -10,6 +10,7 @@ var deg2rad = Math.PI / 180;
 var wasFlipped;
 var updatingCameras = false;
 var is_iOS_device =/iPhone|iPad|iPod/i.test (navigator.userAgent);
+var zoomFactor;
 
 var buttons = {
   'connect' : function () {
@@ -576,7 +577,7 @@ function watchTilt() {
 // Event handlers for the cameraChanged events
 
 function left2right() {
-  if (!updatingRight && !updatingCameras) {
+  if (!updatingRight) {
     updatingLeft = true;
     transferCameras(true);
     setTimeout(function () { updatingLeft = false; }, 500);
@@ -729,6 +730,13 @@ function orbitViews(vert, horiz) {
   var pos = leftPos.clone();
   var trg = viewerLeft.navigation.getTarget();
 
+  var disp = pos.clone().sub(trg);
+  if (zoomFactor && Math.abs(zoomFactor - disp.length()) > 0.000001) {
+    //var dist = disp.length();
+    var unit = disp.normalize();//divideScalar(dist);
+    pos = trg.clone().add(unit.multiplyScalar(zoomFactor));
+  }
+
   // Start by applying the left/right orbit
   // (we need to check the up/down value, though)
 
@@ -819,18 +827,11 @@ function zoomAlongCameraDirection2(viewer, factor) {
 
   var pos = viewer.navigation.getPosition().clone();
   var trg = viewer.navigation.getTarget();
-  var up = viewer.navigation.getCameraUpVector();
 
   var disp = pos.clone().sub(trg);
   var dist = disp.length();
   if (Math.abs(dist - factor) > 0.000001) {
-    var unit = disp.divideScalar(dist);
-    pos = trg.clone().add(unit.multiplyScalar(factor));
-    updatingCameras = true;
-    viewer.navigation.setPosition(pos);
-    viewer.navigation.setCameraUpVector(up);
-    viewer.navigation.setWorldUpVector(new THREE.Vector3(0,1,0), true);
-    setTimeout(function () { updatingCameras = false; }, 500);
+    zoomFactor = factor;
   }
 
   return pos;
