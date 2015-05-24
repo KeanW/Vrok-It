@@ -30,7 +30,7 @@ io.on('connection', function(socket) {
     // Replay all commands since the last lmv model load
     command_history.map(function(command) {
         socket.emit('lmv-command', command);
-    })
+    });
 
     socket.on('disconnect', function() {
         console.log('user disconnected');
