@@ -342,6 +342,18 @@ function uploadFiles(viewDataClient, bucket, files) {
                             console.log("Translation successful: " + response.file.name);
                             console.log("Viewable: ");
                             console.log(viewable);
+
+                            // add new button
+                            var panel = document.getElementById('control');
+                            addButton(panel, response.file.name,
+                                function() {
+                                    launchUrn(
+                                        viewable.urn
+                                    );
+                                }
+                            );
+
+                            // open it in a viewer
                             launchUrn(viewable.urn);
                         });
                 }
