@@ -112,6 +112,17 @@ function addButton(panel, buttonName, loadFunction) {
     panel.appendChild(document.createTextNode('\u00a0'));
 }
 
+function onCameraChange(event) {
+    
+    if (event && event.camera) {
+
+      var pos = viewer.navigation.getPosition();
+      var trg = viewer.navigation.getTarget();
+      var length = trg.clone().sub(pos).length();
+      socket.emit('lmv-command', { name: 'zoom', value: length });
+    }
+}
+
 function onIsolate(event) {
 
     var ids = [];
@@ -238,6 +249,10 @@ function loadDocument(viewer, docId) {
 
         // Add our custom progress listener and set the loaded
         // flags to false
+
+        viewer.addEventListener(
+            Autodesk.Viewing.CAMERA_CHANGE_EVENT,
+            onCameraChange);
 
         viewer.addEventListener(
             Autodesk.Viewing.ISOLATE_EVENT,
