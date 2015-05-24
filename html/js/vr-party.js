@@ -10,6 +10,7 @@ var deg2rad = Math.PI / 180;
 var wasFlipped;
 var updatingCameras = false;
 var is_iOS_device =/iPhone|iPad|iPod/i.test (navigator.userAgent);
+var is_mobile_device = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
 var zoomFactor;
 
 var buttons = {
@@ -787,7 +788,7 @@ function explode(outwards) {
 }
 
 function apply_zoom_to_cameras(val) {
-    if (!window.DeviceOrientationEvent) {
+    if (!is_mobile_device) {
         if (viewerLeft) {
             var pos = leftPos.clone();
             var trg = viewerLeft.navigation.getTarget();
