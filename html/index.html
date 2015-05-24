@@ -22,7 +22,7 @@
 
                     <br>
                         <input type="file" id="fileElem" style="display:none" onchange="onUpload(this.files)"/>
-                        <center><button id="upload-button" type="button" class="cmd-btn-small" onclick="onFileSelect();">Upload file</button></center>
+                        <center><button id="upload-button" type="button" class="cmd-btn-small-x" onclick="onFileSelect();">Upload file</button></center>
 
                     <br>
                     <center><div id="control"></div></center>
@@ -109,7 +109,7 @@ function addButton(panel, buttonName, loadFunction) {
 
     // Add the button with a space under it
     panel.appendChild(button);
-    panel.appendChild(document.createTextNode('\u00a0'));
+    //panel.appendChild(document.createTextNode('\u00a0'));
 }
 
 function onCameraChange(event) {

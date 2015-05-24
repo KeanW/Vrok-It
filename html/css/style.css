@@ -7,6 +7,7 @@ body {
   display: block;
   position: relative;
 }
+
 .cmd-btn-small {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 12px;
@@ -17,11 +18,33 @@ body {
   text-transform: uppercase;
   text-align: center;
   width: 120px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
+
 .cmd-btn-small:hover {
   cursor: pointer;
   color: #fff;
   background-color: #555;
+}
+
+.cmd-btn-small-x {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  border: 1px solid #555;
+  border-radius: 2px;
+  color: #555;
+  background: #ccc;
+  text-transform: uppercase;
+  text-align: center;
+  width: 120px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.cmd-btn-small-x:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: #222;
 }
 
 a {
