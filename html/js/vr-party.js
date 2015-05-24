@@ -381,11 +381,11 @@ function loadDocument(viewer, docId) {
   if (docId != null) {
     Autodesk.Viewing.Document.load(docId,
       function (document) {
-  
+
         // Boilerplate code to load the contents
-  
+
         var geometryItems = [];
-  
+
         if (geometryItems.length == 0) {
           geometryItems =
             Autodesk.Viewing.Document.getSubItemsWithProperties(
@@ -397,10 +397,10 @@ function loadDocument(viewer, docId) {
         if (geometryItems.length > 0) {
           viewer.load(document.getViewablePath(geometryItems[0]));
         }
-  
+
         // Add our custom progress listener and set the loaded
         // flags to false
-  
+
         leftLoaded = rightLoaded = cleanedModel = false;
         viewer.addEventListener('progress', progressListener);
       },

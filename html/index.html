@@ -26,6 +26,7 @@
                     <div>
                         <input type="file" id="fileElem" style="display:none" onchange="onUpload(this.files)"/>
                         <button type="button" onclick="onFileSelect();">Upload file!</button>
+                        <div id="upload_progress"></div>
                     </div>
                     <br>
 
@@ -110,11 +111,11 @@ function launchUrn(urn) {
   $.get(
     window.location.protocol + '//' +
     window.location.host + '/api/token',
-    function (accessToken) {
+    function (accessTokenResponse) {
 
       var options = {};
       options.env = 'AutodeskProduction';
-      options.accessToken = accessToken;
+      options.accessToken = accessTokenResponse.access_token;
       if (urn)
         options.document = urn;
 
@@ -232,7 +233,7 @@ function uploadFiles(viewDataClient, bucket, files) {
         viewDataClient.uploadFileAsync(
             file,
             bucket,
-            file.name,
+            file.name.replace(/ /g,"_"), // Translation API cannot handle spaces...
             function(response) {
                 //onSuccess
                 console.log('File upload successful:');
@@ -254,13 +255,7 @@ function uploadFiles(viewDataClient, bucket, files) {
                             console.log("Translation successful: " + response.file.name);
                             console.log("Viewable: ");
                             console.log(viewable);
-
-                            // TODO KEEAN
-                            // adnViewerMng = new Autodesk.ADN.Toolkit.Viewer.AdnViewerManager(
-                            //     $('#token').val(),
-                            //     document.getElementById('viewer'));
-
-                            // adnViewerMng.loadDocument(viewable.urn);
+                            launchUrn(viewable.urn);
                         });
                 }
             },
@@ -284,12 +279,14 @@ function checkTranslationStatus(viewDataClient, fileId, timeout, onSuccess) {
             viewDataClient.getViewableAsync(
                 fileId,
                 function(response) {
-                    console.log('Translation Progess ' + fileId + ': ' + response.progress);
+                    console.log(response);
+                    console.log('Translation Progress ' + fileId + ': ' + response.progress);
+                    $('#upload_progress').html(response.progress);
 
                     if (response.progress === 'complete') {
                         clearInterval(timer);
                         onSuccess(response);
-                        }
+                    }
                 },
                 function(error) {}
             );
