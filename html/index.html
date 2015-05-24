@@ -180,6 +180,8 @@ function initialize() {
         socket.emit('lmv-command', { name: 'isolate', value: JSON.parse('[' + $('#isolate-value').val() + ']') });
         return false;
     });
+
+    readCookiesForCustomModel();
 }
 
 
@@ -361,6 +363,9 @@ function uploadFiles(viewDataClient, bucket, files) {
 
                             // open it in a viewer
                             launchUrn(viewable.urn);
+
+                            // and store as a cookie
+                            createCookieForCustomModel("custom_model_" + response.file.name, viewable.urn);
                         });
                 }
             },
@@ -399,5 +404,39 @@ function checkTranslationStatus(viewDataClient, fileId, timeout, onSuccess) {
         }
     }, 2000);
 };
+
+
+function createCookieForCustomModel(name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    } else {
+        var expires = "";        
+    }
+
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+
+
+function readCookiesForCustomModel() {
+    var prefix = "custom_model_";
+    var cookies = document.cookie.split(";");
+
+    for (var i in cookies) {
+        var c = cookies[i];
+        if (c.indexOf(prefix) != -1) {
+            c = c.replace(prefix, "");
+            var nameValue = c.split("=");
+
+            if (nameValue) {
+                var panel = document.getElementById('control');
+                addButton(panel, nameValue[0], function() {
+                    launchUrn(nameValue[1]);
+                });
+            }
+        }
+    }
+}
 
 </script>
