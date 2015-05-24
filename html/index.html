@@ -18,14 +18,12 @@
         <table cellpadding="10px">
             <tr>
                 <td style="width:20%;">
-                    <div id="url"></div>
-                    <div id="qrcode"></div>
+                    <a id="url" target="_blank"><div id="qrcode"></div></a>
+
                     <br>
-                    <div>
                         <input type="file" id="fileElem" style="display:none" onchange="onUpload(this.files)"/>
-                        <button type="button" onclick="onFileSelect();">Upload file!</button>
-                        <div id="upload_progress"></div>
-                    </div>
+                        <center><button id="upload-button" type="button" class="cmd-btn-small" onclick="onFileSelect();">Upload file</button></center>
+
                     <br>
                     <center><div id="control"></div></center>
                 </td>
@@ -149,7 +147,7 @@ function initialize() {
 
     var base_url = window.location.origin;
     var url = base_url + '/participant.html';
-    $('#url').html("<a href=\"" + url + "\" target=\"_blank\">Participant page</a><br/><br/>");
+    $('#url').attr('href', url);
     $('#qrcode').qrcode(url);
 
     launchUrn();
@@ -267,6 +265,7 @@ function loadDocument(viewer, docId) {
 
 
 function onFileSelect() {
+    $('#upload-button').html("Uploading...");
     var el = document.getElementById("fileElem");
     if (el) {
         el.click();
@@ -368,11 +367,12 @@ function checkTranslationStatus(viewDataClient, fileId, timeout, onSuccess) {
                 function(response) {
                     console.log(response);
                     console.log('Translation Progress ' + fileId + ': ' + response.progress);
-                    $('#upload_progress').html(response.progress);
+                    $('#upload-button').html(response.progress);
 
                     if (response.progress === 'complete') {
                         clearInterval(timer);
                         onSuccess(response);
+                        $('#upload-button').html('Upload file');
                     }
                 },
                 function(error) {}

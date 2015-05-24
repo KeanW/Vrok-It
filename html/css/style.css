@@ -16,8 +16,7 @@ body {
   background: transparent;
   text-transform: uppercase;
   text-align: center;
-  padding: 5px;
-  width: 100px;
+  width: 120px;
 }
 .cmd-btn-small:hover {
   cursor: pointer;
