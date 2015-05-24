@@ -113,7 +113,7 @@ function addButton(panel, buttonName, loadFunction) {
 }
 
 function onCameraChange(event) {
-    
+
     if (event && event.camera) {
 
       var pos = viewer.navigation.getPosition();
@@ -198,15 +198,19 @@ function launchUrn(urn) {
       if (urn)
         options.document = urn;
 
-      var elem = document.getElementById('3dViewDiv');
-      viewer = new Autodesk.Viewing.Private.GuiViewer3D(elem, {});
+      if (!viewer) {
+          var elem = document.getElementById('3dViewDiv');
+          viewer = new Autodesk.Viewing.Private.GuiViewer3D(elem, {});
+
+          Autodesk.Viewing.Initializer(options, function () {
+            viewer.initialize();
+            loadDocument(viewer, options.document);
+          });
+      } else {
+          loadDocument(viewer, options.document);
+      }
       viewer.container.style.width = $('#3dViewDiv').width() + 'px';
       viewer.container.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
-
-      Autodesk.Viewing.Initializer(options, function () {
-        viewer.initialize();
-        loadDocument(viewer, options.document);
-      });
     }
   );
 }

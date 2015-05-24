@@ -186,11 +186,19 @@ var faceUps = {
 
 var model_state = {};
 
+function reset_model_state() {
+    model_state.zoom_factor = 0;
+    model_state.explode_factor = 0;
+    model_state.isolate_id = [];
+    model_state.cut_planes = [];
+
+}
+
 function init_connection() {
     var socket = io();
     socket.on('lmv-command', function(msg) {
         if (msg.name === "load") {
-            model_state = {};
+            reset_model_state();
             launchViewer(msg.value);
         }
         else if (msg.name === "zoom") {
