@@ -37,6 +37,7 @@
 
 var viewer;
 var socket = io();
+var zoomFactor;
 
 var buttonsSmall = {
   'robot arm' : function () {
@@ -119,7 +120,10 @@ function onCameraChange(event) {
       var pos = viewer.navigation.getPosition();
       var trg = viewer.navigation.getTarget();
       var length = trg.clone().sub(pos).length();
-      socket.emit('lmv-command', { name: 'zoom', value: length });
+      if (Math.abs(length - zoomFactor) < 0.000001) {
+        socket.emit('lmv-command', { name: 'zoom', value: length });
+        zoomFactor = length;
+      }
     }
 }
 
