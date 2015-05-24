@@ -730,16 +730,8 @@ function orbitViews(vert, horiz) {
   var pos = leftPos.clone();
   var trg = viewerLeft.navigation.getTarget();
 
-  var disp = pos.clone();
-  disp.sub(trg);
-  if (zoomFactor && Math.abs(zoomFactor - disp.length()) > 0.000001) {
-    //var dist = disp.length();
-    var unit = disp.clone();
-    unit.normalize();//divideScalar(dist);
-    unit.multiplyScalar(zoomFactor);
-    pos = trg.clone();
-    pos.add(unit);
-  }
+  var trg_vector = pos.clone().sub(trg).normalize().multiplyScalar(model_state.zoom_factor);
+  pos = trg.clone().add(trg_vector);
 
   // Start by applying the left/right orbit
   // (we need to check the up/down value, though)
@@ -794,13 +786,20 @@ function explode(outwards) {
   );
 }
 
-function apply_zoom_to_cameras(val){
-    if (viewerLeft) {
-        leftPos = zoomAlongCameraDirection2(viewerLeft, val);
-    }
+function apply_zoom_to_cameras(val) {
+    if (!window.DeviceOrientationEvent) {
+        if (viewerLeft) {
+            var pos = leftPos.clone();
+            var trg = viewerLeft.navigation.getTarget();
 
-    if (viewerRight) {
-        transferCameras(true);
+            var trg_vector = pos.clone().sub(trg).normalize().multiplyScalar(model_state.zoom_factor);
+            leftPos = trg.clone().add(trg_vector);
+            viewerLeft.navigation.setPosition(leftPos);
+        }
+
+        if (viewerRight) {
+            transferCameras(true);
+        }
     }
 }
 
@@ -823,20 +822,6 @@ function zoomAlongCameraDirection(viewer, factor) {
 
   var disp = trg.clone().sub(pos).multiplyScalar(factor);
   pos.sub(disp);
-
-  return pos;
-}
-
-function zoomAlongCameraDirection2(viewer, factor) {
-
-  var pos = viewer.navigation.getPosition().clone();
-  var trg = viewer.navigation.getTarget();
-
-  var disp = pos.clone().sub(trg);
-  var dist = disp.length();
-  if (Math.abs(dist - factor) > 0.000001) {
-    zoomFactor = factor;
-  }
 
   return pos;
 }
