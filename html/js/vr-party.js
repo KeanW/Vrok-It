@@ -9,6 +9,7 @@ var direction = true;
 var deg2rad = Math.PI / 180;
 var wasFlipped;
 var updatingCameras = false;
+var is_iOS_device =/iPhone|iPad|iPod/i.test (navigator.userAgent);
 
 var buttons = {
   'connect' : function () {
@@ -731,7 +732,7 @@ function orbitViews(vert, horiz) {
   // Start by applying the left/right orbit
   // (we need to check the up/down value, though)
 
-  if (vert < 0)
+  if (vert < 0 && !is_iOS_device)
     horiz = horiz + Math.PI;
 
   var zAxis = upVector.clone();
