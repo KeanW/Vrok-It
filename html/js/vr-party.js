@@ -507,7 +507,7 @@ function progressListener(e) {
 
     watchCameras();
 
-    if (model_state.explode_factor) {
+    if (model_state.zoom_factor) {
         apply_zoom_to_cameras(model_state.zoom_factor);
     }
 
