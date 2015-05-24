@@ -380,13 +380,11 @@ function launchViewer(docId, upVec, zoomFunc) {
 }
 
 function loadDocument(viewer, docId) {
-
   // The viewer defaults to the full width of the container,
   // so we need to set that to 50% to get side-by-side
 
   viewer.container.style.width = '50%';
-  if (viewer.resize)
-    viewer.resize();
+  viewer.resize();
 
   // Let's zoom in and out of the pivot - the screen
   // real estate is fairly limited - and reverse the
