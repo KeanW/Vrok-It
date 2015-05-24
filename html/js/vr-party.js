@@ -736,8 +736,9 @@ function orbitViews(vert, horiz) {
     //var dist = disp.length();
     var unit = disp.clone();
     unit.normalize();//divideScalar(dist);
+    unit.multiplyScalar(zoomFactor);
     pos = trg.clone();
-    pos.add(unit.multiplyScalar(zoomFactor));
+    pos.add(unit);
   }
 
   // Start by applying the left/right orbit
