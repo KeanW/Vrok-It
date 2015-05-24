@@ -8,7 +8,7 @@ var targExp = 0.5, xfac = 0.05, zfac = 0.3;
 var direction = true;
 var deg2rad = Math.PI / 180;
 var wasFlipped;
-
+var updatingCameras = false;
 
 var buttons = {
   'connect' : function () {
@@ -575,7 +575,7 @@ function watchTilt() {
 // Event handlers for the cameraChanged events
 
 function left2right() {
-  if (!updatingRight) {
+  if (!updatingRight && !updatingCameras) {
     updatingLeft = true;
     transferCameras(true);
     setTimeout(function () { updatingLeft = false; }, 500);
@@ -583,7 +583,7 @@ function left2right() {
 }
 
 function right2left() {
-  if (!updatingLeft) {
+  if (!updatingLeft && !updatingCameras) {
     updatingRight = true;
     transferCameras(false);
     setTimeout(function () { updatingRight = false; }, 500);
@@ -818,13 +818,18 @@ function zoomAlongCameraDirection2(viewer, factor) {
 
   var pos = viewer.navigation.getPosition().clone();
   var trg = viewer.navigation.getTarget();
+  var up = viewer.navigation.getCameraUpVector();
 
   var disp = pos.clone().sub(trg);
   var dist = disp.length();
   if (Math.abs(dist - factor) > 0.000001) {
     var unit = disp.divideScalar(dist);
     pos = trg.clone().add(unit.multiplyScalar(factor));
+    updatingCameras = true;
     viewer.navigation.setPosition(pos);
+    viewer.navigation.setCameraUpVector(up);
+    viewer.navigation.setWorldUpVector(new THREE.Vector3(0,1,0), true);
+    setTimeout(function () { updatingCameras = false; }, 500);
   }
 
   return pos;

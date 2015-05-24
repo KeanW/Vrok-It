@@ -364,19 +364,19 @@ function uploadFiles(viewDataClient, bucket, files) {
 
                             // add new button
                             var panel = document.getElementById('control');
-                            addButton(panel, response.file.name,
-                                function() {
-                                    launchUrn(
-                                        viewable.urn
-                                    );
-                                }
-                            );
+                            var name = truncateName(response.file.name);
+
+                            addButton(panel, name, function() {
+                                launchUrn(
+                                    viewable.urn
+                                );
+                            });
 
                             // open it in a viewer
                             launchUrn(viewable.urn);
 
                             // and store as a cookie
-                            createCookieForCustomModel("custom_model_" + response.file.name, viewable.urn);
+                            createCookieForCustomModel("custom_model_" + name, viewable.urn);
                         });
                 }
             },
@@ -417,6 +417,20 @@ function checkTranslationStatus(viewDataClient, fileId, timeout, onSuccess) {
 };
 
 
+function truncateName(name) {
+    var dotIdx = name.lastIndexOf(".");
+    if (dotIdx != -1) {
+        var name = name.substring(0, dotIdx);
+
+        if (name.length > 8) {
+            name = name.substring(0, 8) + "...";
+        }
+    }
+
+    return name;
+}
+
+
 function createCookieForCustomModel(name, value, days) {
     if (days) {
         var date = new Date();
@@ -433,16 +447,21 @@ function createCookieForCustomModel(name, value, days) {
 function readCookiesForCustomModel() {
     var prefix = "custom_model_";
     var cookies = document.cookie.split(";");
+    var panel = document.getElementById('control');
 
     for (var i in cookies) {
         var c = cookies[i];
         if (c.indexOf(prefix) != -1) {
             c = c.replace(prefix, "");
+
+            while (c.charAt(0) == " ") {
+                c = c.substring(1, c.length);
+            }
+
             var nameValue = c.split("=");
 
             if (nameValue) {
-                var panel = document.getElementById('control');
-                addButton(panel, nameValue[0], function() {
+                addButton(panel, truncateName(nameValue[0]), function() {
                     launchUrn(nameValue[1]);
                 });
             }
