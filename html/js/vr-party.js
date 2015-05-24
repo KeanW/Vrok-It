@@ -13,7 +13,7 @@ var wasFlipped;
 var buttons = {
   'connect' : function () {
     init_connection();
-    launchViewer();
+    buttons2['robot arm']();
   },
 };
 
