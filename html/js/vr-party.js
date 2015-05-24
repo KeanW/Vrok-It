@@ -375,10 +375,11 @@ function loadDocument(viewer, docId) {
   viewer.navigation.setReverseZoomDirection(true);
   viewer.setLightPreset(0);
 
-  if (docId.substring(0, 4) !== 'urn:')
-    docId = 'urn:' + docId;
-
   if (docId != null) {
+
+    if (docId.substring(0, 4) !== 'urn:')
+      docId = 'urn:' + docId;
+
     Autodesk.Viewing.Document.load(docId,
       function (document) {
 
@@ -441,6 +442,7 @@ function progressListener(e) {
         // translation issues from Fusion 360... which is also
         // the only model to provide an initial zoom function)
 
+        /*
         for (var p in viewerLeft.impl.matman().materials) {
           var m = viewerLeft.impl.matman().materials[p];
           if (m.color.r >= 0.5 && m.color.g == 0 && m.color.b == 0) {
@@ -455,6 +457,7 @@ function progressListener(e) {
             m.needsUpdate = true;
           }
         }
+        */
 
         // If provided, use the "initial zoom" function
 
