@@ -156,7 +156,7 @@ function initialize() {
       addButton(panel, name, fn);
     }
 
-    var base_url = window.location.origin;
+    var base_url = 'https://' + window.location.hostname;
     var url = base_url + '/participant.html';
     $('#url').attr('href', url);
     $('#qrcode').qrcode(url);
