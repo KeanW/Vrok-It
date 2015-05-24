@@ -5,7 +5,11 @@
         <title>VR Party</title>
         <link
           rel="stylesheet"
-          href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css?v=v1.2.13""
+          href="css/style.css"
+          type="text/css">
+        <link
+          rel="stylesheet"
+          href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css?v=v1.2.13"
           type="text/css">
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
@@ -41,6 +45,9 @@
                     <form id="isolate">
                         <button>Isolate</button> IDs (comma separated): <input id="isolate-value" autocomplete="off" value="1,2,3"/>
                     </form>
+                    <center>
+                      <div id="control"></div>
+                    </center>
                 </td>
                 <td style="valign:top; width:80%; height=100%;">
                     <div id='3dViewDiv' style="height: 80%;overflow: hidden;">
@@ -54,7 +61,65 @@
 <script type="text/javascript">
 
 var viewer;
-var socket;
+var socket = io();
+
+var buttonsSmall = {
+  'robot arm' : function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng='
+    );
+  },
+  'differential' : function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0RpZmYuZHdmeA=='
+    );
+  },
+  'suspension' : function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1N1c3BlbnNpb24uZHdm'
+    );
+  },
+  'house' : function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2hvdXNlLmR3Zng='
+    );
+  },
+  'flyer one' : function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0ZseWVyT25lLmR3Zng='
+    );
+  },
+  'motorcycle' : function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL01vdG9yY3ljbGUuZHdmeA=='
+    );
+  },
+  'V8 engine' : function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1Y4RW5naW5lLnN0cA=='
+    );
+  },
+  'aotea': function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2FvdGVhMy5kd2Y='
+    );
+  },
+  'dinghy': function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2RpbmdoeS5mM2Q='
+    );
+  },
+  'column': function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL3RhYmxldDIuemlw'
+    );
+  },
+  'tablet': function () {
+    launchUrn(
+      'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
+    );
+  }
+}
 
 function onIsolate(event) {
 
@@ -74,6 +139,31 @@ function onExplode() {
 var view_data_bucket = 'steambuck';
 
 function initialize() {
+  
+    // Populate our initial UI with a set of buttons, one for each
+    // function in the Buttons object
+  
+    var panel = document.getElementById('control');
+    for (var name in buttonsSmall) {
+      var fn = buttonsSmall[name];
+  
+      var button = document.createElement('div');
+      button.classList.add('cmd-btn-small');
+  
+      // Replace any underscores with spaces before setting the
+      // visible name
+  
+      button.innerHTML = name;
+      button.onclick = (function (name) {
+        return function () { name(); };
+      })(fn);
+  
+      // Add the button with a space under it
+  
+      panel.appendChild(button);
+      panel.appendChild(document.createTextNode('\u00a0'));
+    }
+  
     var base_url = window.location.origin;
     var url = base_url + '/participant.html';
     $('#url').html("<a href=\"" + url + "\" target=\"_blank\">Participant page</a><br/><br/>");
@@ -81,11 +171,8 @@ function initialize() {
 
     launchUrn();
 
-    socket = io();
-
     $('#load').submit(function() {
         var urn = $('#load-value').val();
-        socket.emit('lmv-command', { name: 'load', value: urn });
 
         launchUrn(urn);
 
@@ -105,6 +192,9 @@ function initialize() {
 
 
 function launchUrn(urn) {
+
+  socket.emit('lmv-command', { name: 'load', value: urn });
+
   $.get(
     window.location.protocol + '//' +
     window.location.host + '/api/token',
