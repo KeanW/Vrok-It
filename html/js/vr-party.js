@@ -731,8 +731,8 @@ function orbitViews(vert, horiz) {
 
   if (zoomFactor) {
     var disp = pos.clone().sub(trg);
-    var dist = disp.length();
-    var unit = disp.divideScalar(dist);
+    //var dist = disp.length();
+    var unit = disp.normalize();//divideScalar(dist);
     pos = trg.clone().add(unit.multiplyScalar(zoomFactor));
   }
 
