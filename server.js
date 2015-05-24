@@ -20,17 +20,27 @@ var server = http.createServer(app)
 server.listen(port)
 console.log('Listening on port ' + port + '...');
 
+var command_history = [];
 
 // WEB SOCKETS
 var io = require('socket.io')(server);
 io.on('connection', function(socket) {
-    console.log('a user connected');
+    console.log('a user connected (id=' + socket.id +')');
+
+    // Replay all commands since the last lmv model load
+    command_history.map(function(command) {
+        socket.emit('lmv-command', command);
+    })
 
     socket.on('disconnect', function() {
         console.log('user disconnected');
     });
 
     socket.on('lmv-command', function(command) {
+        if (command.name === 'load') {
+            command_history = [];
+        }
+        command_history.push(command);
         console.log(command);
         socket.broadcast.emit('lmv-command', command);
     });

@@ -9,6 +9,7 @@ var direction = true;
 var deg2rad = Math.PI / 180;
 var wasFlipped;
 
+
 var buttons = {
   'connect' : function () {
     launchViewer();//'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=');
@@ -182,35 +183,34 @@ var faceUps = {
   'bottom': new THREE.Vector3(0, 1, 0)
 };
 
+var model_state = {};
+
 function initialize() {
 
   var socket = io();
   socket.on('lmv-command', function(msg){
     if (msg.name == "load") {
+      model_state = {};
       launchViewer(msg.value);
     }
     else if (msg.name == "explode") {
-      var fac = parseFloat(msg.value);
-      xfac = Math.abs(fac - exp) / 10;
-      explodeToFactor(fac);
+      model_state.explode_factor = parseFloat(msg.value);
+      xfac = Math.abs(model_state.explode_factor - exp) / 10;
+      apply_to_viewers('explode', model_state.explode_factor);
     }
     else if (msg.name == "isolate") {
-      if (viewerLeft) {
-        viewerLeft.isolateById(msg.value);
-      }
-      if (viewerRight) {
-        viewerRight.isolateById(msg.value);
-      }
+      model_state.isolate_id = msg.value;
+      apply_to_viewers('isolateById', model_state.isolate_id);
     }
     else if (msg.name == "section") {
-      
+
       var planes = [];
       if (msg.value) {
         for(var i=0; i<msg.value.length; ++i) {
             var vec = msg.value[i];
             planes.push(new THREE.Vector4(vec.x, vec.y, vec.z, vec.w));
         }
-              
+
         if (viewerLeft) {
           viewerLeft.setCutPlanes(planes);
         }
@@ -314,7 +314,7 @@ function launchViewer(docId, upVec, zoomFunc) {
   // (can only happen in a function called from a
   // button-click handler or some other UI event)
 
-  requestFullscreen();
+  //requestFullscreen();
 
   // Hide the controls that brought us here
 
@@ -495,7 +495,7 @@ function progressListener(e) {
       cleanedModel = true;
     }
   }
-  else if (cleanedModel && e.percent > 10) {
+  else if (cleanedModel && e.percent >= 100) {
 
     // If we have already cleaned and are even further loaded,
     // remove the progress listeners from the two viewers and
@@ -504,6 +504,15 @@ function progressListener(e) {
     unwatchProgress();
 
     watchCameras();
+
+    if (model_state.explode_factor) {
+        apply_to_viewers('explode', model_state.explode_factor);
+    }
+
+    if (model_state.isolate_id) {
+        apply_to_viewers('isolateById', model_state.isolate_id);
+    }
+
   }
 }
 
@@ -753,10 +762,14 @@ function explode(outwards) {
   );
 }
 
-function explodeToFactor(fac) {
+function apply_to_viewers(func){
+    if (viewerLeft) {
+        viewerLeft[func].apply(viewerLeft, Array.prototype.slice.call(arguments, 1));
+    }
 
-  setTimeout(function () { viewerLeft.explode(fac); }, 0);
-  setTimeout(function () { viewerRight.explode(fac); }, 0);
+    if (viewerRight) {
+        viewerRight[func].apply(viewerRight, Array.prototype.slice.call(arguments, 1));
+    }
 }
 
 function zoomAlongCameraDirection(viewer, factor) {
