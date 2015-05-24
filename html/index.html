@@ -120,6 +120,22 @@ var buttonsSmall = {
   }
 }
 
+function addButton(panel, buttonName, loadFunction) {
+    var button = document.createElement('div');
+    button.classList.add('cmd-btn-small');
+  
+    // Replace any underscores with spaces before setting the
+    // visible name
+    button.innerHTML = buttonName;
+    button.onclick = (function (buttonName) {
+        return function () { buttonName(); };
+    })(loadFunction);
+  
+    // Add the button with a space under it 
+    panel.appendChild(button);
+    panel.appendChild(document.createTextNode('\u00a0'));
+}
+
 function onIsolate(event) {
 
     var ids = [];
@@ -145,22 +161,7 @@ function initialize() {
     var panel = document.getElementById('control');
     for (var name in buttonsSmall) {
       var fn = buttonsSmall[name];
-  
-      var button = document.createElement('div');
-      button.classList.add('cmd-btn-small');
-  
-      // Replace any underscores with spaces before setting the
-      // visible name
-  
-      button.innerHTML = name;
-      button.onclick = (function (name) {
-        return function () { name(); };
-      })(fn);
-  
-      // Add the button with a space under it
-  
-      panel.appendChild(button);
-      panel.appendChild(document.createTextNode('\u00a0'));
+      addButton(panel, name, fn);
     }
   
     var base_url = window.location.origin;
