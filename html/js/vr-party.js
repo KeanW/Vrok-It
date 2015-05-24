@@ -790,7 +790,7 @@ function explode(outwards) {
 function apply_zoom_to_cameras(val) {
     if (!is_mobile_device) {
         if (viewerLeft) {
-            var pos = leftPos.clone();
+            var pos = viewerLeft.navigation.getPosition();
             var trg = viewerLeft.navigation.getTarget();
 
             var trg_vector = pos.clone().sub(trg).normalize().multiplyScalar(model_state.zoom_factor);
