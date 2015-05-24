@@ -12,7 +12,8 @@ var wasFlipped;
 
 var buttons = {
   'connect' : function () {
-    launchViewer();//'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=');
+    init_connection();
+    launchViewer();
   },
 };
 
@@ -185,30 +186,32 @@ var faceUps = {
 
 var model_state = {};
 
-function initialize() {
+function init_connection() {
     var socket = io();
     socket.on('lmv-command', function(msg) {
-    if (msg.name === "load") {
-        model_state = {};
-        launchViewer(msg.value);
-    }
-    else if (msg.name === "explode") {
-        model_state.explode_factor = parseFloat(msg.value);
-        xfac = Math.abs(model_state.explode_factor - exp) / 10;
-        apply_to_viewers('explode', model_state.explode_factor);
-    }
-    else if (msg.name === "isolate") {
-        model_state.isolate_id = msg.value;
-        apply_to_viewers('isolateById', model_state.isolate_id);
-    }
-    else if (msg.name == "section") {
-        model_state.cut_planes = msg.value.map(function(vec) {
-            return new THREE.Vector4(vec.x, vec.y, vec.z, vec.w);
-        });
-        apply_to_viewers('setCutPlanes', model_state.cut_planes);
-    }
-  });
+        if (msg.name === "load") {
+            model_state = {};
+            launchViewer(msg.value);
+        }
+        else if (msg.name === "explode") {
+            model_state.explode_factor = parseFloat(msg.value);
+            xfac = Math.abs(model_state.explode_factor - exp) / 10;
+            apply_to_viewers('explode', model_state.explode_factor);
+        }
+        else if (msg.name === "isolate") {
+            model_state.isolate_id = msg.value;
+            apply_to_viewers('isolateById', model_state.isolate_id);
+        }
+        else if (msg.name == "section") {
+            model_state.cut_planes = msg.value.map(function(vec) {
+                return new THREE.Vector4(vec.x, vec.y, vec.z, vec.w);
+            });
+            apply_to_viewers('setCutPlanes', model_state.cut_planes);
+        }
+    });
+}
 
+function initialize() {
   // Populate our initial UI with a set of buttons, one for each
   // function in the Buttons object
 
@@ -302,7 +305,7 @@ function launchViewer(docId, upVec, zoomFunc) {
   // (can only happen in a function called from a
   // button-click handler or some other UI event)
 
-  //requestFullscreen();
+  requestFullscreen();
 
   // Hide the controls that brought us here
 
