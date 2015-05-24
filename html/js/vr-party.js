@@ -819,12 +819,13 @@ function zoomAlongCameraDirection2(viewer, factor) {
   var pos = viewer.navigation.getPosition().clone();
   var trg = viewer.navigation.getTarget();
 
-  var disp = pos.sub(trg);
+  var disp = pos.sub(trg).clone();
   var dist = disp.length();
-  var unit = disp.divideScalar(dist);
-  pos = trg.clone().add(unit.multiplyScalar(factor));
-  viewer.navigation.setPosition(pos);
-
+  if (Math.abs(dist - factor) > 0.000001) {
+    var unit = disp.divideScalar(dist);
+    pos = trg.clone().add(unit.multiplyScalar(factor));
+    viewer.navigation.setPosition(pos);
+  }
   return pos;
 }
 
