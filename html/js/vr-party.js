@@ -257,17 +257,6 @@ function checkViewers() {
 }
 
 function launchViewer(docId, upVec, zoomFunc) {
-
-  // Reset some variables when we reload
-
-  if (viewerLeft) {
-    viewerLeft.uninitialize();
-    viewerLeft = null;
-  }
-  if (viewerRight) {
-    viewerRight.uninitialize();
-    viewerRight = null;
-  }
   updatingLeft = false;
   updatingRight = false;
   leftPos = null;
@@ -344,25 +333,34 @@ function launchViewer(docId, upVec, zoomFunc) {
       options.env = 'AutodeskProduction';
       options.accessToken = accessTokenResponse.access_token;
       if (docId)
+      {
         options.document = docId;
+      }
 
       // Create and initialize our two 3D viewers
+      if (!viewerLeft) {
+        var elem = document.getElementById('viewLeft');
+        viewerLeft = new Autodesk.Viewing.Viewer3D(elem, {});
 
-      var elem = document.getElementById('viewLeft');
-      viewerLeft = new Autodesk.Viewing.Viewer3D(elem, {});
+        Autodesk.Viewing.Initializer(options, function () {
+          viewerLeft.initialize();
+          loadDocument(viewerLeft, options.document);
+        });
+      } else {
+          loadDocument(viewerLeft, options.document);
+      }
 
-      Autodesk.Viewing.Initializer(options, function () {
-        viewerLeft.initialize();
-        loadDocument(viewerLeft, options.document);
-      });
+      if (!viewerRight) {
+          elem = document.getElementById('viewRight');
+          viewerRight = new Autodesk.Viewing.Viewer3D(elem, {});
 
-      elem = document.getElementById('viewRight');
-      viewerRight = new Autodesk.Viewing.Viewer3D(elem, {});
-
-      Autodesk.Viewing.Initializer(options, function () {
-        viewerRight.initialize();
-        loadDocument(viewerRight, options.document);
-      });
+          Autodesk.Viewing.Initializer(options, function () {
+            viewerRight.initialize();
+            loadDocument(viewerRight, options.document);
+          });
+      } else {
+         loadDocument(viewerRight, options.document);
+      }
     }
   );
 }
