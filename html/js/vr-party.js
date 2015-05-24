@@ -728,11 +728,11 @@ function orbitViews(vert, horiz) {
   // We'll rotate our position based on the initial position
   // and the target will stay the same
 
-  var pos = viewerLeft.navigation.getPosition();
-  var trg = viewerLeft.navigation.getTarget();
+  // var pos = viewerLeft.navigation.getPosition();
+  // var trg = viewerLeft.navigation.getTarget();
 
-  var trg_vector = pos.clone().sub(trg).normalize().multiplyScalar(model_state.zoom_factor);
-  pos = trg.clone().add(trg_vector);
+  // var trg_vector = pos.clone().sub(trg).normalize().multiplyScalar(model_state.zoom_factor);
+  // pos = trg.clone().add(trg_vector);
 
   // Start by applying the left/right orbit
   // (we need to check the up/down value, though)
