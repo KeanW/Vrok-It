@@ -818,6 +818,7 @@ function zoomAlongCameraDirection2(viewer, factor) {
 
   var pos = viewer.navigation.getPosition().clone();
   var trg = viewer.navigation.getTarget();
+  var up = viewer.navigation.getCameraUpVector();
 
   var disp = pos.clone().sub(trg);
   var dist = disp.length();
@@ -826,7 +827,7 @@ function zoomAlongCameraDirection2(viewer, factor) {
     pos = trg.clone().add(unit.multiplyScalar(factor));
     updatingCameras = true;
     viewer.navigation.setPosition(pos);
-    viewer.navigation.setCameraUpVector(new THREE.Vector3(0,1,0));
+    viewer.navigation.setCameraUpVector(up);
     updatingCameras = false;
   }
 
