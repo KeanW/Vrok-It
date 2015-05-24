@@ -114,17 +114,13 @@ function addButton(panel, buttonName, loadFunction) {
 }
 
 function onCameraChange(event) {
+    var pos = viewer.navigation.getPosition();
+    var trg = viewer.navigation.getTarget();
+    var length = trg.clone().sub(pos).length();
 
-    if (event && event.camera) {
-
-      var pos = viewer.navigation.getPosition();
-      var trg = viewer.navigation.getTarget();
-      var length = trg.clone().sub(pos).length();
-      
-      if (!zoomFactor || Math.abs(length - zoomFactor) > 0.000001) {
-        socket.emit('lmv-command', { name: 'zoom', value: length });
-        zoomFactor = length;
-      }
+    if (!zoomFactor || Math.abs(length - zoomFactor) > 0.000001) {
+      socket.emit('lmv-command', { name: 'zoom', value: length });
+      zoomFactor = length;
     }
 }
 
