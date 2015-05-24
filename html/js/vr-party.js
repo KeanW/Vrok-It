@@ -483,7 +483,7 @@ function progressListener(e) {
       cleanedModel = true;
     }
   }
-  else if (cleanedModel && e.percent >= 100) {
+  else if (cleanedModel && e.percent >= 10) {
 
     // If we have already cleaned and are even further loaded,
     // remove the progress listeners from the two viewers and
