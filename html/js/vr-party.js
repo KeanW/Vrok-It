@@ -202,6 +202,23 @@ function initialize() {
         viewerRight.isolateById(msg.value);
       }
     }
+    else if (msg.name == "section") {
+      
+      var planes = [];
+      if (msg.value) {
+        for(var i=0; i<msg.value.length; ++i) {
+            var vec = msg.value[i];
+            planes.push(new THREE.Vector4(vec.x, vec.y, vec.z, vec.w));
+        }
+              
+        if (viewerLeft) {
+          viewerLeft.setCutPlanes(planes);
+        }
+        if (viewerRight) {
+          viewerRight.setCutPlanes(planes);
+        }
+      }
+    }
   });
 
   // Populate our initial UI with a set of buttons, one for each

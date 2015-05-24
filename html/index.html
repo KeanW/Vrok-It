@@ -151,6 +151,11 @@ function onExplode() {
     socket.emit('lmv-command', { name: 'explode', value: viewer.getExplodeScale() });
 }
 
+function onSection(event) {
+
+    socket.emit('lmv-command', { name: 'section', value: viewer.getCutPlanes() });
+}
+
 var view_data_bucket = 'steambuck';
 
 function initialize() {
@@ -264,6 +269,10 @@ function loadDocument(viewer, docId) {
         viewer.addEventListener(
             Autodesk.Viewing.EXPLODE_CHANGE_EVENT,
             onExplode);
+
+        viewer.addEventListener(
+            Autodesk.Viewing.CUTPLANES_CHANGE_EVENT,
+            onSection);
 
         //viewer.addEventListener('progress', progressListener);
       },
