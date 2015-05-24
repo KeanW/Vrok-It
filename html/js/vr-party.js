@@ -724,40 +724,37 @@ function orbitViews(vert, horiz) {
   if (!leftPos)
     return;
 
-  if (vert < 0 && !is_iOS_device)
-    horiz = horiz + Math.PI;
-
   // We'll rotate our position based on the initial position
   // and the target will stay the same
 
-//  var pos = viewerLeft.navigation.getPosition();//leftPos.clone();
-  var trg = viewerLeft.navigation.getTarget();
   var pos = leftPos.clone();
+  var trg = viewerLeft.navigation.getTarget();
 
-  var disp = leftPos.clone();
+  var disp = pos.clone();
   disp.sub(trg);
-  if (!zoomFactor) {
-    zoomFactor = disp.length();
+  if (zoomFactor && Math.abs(zoomFactor - disp.length()) > 0.000001) {
+    //var dist = disp.length();
+    var unit = disp.clone();
+    unit.normalize();//divideScalar(dist);
+    unit.multiplyScalar(zoomFactor);
+    pos = trg.clone();
+    pos.add(unit);
   }
 
-  var unit = disp.clone();
-  unit.normalize();//divideScalar(dist);
-  
   // Start by applying the left/right orbit
   // (we need to check the up/down value, though)
 
+  if (vert < 0 && !is_iOS_device)
+    horiz = horiz + Math.PI;
+
   var zAxis = upVector.clone();
-  unit.applyAxisAngle(zAxis, horiz);
+  pos.applyAxisAngle(zAxis, horiz);
 
   // Now add the up/down rotation
 
   var axis = trg.clone().sub(pos).normalize();
   axis.cross(zAxis);
-  unit.applyAxisAngle(axis, -vert);
-
-  unit.multiplyScalar(zoomFactor);
-  pos = trg.clone();
-  pos.add(unit);
+  pos.applyAxisAngle(axis, -vert);
 
   // Determine the camera up vector: this is important if
   // getting to the extremities, to stop direction flipping
