@@ -775,7 +775,7 @@ function explode(outwards) {
 
 function apply_zoom_to_cameras(val){
     if (viewerLeft) {
-        zoomAlongCameraDirection2(viewerLeft, val);
+        leftPos = zoomAlongCameraDirection2(viewerLeft, val);
     }
 
     if (viewerRight) {
