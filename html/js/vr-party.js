@@ -193,7 +193,7 @@ function reset_model_state() {
     model_state.explode_factor = 0;
     model_state.isolate_id = [];
     model_state.cut_planes = [];
-
+    model_state.ready_to_apply_events = false;
 }
 
 function init_connection() {
@@ -205,22 +205,30 @@ function init_connection() {
         }
         else if (msg.name === "zoom") {
             model_state.zoom_factor = parseFloat(msg.value);
-            apply_zoom_to_cameras(model_state.zoom_factor);
+            if (model_state.ready_to_apply_events) {
+                apply_zoom_to_cameras(model_state.zoom_factor);
+            }
         }
         else if (msg.name === "explode") {
             model_state.explode_factor = parseFloat(msg.value);
             xfac = Math.abs(model_state.explode_factor - exp) / 10;
-            apply_to_viewers('explode', model_state.explode_factor);
+            if (model_state.ready_to_apply_events) {
+                apply_to_viewers('explode', model_state.explode_factor);
+            }
         }
         else if (msg.name === "isolate") {
             model_state.isolate_id = msg.value;
-            apply_to_viewers('isolateById', model_state.isolate_id);
+            if (model_state.ready_to_apply_events) {
+                apply_to_viewers('isolateById', model_state.isolate_id);
+              }
         }
         else if (msg.name == "section") {
             model_state.cut_planes = msg.value.map(function(vec) {
                 return new THREE.Vector4(vec.x, vec.y, vec.z, vec.w);
             });
-            apply_to_viewers('setCutPlanes', model_state.cut_planes);
+            if (model_state.ready_to_apply_events) {
+                apply_to_viewers('setCutPlanes', model_state.cut_planes);
+            }
         }
     });
 }
@@ -522,6 +530,8 @@ function progressListener(e) {
     if (model_state.cut_planes) {
         apply_to_viewers('setCutPlanes', model_state.cut_planes);
     }
+
+    model_state.ready_to_apply_events = true;
   }
 }
 
