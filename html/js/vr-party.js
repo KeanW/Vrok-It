@@ -496,7 +496,7 @@ function progressListener(e) {
 
     unwatchProgress();
 
-    //watchCameras();
+    watchCameras();
 
     if (model_state.explode_factor) {
         apply_zoom_to_cameras(model_state.zoom_factor);
@@ -797,13 +797,13 @@ function zoomAlongCameraDirection(viewer, factor) {
 
 function zoomAlongCameraDirection2(viewer, factor) {
 
-  var pos = viewer.navigation.getPosition();
+  var pos = viewer.navigation.getPosition().clone();
   var trg = viewer.navigation.getTarget();
 
-  var disp = trg.clone().sub(pos);  
+  var disp = pos.sub(trg);
   var dist = disp.length();
-  var unit = disp.multiplyScalar(1/dist);
-  pos.sub(unit * (dist - factor));
+  var unit = disp.divideScalar(dist);
+  pos = trg.clone().add(unit.multiplyScalar(factor));
   viewer.navigation.setPosition(pos);
 
   return pos;
