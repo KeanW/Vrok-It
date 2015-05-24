@@ -156,7 +156,13 @@ function initialize() {
       addButton(panel, name, fn);
     }
 
-    var base_url = 'https://' + window.location.hostname;
+    var base_url = window.location.origin;
+    if (window.location.hostname === 'vr-party.herokuapp.com') {
+        // Apparently some phone browsers don't like the mix of http and https
+        // Default to https on Heroku deployment
+        base_url = 'https://vr-party.herokuapp.com'
+    }
+
     var url = base_url + '/participant.html';
     $('#url').attr('href', url);
     $('#qrcode').qrcode(url);
@@ -412,7 +418,7 @@ function createCookieForCustomModel(name, value, days) {
         date.setTime(date.getTime() + (days*24*60*60*1000));
         var expires = "; expires="+date.toGMTString();
     } else {
-        var expires = "";        
+        var expires = "";
     }
 
     document.cookie = name+"="+value+expires+"; path=/";
