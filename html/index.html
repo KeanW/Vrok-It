@@ -5,7 +5,7 @@
         <title>VR Party</title>
         <link
           rel="stylesheet"
-          href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css"
+          href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css?v=v1.2.13""
           type="text/css">
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
@@ -68,10 +68,7 @@ function onIsolate(event) {
 
 function onExplode() {
 
-    var data = {
-        explodeScale: viewer.getExplodeScale()
-    };
-    socket.emit('lmv-command', { name: 'explode', value: JSON.parse($('#explode-value').val()) });
+    socket.emit('lmv-command', { name: 'explode', value: viewer.getExplodeScale() });
 }
 
 var view_data_bucket = 'steambuck';
