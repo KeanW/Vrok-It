@@ -193,6 +193,10 @@ function init_connection() {
             model_state = {};
             launchViewer(msg.value);
         }
+        else if (msg.name === "zoom") {
+            model_state.zoom_factor = parseFloat(msg.value);
+            apply_zoom_to_cameras(model_state.zoom_factor);
+        }
         else if (msg.name === "explode") {
             model_state.explode_factor = parseFloat(msg.value);
             xfac = Math.abs(model_state.explode_factor - exp) / 10;
@@ -494,7 +498,11 @@ function progressListener(e) {
 
     unwatchProgress();
 
-    watchCameras();
+    //watchCameras();
+
+    if (model_state.explode_factor) {
+        apply_zoom_to_cameras(model_state.zoom_factor);
+    }
 
     if (model_state.explode_factor) {
         apply_to_viewers('explode', model_state.explode_factor);
@@ -756,13 +764,25 @@ function explode(outwards) {
   );
 }
 
-function apply_to_viewers(func){
+function apply_zoom_to_cameras(val){
     if (viewerLeft) {
-        viewerLeft[func].apply(viewerLeft, Array.prototype.slice.call(arguments, 1));
+        zoomAlongCameraDirection2(viewerLeft, val);
     }
 
     if (viewerRight) {
-        viewerRight[func].apply(viewerRight, Array.prototype.slice.call(arguments, 1));
+        zoomAlongCameraDirection2(viewerRight, val);
+    }
+}
+
+function apply_to_viewers(func){
+    var val = Array.prototype.slice.call(arguments, 1);
+
+    if (viewerLeft) {
+        viewerLeft[func].apply(viewerLeft, val);
+    }
+
+    if (viewerRight) {
+        viewerRight[func].apply(viewerRight, val);
     }
 }
 
@@ -776,6 +796,21 @@ function zoomAlongCameraDirection(viewer, factor) {
 
   return pos;
 }
+
+function zoomAlongCameraDirection2(viewer, factor) {
+
+  var pos = viewer.navigation.getPosition();
+  var trg = viewer.navigation.getTarget();
+
+  var disp = trg.clone().sub(pos);  
+  var dist = disp.length();
+  var unit = disp.multiplyScalar(1/dist);
+  pos.sub(unit * (dist - factor));
+  viewer.navigation.setPosition(pos);
+
+  return pos;
+}
+
 
 function zoomInwards(factor) {
 
