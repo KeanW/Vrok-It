@@ -826,6 +826,7 @@ function zoomAlongCameraDirection2(viewer, factor) {
     pos = trg.clone().add(unit.multiplyScalar(factor));
     updatingCameras = true;
     viewer.navigation.setPosition(pos);
+    viewer.navigation.setCameraUpVector(new THREE.Vector3(0,1,0));
     updatingCameras = false;
   }
 
