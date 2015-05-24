@@ -779,7 +779,7 @@ function apply_zoom_to_cameras(val){
     }
 
     if (viewerRight) {
-        zoomAlongCameraDirection2(viewerRight, val);
+        transferCameras(true);
     }
 }
 
