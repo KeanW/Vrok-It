@@ -66,7 +66,6 @@ function launchViewer(urn) {
                 _viewerLeft.setGroundShadow(false);
                 _viewerLeft.setGroundReflection(false);
                 _viewerLeft.setGhosting(false);
-                _viewerLeft.setLightPreset(8)
             }
 
             if (!_viewerRight) {
