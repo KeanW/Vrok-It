@@ -40,7 +40,10 @@ exports.getToken = function (req, res) {
         res.send(authResponse);
       }
       else {
-        console.log("Token error: " + response.statusCode);
+        console.log("Token error: ");
+        if (response && response.statusCode) {
+          console.log (response.statusCode);
+        }
       }
     }
   );

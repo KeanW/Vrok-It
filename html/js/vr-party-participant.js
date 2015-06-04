@@ -9,8 +9,7 @@ var _readyToApplyEvents = false;
 var _model_state = {};
 var _orbitInitalPosition;
 
-
-function initialize() {
+function initialize(isR13) {
     var buttonName = 'Connect';
     var panel = document.getElementById('control');
     var button = document.createElement('div');
@@ -22,17 +21,39 @@ function initialize() {
     })(function() {
         $('#layer1').hide();
 
-        launchFullscreen($('#layer2')[0])
-
-        Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-
-            var avp = Autodesk.Viewing.Private;
-            avp.GPU_OBJECT_LIMIT = 100000;
-            avp.onDemandLoading = false;
-
-            launchViewer('urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=');
-            initConnection();
-        });
+        launchFullscreen($('#layer2')[0]);
+        
+        var urn = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=';
+        
+        if (isR13) {
+            $.get(
+                window.location.origin + '/api/token',
+                function (accessTokenResponse) {
+            
+                  var options = {};
+                  options.env = 'AutodeskProduction';
+                  options.accessToken = accessTokenResponse.access_token;
+                  options.document = urn;
+                  Autodesk.Viewing.Initializer(options, function() {
+                        var avp = Autodesk.Viewing.Private;
+                        avp.GPU_OBJECT_LIMIT = 100000;
+                        avp.onDemandLoading = false;
+            
+                        launchViewer(urn);
+                        initConnection();
+                  });
+                });
+        }
+        else {
+            Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+                var avp = Autodesk.Viewing.Private;
+                avp.GPU_OBJECT_LIMIT = 100000;
+                avp.onDemandLoading = false;
+    
+                launchViewer(urn);
+                initConnection();
+            });
+        }
     });
 
     panel.appendChild(button);
@@ -51,6 +72,8 @@ function launchViewer(urn) {
     unwatchProgress();
     unwatchCameras();
 
+    urn = urn.ensurePrefix('urn:');
+    
     Autodesk.Viewing.Document.load(
         urn,
         function(documentData) {
@@ -62,10 +85,10 @@ function launchViewer(urn) {
                 _viewerLeft.start();
 
                 // The settings are loaded by the 2nd viewer automatically
-                _viewerLeft.setQualityLevel(false, false);
-                _viewerLeft.setGroundShadow(false);
-                _viewerLeft.setGroundReflection(false);
-                _viewerLeft.setGhosting(false);
+                //_viewerLeft.setQualityLevel(false, false);
+                //_viewerLeft.setGroundShadow(false);
+                //_viewerLeft.setGroundReflection(false);
+                //_viewerLeft.setGhosting(false);
             }
 
             if (!_viewerRight) {
