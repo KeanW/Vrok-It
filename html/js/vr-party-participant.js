@@ -9,7 +9,7 @@ var _readyToApplyEvents = false;
 var _model_state = {};
 var _orbitInitalPosition;
 
-function initialize(isR13) {
+function initialize() {
     var buttonName = 'Connect';
     var panel = document.getElementById('control');
     var button = document.createElement('div');
@@ -25,7 +25,7 @@ function initialize(isR13) {
         
         var urn = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=';
         
-        if (isR13) {
+        if (LMV_VIEWER_VERSION === '1.2.13') {
             $.get(
                 window.location.origin + '/api/token',
                 function (accessTokenResponse) {
