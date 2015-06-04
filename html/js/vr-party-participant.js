@@ -74,12 +74,17 @@ function launchViewer(urn) {
             }
 
             watchProgress();
+            forceWidth(_viewerLeft);
             loadModel(_viewerLeft, model);
+            forceWidth(_viewerRight);
             loadModel(_viewerRight, model);
         }
     );
 }
 
+function forceWidth(viewer) {
+    viewer.container.style.width = '50%';
+}
 
 function initConnection() {
     var socket = io();
