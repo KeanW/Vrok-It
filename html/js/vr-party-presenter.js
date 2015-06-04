@@ -45,6 +45,7 @@ function initialize() {
     Autodesk.Viewing.Initializer(getViewingOptions(), function() {
         launchUrn('urn:' + _default_models['robot arm']);
         readCookiesForCustomModel();
+        initializeSelectFilesDialog();
     });
 }
 
@@ -128,6 +129,155 @@ function onFileSelect() {
 }
 
 
+function cancel() {
+    $(this).dialog('close');
+}
+
+
+function upload() {
+    var filteredForUpload = new Array();
+
+    $(':checkbox').each(function() {
+        if ($(this).is(':checked')) {
+            // 'filesToUpload' seems to be not a regular array, 'filter()'' function is undefined
+            for (var i = 0; i < filesToUpload.length; ++i) {
+                var file = filesToUpload[i];
+                if (file.name == $(this).val()) {
+                    filteredForUpload.push(file);
+                }
+            }
+        }
+    });
+
+    console.log("Filtered for upload");
+    for (var i = 0; i < filteredForUpload.length; ++i) {
+        var file = filteredForUpload[i];
+        console.log('Selected file: ' + file.name + ' size: ' + file.size);
+    }
+
+    onUpload(filteredForUpload);
+
+    $(this).dialog('close');
+}
+
+
+function deselectAllFiles() {
+    $(':checkbox').prop('checked', false);
+    $(":button:contains('OK')").prop("disabled", true).addClass("ui-state-disabled");
+}
+
+
+function selectAllFiles() {
+    $(':checkbox').prop('checked', true);
+    $(":button:contains('OK')").prop("disabled", false).removeClass("ui-state-disabled");
+}
+
+
+function initializeSelectFilesDialog() {
+    var dlg = document.getElementsByName("upload-files");
+
+    if (dlg.length == 0) {
+        var dlgDiv = document.createElement("div");
+        dlgDiv.id = "upload-files";
+        dlgDiv.title='Uploading files';
+        document.getElementsByTagName("body")[0].appendChild(dlgDiv);
+
+        $('#upload-files').append("<p>Following files are larger than 2MB. Are you sure you want to upload them?</p>");
+
+        var buttons = {
+            Cancel: cancel,
+            'OK': upload,
+            'Deselect All': deselectAllFiles,
+            'Select All': selectAllFiles
+        };
+
+        $('#upload-files').dialog({ 
+            autoOpen: false, 
+            modal: true,
+            buttons: buttons,
+            width:"auto",
+            resizable: false,
+        });
+    }
+}
+
+
+function clearCheckBoxes() {
+    var checkboxes = document.getElementById("checkboxes");
+    if (checkboxes) {
+        checkboxes.parentNode.removeChild(checkboxes);
+    }
+
+    checkboxes = document.createElement('div');
+    checkboxes.id = "checkboxes";
+    $('#upload-files').append(checkboxes);
+}
+
+
+function createCheckBox(fileName) {
+    var id = "filename-checkbox-" + fileName;
+    var checkbox = document.createElement('input');
+    checkbox.id = id;
+    checkbox.type = "checkbox";
+    checkbox.name = "upload-files";
+    checkbox.value = fileName;
+    
+    $("#upload-files").change(function() {
+        var numberChecked = $("input[name='upload-files']:checked").size();
+        if (numberChecked > 0) {
+            $(":button:contains('OK')").prop("disabled", false).removeClass("ui-state-disabled");
+        } else {
+            $(":button:contains('OK')").prop("disabled", true).addClass("ui-state-disabled");
+        }
+    });
+
+    var label = document.createElement('label');
+    label.htmlFor = id;
+    label.appendChild(document.createTextNode(fileName));
+
+    $('#checkboxes').append(checkbox);
+    $('#checkboxes').append(label);
+}
+
+
+function resetSelectedFiles() {
+   var fileElem = $("#fileElem");
+    fileElem.wrap("<form>").closest("form").get(0).reset();
+    fileElem.unwrap();
+}
+
+
+function onFilesDialogCalled(files) {
+    filesToUpload = [];
+    var sizeLimit = 2097152; // 2MB
+
+    clearCheckBoxes();
+
+    var numberFilesLargerThanLimit = 0;
+    for (var i = 0; i < files.length; ++i) {
+        var file = files[i];
+        if (file.size > sizeLimit) {
+            ++numberFilesLargerThanLimit;
+            createCheckBox(file.name);
+        }
+
+        filesToUpload.push(file);
+    }
+
+    // select all files in the confirmation dialog
+    selectAllFiles();
+
+    // reset FilesSet property of the input element
+    resetSelectedFiles();
+
+    if (numberFilesLargerThanLimit > 0) {
+        $('#upload-files').dialog('open');
+    } else {
+        onUpload(filesToUpload);
+    }
+}
+
+
 function onUpload(files) {
     $.get(
         window.location.origin + '/api/token',
@@ -185,15 +335,18 @@ function uploadFiles(viewDataClient, bucket, files) {
                             console.log('Viewable: ');
                             console.log(viewable);
 
+                            var urn = "urn:" + viewable.urn;
+
                             // add new button
                             var panel = document.getElementById('control');
-                            addButton(panel, response.file.name, function() { launchUrn(viewable.urn); });
+                            var name = truncateName(response.file.name);
+                            addButton(panel, name, function() { launchUrn(urn); });
 
                             // open it in a viewer
-                            launchUrn(viewable.urn);
+                            launchUrn(urn);
 
                             // and store as a cookie
-                            createCookieForCustomModel('custom_model_' + response.file.name, viewable.urn);
+                            createCookieForCustomModel('custom_model_' + response.file.name, urn);
                         });
                 }
             },
@@ -238,6 +391,19 @@ function checkTranslationStatus(viewDataClient, fileId, timeout, onSuccess) {
 //  Models stored in cookies
 //
 
+function truncateName(name) {
+    var dotIdx = name.lastIndexOf(".");
+    if (dotIdx != -1) {
+        var name = name.substring(0, dotIdx);
+
+        if (name.length > 8) {
+            name = name.substring(0, 8) + "...";
+        }
+    }
+
+    return name;
+}
+
 
 function createCookieForCustomModel(name, value, days) {
     if (days) {
@@ -263,7 +429,7 @@ function readCookiesForCustomModel() {
             var nameValue = c.split('=');
             if (nameValue) {
                 var panel = document.getElementById('control');
-                addButton(panel, nameValue[0], function() {
+                addButton(panel, truncateName(nameValue[0]), function() {
                     launchUrn(nameValue[1]);
                 });
             }
