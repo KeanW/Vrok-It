@@ -5,11 +5,12 @@
         <title>VR Party</title>
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2">
         <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
-        <script type="text/javascript" src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=v1.2.15"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript" src="js/socket.io.js"></script>
-        <script type="text/javascript" src="js/vr-party-common.js"></script>
-        <script type="text/javascript" src="js/vr-party-participant.js"></script>
+        <link rel="stylesheet" href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css?v=v1.2.15">
+        <script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=v1.2.15"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/socket.io.js"></script>
+        <script src="js/vr-party-common.js"></script>
+        <script src="js/vr-party-participant.js"></script>
         <style>
             html, body {
                 width: 100%;
@@ -39,7 +40,6 @@
                 margin: 3px;
                 position: absolute;
                 display: inline-block;
-                float: none;
                 left: 0;
                 right: 0;
                 width: 100%;
@@ -49,6 +49,7 @@
                 z-index: 1;
                 position: absolute;
                 overflow: hidden;
+                top: 0;
                 left: 0;
                 right: 0;
                 width: 100%;

@@ -17,6 +17,7 @@ function getViewingOptions() {
 
 
 function loadModel(viewer, documentData) {
+    viewer.container.style.width = '50%';
     viewer.resize();
     viewer.load(
         documentData,
