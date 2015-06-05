@@ -8,7 +8,7 @@ var _wasFlipped;
 var _readyToApplyEvents = false;
 var _model_state = {};
 var _orbitInitialPosition;
-
+var _lastVert, _lastHoriz;
 
 function initialize() {
     var buttonName = 'Connect';
@@ -151,22 +151,31 @@ function viewersApplyState() {
     }
 
     if (_model_state.zoom_factor !== undefined) {
+        
+        unwatchTilt();
+        
         var previousUpdatingLeft = _updatingLeft;
-        var previousUpdatingRight = _updatingRight
+        var previousUpdatingRight = _updatingRight;
 
         var direction = new THREE.Vector3();
-        direction.subVectors(_orbitInitialPosition, _viewerLeft.navigation.getTarget());
+        var target = _viewerLeft.navigation.getTarget();
+        direction.subVectors(_orbitInitialPosition, target);
         direction.normalize();
         direction.multiplyScalar(_model_state.zoom_factor);
-        _viewerLeft.navigation.setPosition(direction.add(_viewerLeft.navigation.getTarget()));
+        var newPos = direction.add(target);
+        _viewerLeft.navigation.setPosition(newPos);
         transferCameras(true);
 
-        _orbitInitialPosition = _viewerLeft.navigation.getPosition();
+        _orbitInitialPosition = newPos;
 
         _updatingLeft = previousUpdatingLeft;
         _updatingRight = previousUpdatingRight;
 
         _model_state.zoom_factor = undefined;
+        
+        orbitViews(_lastVert, _lastHoriz);
+        
+        watchTilt();
     }
 
     if (_model_state.explode_factor !== undefined) {
@@ -368,6 +377,11 @@ function orb(e) {
     // left - right rotation in landscape
     // orientation (with 0-360 degrees)
     var horiz = (e.alpha - _baseDir) * _deg2rad;
+    
+    // Save the latest horiz and vert values for use in zoom
+    _lastHoriz = horiz;
+    _lastVert = vert;
+    
     orbitViews(vert, horiz);
 }
 
