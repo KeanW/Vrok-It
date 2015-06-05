@@ -239,7 +239,7 @@ function initializeSelectFilesDialog() {
         dlgDiv.title='Uploading files';
         document.getElementsByTagName("body")[0].appendChild(dlgDiv);
 
-        $('#upload-files').append("<p>Following files are larger than 2MB. Are you sure you want to upload them?</p>");
+        $('#upload-files').append("<p>The following files are larger than 2MB. Are you sure you want to upload them?</p>");
 
         var buttons = {
             Cancel: cancel,
