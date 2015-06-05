@@ -87,7 +87,7 @@ function launchViewer(urn) {
 
                 // The settings are loaded by the 2nd viewer automatically
                 _viewerLeft.setQualityLevel(false, false);
-                //_viewerLeft.setGroundShadow(false);
+                _viewerLeft.setGroundShadow(true);
                 _viewerLeft.setGroundReflection(false);
                 _viewerLeft.setGhosting(false);
             }
