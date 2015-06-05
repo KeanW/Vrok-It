@@ -20,18 +20,25 @@
             <tr>
                 <td style="width:20%;">
                     <a id="url" target="_blank"><div id="qrcode"></div></a>
-                    <br>
-                        <input type="file" id="fileElem" style="display:none" onchange="onFilesDialogCalled(this.files);"/>
-                        <center>
-                            <button
-                                id="upload-button"
-                                type="button"
-                                class="cmd-btn-small-x"
-                                onclick="onFileSelect();">Upload file
-                            </button>
-                        </center>
-                    <br>
-                    <center><div id="control"></div></center>
+                    <br/>
+                    <input type="file" id="fileElem" style="display:none" onchange="onFilesDialogCalled(this.files);"/>
+                    <center>
+                        <div
+                            id="upload-button"
+                            type="button"
+                            class="cmd-btn-small-x"
+                            onclick="onFileSelect();">Upload file
+                        </div>
+                        <br/>
+                        <div id="control"></div>
+                        <br/>
+                        <div
+                            id="restart-button"
+                            type="button"
+                            class="cmd-btn-small-x"
+                            onclick="window.location.href = window.location.origin;">New session
+                        </div>
+                    </center>
                 </td>
                 <td valign="top"  style="height:20%;"><div id="3dViewDiv"></div></td>
             </tr>

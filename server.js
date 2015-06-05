@@ -4,7 +4,7 @@ var http = require('http');
 var crypto = require('crypto');
 
 // CONFIG
-var port = process.env.PORT || 5000
+var port = process.env.PORT || 5000;
 
 // WEB SERVER
 var app = express();
@@ -27,8 +27,16 @@ app.get('/api/sessionId', function(req, res) {
     res.json(sessionId);
 });
 
-var server = http.createServer(app)
-server.listen(port)
+// Currently only return the URN - could also return
+// the various explode, zoom factors, etc.
+app.get('/api/getSession/:id', function(req, res) {  
+    var sessionId = req.params.id;
+    var idx = sessionIds.indexOf(sessionId);
+    res.json(idx < 0 ? "" : models[idx]);
+});
+
+var server = http.createServer(app);
+server.listen(port);
 console.log('Listening on port ' + port + '...');
 
 var sessionIds = [];
@@ -52,6 +60,11 @@ io.on('connection', function(socket) {
         console.log('user joined session (id=' + session.id +')');
         var idx = sessionIds.indexOf(session.id);
         if (idx >= 0) {
+            
+            // Add our user to the room for this session
+            socket.join(session.id);
+            
+            // Bring this user up to speed with the state of the session
             socket.emit('lmv-command', { name: 'load', value: models[idx] });
             if (zoomFactors[idx] !== defZoom) {
                 socket.emit('lmv-command', { name: 'zoom', value: zoomFactors[idx] });
@@ -72,7 +85,8 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect', function() {
-        console.log('user disconnected');
+        // Maybe we need to leave the room this user has joined?
+        console.log('a user disconnected (id=' + socket.id +')');
     });
 
     socket.on('create-session', function(session) {
@@ -106,7 +120,9 @@ io.on('connection', function(socket) {
                 sectionPlanes[idx] = command.value;
             }
             console.log(command);
-            socket.broadcast.emit('lmv-command', command);
+
+            io.to(command.session).emit('lmv-command', command);
+            console.log('emitted command to ' + command.session);
         }
         else {
             console.log('could not find session (id=' + command.session +')');
