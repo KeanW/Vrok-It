@@ -9,6 +9,7 @@ var _readyToApplyEvents = false;
 var _model_state = {};
 var _orbitInitalPosition;
 
+
 function initialize() {
     var buttonName = 'Connect';
     var panel = document.getElementById('control');
@@ -85,10 +86,10 @@ function launchViewer(urn) {
                 _viewerLeft.start();
 
                 // The settings are loaded by the 2nd viewer automatically
-                //_viewerLeft.setQualityLevel(false, false);
+                _viewerLeft.setQualityLevel(false, false);
                 //_viewerLeft.setGroundShadow(false);
-                //_viewerLeft.setGroundReflection(false);
-                //_viewerLeft.setGhosting(false);
+                _viewerLeft.setGroundReflection(false);
+                _viewerLeft.setGhosting(false);
             }
 
             if (!_viewerRight) {
@@ -315,7 +316,7 @@ function orb(e) {
     // (we won't actually bother adding them back, afterwards,
     // as this means we're in mobile mode and probably inside
     // a Google Cardboard holder)
-    // unwatchCameras();
+    unwatchCameras();
 
     // gamma is the front-to-back in degrees (with
     // this screen orientation) with +90/-90 being
