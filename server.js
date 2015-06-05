@@ -4,7 +4,7 @@ var http = require('http');
 var crypto = require('crypto');
 
 // CONFIG
-var port = process.env.PORT || 5000
+var port = process.env.PORT || 5000;
 
 // WEB SERVER
 var app = express();
@@ -27,8 +27,21 @@ app.get('/api/sessionId', function(req, res) {
     res.json(sessionId);
 });
 
-var server = http.createServer(app)
-server.listen(port)
+app.get('/api/sessionExists/:id', function(req, res) {  
+    var sessionId = req.params.id;  
+    res.json(sessionIds.indexOf(sessionId) > -1);
+});
+
+// Currently only return the URN - could also return
+// the various explode, zoom factors, etc.
+app.get('/api/getSession/:id', function(req, res) {  
+    var sessionId = req.params.id;
+    var idx = sessionIds.indexOf(sessionId);
+    res.json(idx < 0 ? "" : models[idx]);
+});
+
+var server = http.createServer(app);
+server.listen(port);
 console.log('Listening on port ' + port + '...');
 
 var sessionIds = [];
