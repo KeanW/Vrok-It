@@ -8,13 +8,12 @@ body {
   position: relative;
 }
 
-.cmd-btn-small {
+.cmd-btn-small, .cmd-btn-small-x {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 12px;
   border: 1px solid #555;
   border-radius: 2px;
   color: #555;
-  background: transparent;
   text-transform: uppercase;
   text-align: center;
   width: 120px;
@@ -22,28 +21,24 @@ body {
   padding-bottom: 5px;
 }
 
-.cmd-btn-small:hover {
-  cursor: pointer;
-  color: #fff;
-  background-color: #555;
+.cmd-btn-small {
+  background: transparent;
 }
 
 .cmd-btn-small-x {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  border: 1px solid #555;
-  border-radius: 2px;
-  color: #555;
-  background: #ccc;
-  text-transform: uppercase;
-  text-align: center;
   width: 120px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  background: #ccc;
 }
-.cmd-btn-small-x:hover {
+
+.cmd-btn-small:hover, .cmd-btn-small-x:hover {
   cursor: pointer;
   color: #fff;
+}
+
+.cmd-btn-small:hover {
+  background-color: #555;
+}
+.cmd-btn-small-x:hover {
   background-color: #222;
 }
 
