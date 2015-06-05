@@ -45,25 +45,17 @@ function initialize() {
         $('#url').attr('href', url);
         $('#qrcode').qrcode(url);
     
-        // If the provided session exists...
+        // If the provided session exists then load its data (right now just its URN)
         $.get(
-            window.location.origin + '/api/sessionExists/' + _sessionId,
-            function(req1, res1) {
-                if (res1 === "success") {
-                    if (req1) {
-                        // .. then get its data (right now its URN) and load it
-                        $.get(
-                            window.location.origin + '/api/getSession/' + _sessionId,
-                            function(req2, res2) {
-                                if (res2 === "success") {
-                                    Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-                                        launchUrn(req2);
-                                        readCookiesForCustomModel();
-                                        initializeSelectFilesDialog();
-                                    });
-                                }
-                            }
-                        );
+            window.location.origin + '/api/getSession/' + _sessionId,
+            function(req2, res2) {
+                if (res2 === "success") {
+                    if (req2 !== "") {
+                        Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+                            launchUrn(req2);
+                            readCookiesForCustomModel();
+                            initializeSelectFilesDialog();
+                        });
                     }
                     else {
                         // Otherwise we'll create a session with this name
@@ -80,7 +72,7 @@ function initialize() {
                     }
                 }
             }
-        );    
+        );
     }
     else {
         // If no session was provided, redirect the browser to a session
