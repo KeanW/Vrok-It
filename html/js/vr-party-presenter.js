@@ -98,7 +98,11 @@ function launchUrn(urn) {
 
 
 function onCameraChange(event) {
-    var distance_to_target = _viewer.navigation.getPosition().distanceTo(_viewer.navigation.getTarget());
+    
+    // With OBJ models the target moves to keep equidistant from the camera
+    // So we just check the distance from the origin rather than the target
+    // It seems to work, anyway!
+    var distance_to_target = _viewer.navigation.getPosition().length(); //distanceTo(_viewer.navigation.getTarget());
     if (_last_distance_to_target === undefined || Math.abs(distance_to_target - _last_distance_to_target) > 0.1) {
         _socket.emit('lmv-command', { name: 'zoom', value: distance_to_target });
         _last_distance_to_target = distance_to_target;
