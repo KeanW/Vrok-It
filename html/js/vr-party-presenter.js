@@ -61,6 +61,11 @@ function launchUrn(urn) {
     
     _socket.emit('lmv-command', { name: 'load', value: urn });
 
+    if (_viewer) {
+        _viewer.uninitialize();
+        _viewer = null;
+    }
+    
     urn = urn.ensurePrefix('urn:');
     
     Autodesk.Viewing.Document.load(
