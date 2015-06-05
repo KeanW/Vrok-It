@@ -61,6 +61,7 @@ function launchUrn(urn) {
     
     _socket.emit('lmv-command', { name: 'load', value: urn });
 
+    // Uninitializing the viewer helps with stability
     if (_viewer) {
         _viewer.uninitialize();
         _viewer = null;
@@ -106,7 +107,13 @@ function onCameraChange(event) {
 
 
 function onIsolate(event) {
-    _socket.emit('lmv-command', { name: 'isolate', value: event.nodeIdArray });
+    // Translate a list of objects (for R13 & R14) to a list of IDs
+    // Socket.io prefers not to have binary content to transfer, it seems
+    var ids = event.nodeIdArray;
+    if (ids.length > 0 && typeof ids[0] === 'object') {
+        ids = ids.map(function(obj) { return obj.dbId;});
+    }
+    _socket.emit('lmv-command', { name: 'isolate', value: ids });
 }
 
 
