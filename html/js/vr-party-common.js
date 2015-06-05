@@ -1,3 +1,18 @@
+// Define a String.startsWith() function
+
+if (typeof String.prototype.startsWith != 'function') {
+  // see below for better implementation!
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) === 0;
+  };
+}
+
+if (typeof String.prototype.ensurePrefix != 'function') {
+  String.prototype.ensurePrefix = function (str){    
+    return (this.startsWith(str) ? this : str + this);
+  };
+}
+    
 function getViewingOptions() {
     var options = {};
     options.env = 'AutodeskProduction';

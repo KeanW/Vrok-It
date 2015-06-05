@@ -15,20 +15,16 @@ var _default_models = {
     'column'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL3RhYmxldDIuemlw',
     'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
 }
-
-
-
 //
 //  Init
 //
-
 
 function initialize() {
     // Populate our initial UI with a set of buttons, one for each function in the Buttons object
     var panel = document.getElementById('control');
     for (var name in _default_models) {
         var urn = _default_models[name];
-        addButton(panel, name, function(urn) { return function() { launchUrn('urn:' + urn); } }(urn));
+        addButton(panel, name, function(urn) { return function() { launchUrn(urn); } }(urn));
     }
 
     var base_url = window.location.origin;
@@ -43,7 +39,7 @@ function initialize() {
     $('#qrcode').qrcode(url);
 
     Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-        launchUrn('urn:' + _default_models['robot arm']);
+        launchUrn(_default_models['robot arm']);
         readCookiesForCustomModel();
         initializeSelectFilesDialog();
     });
@@ -62,8 +58,11 @@ function addButton(panel, buttonName, loadFunction) {
 
 
 function launchUrn(urn) {
+    
     _socket.emit('lmv-command', { name: 'load', value: urn });
 
+    urn = urn.ensurePrefix('urn:');
+    
     Autodesk.Viewing.Document.load(
         urn,
         function(documentData) {
@@ -335,7 +334,7 @@ function uploadFiles(viewDataClient, bucket, files) {
                             console.log('Viewable: ');
                             console.log(viewable);
 
-                            var urn = "urn:" + viewable.urn;
+                            var urn = viewable.urn;
 
                             // add new button
                             var panel = document.getElementById('control');
@@ -414,7 +413,8 @@ function createCookieForCustomModel(name, value, days) {
         var expires = '';
     }
 
-    document.cookie = name + '=' + value + expires + '; path=/';
+    var urn = encodeURIComponent(value);
+    document.cookie = name + '=' + urn + expires + '; path=/';
 }
 
 
@@ -430,7 +430,7 @@ function readCookiesForCustomModel() {
             if (nameValue) {
                 var panel = document.getElementById('control');
                 addButton(panel, truncateName(nameValue[0]), function() {
-                    launchUrn(nameValue[1]);
+                    launchUrn(decodeURIComponent(nameValue[1]));
                 });
             }
         }

@@ -22,17 +22,39 @@ function initialize() {
     })(function() {
         $('#layer1').hide();
 
-        launchFullscreen($('#layer2')[0])
-
-        Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-
-            var avp = Autodesk.Viewing.Private;
-            avp.GPU_OBJECT_LIMIT = 100000;
-            avp.onDemandLoading = false;
-
-            launchViewer('urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=');
-            initConnection();
-        });
+        launchFullscreen($('#layer2')[0]);
+        
+        var urn = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=';
+        
+        if (LMV_VIEWER_VERSION === '1.2.13') {
+            $.get(
+                window.location.origin + '/api/token',
+                function (accessTokenResponse) {
+            
+                  var options = {};
+                  options.env = 'AutodeskProduction';
+                  options.accessToken = accessTokenResponse.access_token;
+                  options.document = urn;
+                  Autodesk.Viewing.Initializer(options, function() {
+                        var avp = Autodesk.Viewing.Private;
+                        avp.GPU_OBJECT_LIMIT = 100000;
+                        avp.onDemandLoading = false;
+            
+                        launchViewer(urn);
+                        initConnection();
+                  });
+                });
+        }
+        else {
+            Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+                var avp = Autodesk.Viewing.Private;
+                avp.GPU_OBJECT_LIMIT = 100000;
+                avp.onDemandLoading = false;
+    
+                launchViewer(urn);
+                initConnection();
+            });
+        }
     });
 
     panel.appendChild(button);
@@ -51,6 +73,8 @@ function launchViewer(urn) {
     unwatchProgress();
     unwatchCameras();
 
+    urn = urn.ensurePrefix('urn:');
+    
     Autodesk.Viewing.Document.load(
         urn,
         function(documentData) {
@@ -63,7 +87,7 @@ function launchViewer(urn) {
 
                 // The settings are loaded by the 2nd viewer automatically
                 _viewerLeft.setQualityLevel(false, false);
-                _viewerLeft.setGroundShadow(false);
+                //_viewerLeft.setGroundShadow(false);
                 _viewerLeft.setGroundReflection(false);
                 _viewerLeft.setGhosting(false);
             }
@@ -292,7 +316,7 @@ function orb(e) {
     // (we won't actually bother adding them back, afterwards,
     // as this means we're in mobile mode and probably inside
     // a Google Cardboard holder)
-    // unwatchCameras();
+    unwatchCameras();
 
     // gamma is the front-to-back in degrees (with
     // this screen orientation) with +90/-90 being
