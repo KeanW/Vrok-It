@@ -1,5 +1,6 @@
-var _viewer;
 var _socket = io();
+var _sessionId;
+var _viewer;
 var _last_distance_to_target;
 var _view_data_bucket = 'steambuck';
 var _default_models = {
@@ -14,35 +15,52 @@ var _default_models = {
     'dinghy'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2RpbmdoeS5mM2Q=',
     'column'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL3RhYmxldDIuemlw',
     'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
-}
+};
+
 //
 //  Init
 //
 
 function initialize() {
-    // Populate our initial UI with a set of buttons, one for each function in the Buttons object
-    var panel = document.getElementById('control');
-    for (var name in _default_models) {
-        var urn = _default_models[name];
-        addButton(panel, name, function(urn) { return function() { launchUrn(urn); } }(urn));
+    
+    _sessionId = getURLParameter('session');
+    if (_sessionId) {
+
+        // Populate our initial UI with a set of buttons, one for each function in the Buttons object
+        var panel = document.getElementById('control');
+        for (var name in _default_models) {
+            var urn = _default_models[name];
+            addButton(panel, name, function(urn) { return function() { launchUrn(urn); } }(urn));
+        }
+    
+        var base_url = window.location.origin;
+        if (window.location.hostname === 'vr-party.herokuapp.com') {
+            // Apparently some phone browsers don't like the mix of http and https
+            // Default to https on Heroku deployment
+            base_url = 'https://vr-party.herokuapp.com'
+        }
+    
+        var url = base_url + '/participant.html?session=' + _sessionId;
+        $('#url').attr('href', url);
+        $('#qrcode').qrcode(url);
+    
+        _socket.emit('create-session', { id: _sessionId });
+    
+        Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+            launchUrn(_default_models['robot arm']);
+            readCookiesForCustomModel();
+            initializeSelectFilesDialog();
+        });
     }
-
-    var base_url = window.location.origin;
-    if (window.location.hostname === 'vr-party.herokuapp.com') {
-        // Apparently some phone browsers don't like the mix of http and https
-        // Default to https on Heroku deployment
-        base_url = 'https://vr-party.herokuapp.com'
+    else {
+        $.get(
+            window.location.origin + '/api/sessionId',
+            function(res) {
+                _sessionId = res;
+                window.location.replace(window.location.origin + "?session=" + _sessionId);
+            }
+        );    
     }
-
-    var url = base_url + '/participant.html';
-    $('#url').attr('href', url);
-    $('#qrcode').qrcode(url);
-
-    Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-        launchUrn(_default_models['robot arm']);
-        readCookiesForCustomModel();
-        initializeSelectFilesDialog();
-    });
 }
 
 
@@ -59,7 +77,7 @@ function addButton(panel, buttonName, loadFunction) {
 
 function launchUrn(urn) {
     
-    _socket.emit('lmv-command', { name: 'load', value: urn });
+    _socket.emit('lmv-command', { session: _sessionId, name: 'load', value: urn });
 
     // Uninitializing the viewer helps with stability
     if (_viewer) {
@@ -104,7 +122,7 @@ function onCameraChange(event) {
     // It seems to work, anyway!
     var distance_to_target = _viewer.navigation.getPosition().length(); //distanceTo(_viewer.navigation.getTarget());
     if (_last_distance_to_target === undefined || Math.abs(distance_to_target - _last_distance_to_target) > 0.1) {
-        _socket.emit('lmv-command', { name: 'zoom', value: distance_to_target });
+        _socket.emit('lmv-command', { session: _sessionId, name: 'zoom', value: distance_to_target });
         _last_distance_to_target = distance_to_target;
     }
 }
@@ -117,17 +135,17 @@ function onIsolate(event) {
     if (ids.length > 0 && typeof ids[0] === 'object') {
         ids = ids.map(function(obj) { return obj.dbId;});
     }
-    _socket.emit('lmv-command', { name: 'isolate', value: ids });
+    _socket.emit('lmv-command', { session: _sessionId, name: 'isolate', value: ids });
 }
 
 
 function onExplode() {
-    _socket.emit('lmv-command', { name: 'explode', value: _viewer.getExplodeScale() });
+    _socket.emit('lmv-command', { session: _sessionId, name: 'explode', value: _viewer.getExplodeScale() });
 }
 
 
 function onSection(event) {
-    _socket.emit('lmv-command', { name: 'section', value: _viewer.getCutPlanes() });
+    _socket.emit('lmv-command', { session: _sessionId, name: 'section', value: _viewer.getCutPlanes() });
 }
 
 

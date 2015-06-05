@@ -9,56 +9,64 @@ var _readyToApplyEvents = false;
 var _model_state = {};
 var _orbitInitialPosition;
 var _lastVert, _lastHoriz;
+var _socket = io();
+var _sessionId;
 
 function initialize() {
-    var buttonName = 'Connect';
-    var panel = document.getElementById('control');
-    var button = document.createElement('div');
-    button.classList.add('cmd-btn');
-
-    button.innerHTML = buttonName;
-    button.onclick = (function (buttonName) {
-        return function() { buttonName(); };
-    })(function() {
-        $('#layer1').hide();
-
-        launchFullscreen($('#layer2')[0]);
-        
-        var urn = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=';
-        
-        if (LMV_VIEWER_VERSION === '1.2.13') {
-            $.get(
-                window.location.origin + '/api/token',
-                function (accessTokenResponse) {
-            
-                  var options = {};
-                  options.env = 'AutodeskProduction';
-                  options.accessToken = accessTokenResponse.access_token;
-                  options.document = urn;
-                  Autodesk.Viewing.Initializer(options, function() {
-                        var avp = Autodesk.Viewing.Private;
-                        avp.GPU_OBJECT_LIMIT = 100000;
-                        avp.onDemandLoading = false;
-            
-                        launchViewer(urn);
-                        initConnection();
-                  });
-                });
-        }
-        else {
-            Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-                var avp = Autodesk.Viewing.Private;
-                avp.GPU_OBJECT_LIMIT = 100000;
-                avp.onDemandLoading = false;
     
-                launchViewer(urn);
-                initConnection();
-            });
-        }
-    });
-
-    panel.appendChild(button);
-    panel.appendChild(document.createTextNode('\u00a0'));
+    _sessionId = getURLParameter('session');
+    if (_sessionId) {
+        var buttonName = 'Connect';
+        var panel = document.getElementById('control');
+        var button = document.createElement('div');
+        button.classList.add('cmd-btn');
+    
+        button.innerHTML = buttonName;
+        button.onclick = (function (buttonName) {
+            return function() { buttonName(); };
+        })(function() {
+            $('#layer1').hide();
+    
+            launchFullscreen($('#layer2')[0]);
+            
+            var urn = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=';
+            
+            if (LMV_VIEWER_VERSION === '1.2.13') {
+                $.get(
+                    window.location.origin + '/api/token',
+                    function (accessTokenResponse) {
+                
+                      var options = {};
+                      options.env = 'AutodeskProduction';
+                      options.accessToken = accessTokenResponse.access_token;
+                      options.document = urn;
+                      Autodesk.Viewing.Initializer(options, function() {
+                            var avp = Autodesk.Viewing.Private;
+                            avp.GPU_OBJECT_LIMIT = 100000;
+                            avp.onDemandLoading = false;
+                
+                            _socket.emit('join-session', { id: _sessionId });
+                            //launchViewer(urn);
+                            initConnection();
+                      });
+                    });
+            }
+            else {
+                Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+                    var avp = Autodesk.Viewing.Private;
+                    avp.GPU_OBJECT_LIMIT = 100000;
+                    avp.onDemandLoading = false;
+        
+                    _socket.emit('join-session', { id: _sessionId });
+                    //launchViewer(urn);
+                    initConnection();
+                });
+            }
+        });
+    
+        panel.appendChild(button);
+        panel.appendChild(document.createTextNode('\u00a0'));
+    }
 }
 
 
@@ -121,8 +129,7 @@ function forceWidth(viewer) {
 }
 
 function initConnection() {
-    var socket = io();
-    socket.on('lmv-command', function(msg) {
+    _socket.on('lmv-command', function(msg) {
         if (msg.name === 'load') {
             launchViewer(msg.value);
         }
@@ -160,7 +167,7 @@ function viewersApplyState() {
         var previousUpdatingRight = _updatingRight;
 
         var direction = new THREE.Vector3();
-        var target = _viewerLeft.navigation.getTarget();
+        var target = new THREE.Vector3(); //_viewerLeft.navigation.getTarget();
         direction.subVectors(_orbitInitialPosition, target);
         direction.normalize();
         direction.multiplyScalar(_model_state.zoom_factor);
@@ -175,8 +182,10 @@ function viewersApplyState() {
 
         _model_state.zoom_factor = undefined;
         
-        orbitViews(_lastVert, _lastHoriz);
-        
+        if (_lastVert && _lastHoriz) {
+            orbitViews(_lastVert, _lastHoriz);
+        }
+            
         watchTilt();
     }
 
@@ -197,7 +206,6 @@ function viewersApplyState() {
                 }
                 catch (ex) {
                     isolate_not_ready = true;
-                    return;
                 }
             }
         if (!isolate_not_ready) {
