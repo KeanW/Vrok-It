@@ -146,6 +146,8 @@ function initConnection() {
 
 
 function viewersApplyState() {
+    var not_ready = false;
+
     if (!_leftLoaded || !_rightLoaded || !_readyToApplyEvents) {
         return;
     }
@@ -184,6 +186,7 @@ function viewersApplyState() {
     }
 
     if (_model_state.isolate_id !== undefined) {
+        var isolate_not_ready = false;        
         var ids = _model_state.isolate_id;
         if ((LMV_VIEWER_VERSION === '1.2.13' || LMV_VIEWER_VERSION === '1.2.14') &&
             ids.length > 0 && typeof ids[0] === 'number') {
@@ -193,17 +196,24 @@ function viewersApplyState() {
                     ids = _viewerLeft.model.getNodesByIds(ids);
                 }
                 catch (ex) {
-                    setTimeout(function() { viewersApplyState(); }, 1000);
+                    isolate_not_ready = true;
                     return;
                 }
             }
-        viewersApply('isolate', ids);
-        _model_state.isolate_id = undefined;
+        if (!isolate_not_ready) {
+            viewersApply('isolate', ids);
+            _model_state.isolate_id = undefined;
+        }
+        not_ready = not_ready || isolate_not_ready;
     }
 
     if (_model_state.cut_planes !== undefined) {
         viewersApply('setCutPlanes', _model_state.cut_planes);
         _model_state.cut_planes = undefined;
+    }
+
+    if (not_ready) {
+        setTimeout(function() { viewersApplyState(); }, 1000);
     }
 }
 
