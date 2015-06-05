@@ -61,6 +61,12 @@ function launchUrn(urn) {
     
     _socket.emit('lmv-command', { name: 'load', value: urn });
 
+    // Uninitializing the viewer helps with stability
+    if (_viewer) {
+        _viewer.uninitialize();
+        _viewer = null;
+    }
+    
     urn = urn.ensurePrefix('urn:');
     
     Autodesk.Viewing.Document.load(
@@ -92,7 +98,11 @@ function launchUrn(urn) {
 
 
 function onCameraChange(event) {
-    var distance_to_target = _viewer.navigation.getPosition().distanceTo(_viewer.navigation.getTarget());
+    
+    // With OBJ models the target moves to keep equidistant from the camera
+    // So we just check the distance from the origin rather than the target
+    // It seems to work, anyway!
+    var distance_to_target = _viewer.navigation.getPosition().length(); //distanceTo(_viewer.navigation.getTarget());
     if (_last_distance_to_target === undefined || Math.abs(distance_to_target - _last_distance_to_target) > 0.1) {
         _socket.emit('lmv-command', { name: 'zoom', value: distance_to_target });
         _last_distance_to_target = distance_to_target;
@@ -101,7 +111,13 @@ function onCameraChange(event) {
 
 
 function onIsolate(event) {
-    _socket.emit('lmv-command', { name: 'isolate', value: event.nodeIdArray });
+    // Translate a list of objects (for R13 & R14) to a list of IDs
+    // Socket.io prefers not to have binary content to transfer, it seems
+    var ids = event.nodeIdArray;
+    if (ids.length > 0 && typeof ids[0] === 'object') {
+        ids = ids.map(function(obj) { return obj.dbId;});
+    }
+    _socket.emit('lmv-command', { name: 'isolate', value: ids });
 }
 
 

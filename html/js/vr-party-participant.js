@@ -7,7 +7,7 @@ var _deg2rad = Math.PI / 180;
 var _wasFlipped;
 var _readyToApplyEvents = false;
 var _model_state = {};
-var _orbitInitalPosition;
+var _orbitInitialPosition;
 
 
 function initialize() {
@@ -81,6 +81,16 @@ function launchViewer(urn) {
             var model = getModel(documentData);
             if (!model) return;
 
+            // Uninitializing the viewers helps with stability
+            if (_viewerLeft) {
+                _viewerLeft.uninitialize();
+                _viewerLeft = null;
+            }
+            if (_viewerRight) {
+                _viewerRight.uninitialize();
+                _viewerRight = null;
+            }
+            
             if (!_viewerLeft) {
                 _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
                 _viewerLeft.start();
@@ -145,13 +155,13 @@ function viewersApplyState() {
         var previousUpdatingRight = _updatingRight
 
         var direction = new THREE.Vector3();
-        direction.subVectors(_orbitInitalPosition, _viewerLeft.navigation.getTarget());
+        direction.subVectors(_orbitInitialPosition, _viewerLeft.navigation.getTarget());
         direction.normalize();
         direction.multiplyScalar(_model_state.zoom_factor);
         _viewerLeft.navigation.setPosition(direction.add(_viewerLeft.navigation.getTarget()));
         transferCameras(true);
 
-        _orbitInitalPosition = _viewerLeft.navigation.getPosition();
+        _orbitInitialPosition = _viewerLeft.navigation.getPosition();
 
         _updatingLeft = previousUpdatingLeft;
         _updatingRight = previousUpdatingRight;
@@ -165,7 +175,20 @@ function viewersApplyState() {
     }
 
     if (_model_state.isolate_id !== undefined) {
-        viewersApply('isolate', _model_state.isolate_id);
+        var ids = _model_state.isolate_id;
+        if ((LMV_VIEWER_VERSION === '1.2.13' || LMV_VIEWER_VERSION === '1.2.14') &&
+            ids.length > 0 && typeof ids[0] === 'number') {
+                // getNodesByIds can throw an exception when the model isn't sufficiently loaded
+                // Catch it and try to apply the viewer state again in a second
+                 try {
+                    ids = _viewerLeft.model.getNodesByIds(ids);
+                }
+                catch (ex) {
+                    setTimeout(function() { viewersApplyState(); }, 1000);
+                    return;
+                }
+            }
+        viewersApply('isolate', ids);
         _model_state.isolate_id = undefined;
     }
 
@@ -200,8 +223,8 @@ function progressListener(e) {
 
     if (_leftLoaded && _rightLoaded) {
 
-        if (!_orbitInitalPosition) {
-            _orbitInitalPosition = _viewerLeft.navigation.getPosition();
+        if (!_orbitInitialPosition) {
+            _orbitInitialPosition = _viewerLeft.navigation.getPosition();
         }
 
         unwatchProgress();
@@ -352,7 +375,7 @@ function orb(e) {
 function orbitViews(vert, horiz) {
     // We'll rotate our position based on the initial position
     // and the target will stay the same
-    var pos = _orbitInitalPosition.clone();
+    var pos = _orbitInitialPosition.clone();
     var trg = _viewerLeft.navigation.getTarget();
 
     // Start by applying the left/right orbit
