@@ -1,8 +1,33 @@
 body {
   font-family: 'Open Sans', Arial, sans-serif; !important;
   padding-top: 0px;
+  margin: 0px 200px;
+  text-align: justify;
 }
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Lato', Arial, sans-serif; !important;
   text-align: center;
+}
+
+a, a:link, a:visited, a:visited:hover, a:hover {
+  text-decoration: none;
+}
+
+a {
+  color: #006699;
+}
+
+a:hover {
+  color: #000;
+}
+
+a:active, a:hover {
+  outline: 0;
+}
+
+img {
+  margin: 50px auto;
+  display:block;
+  width: 50%;
 }
