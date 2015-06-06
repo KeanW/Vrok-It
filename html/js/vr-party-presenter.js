@@ -2,9 +2,10 @@ var _socket = io();
 var _sessionId;
 var _viewer;
 var _last_distance_to_target;
-var _view_data_bucket = 'steambuck';
+var _view_data_bucket = 'vrparty';
 var _default_models = {
     'robot arm'     : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=',
+    'ergon chair'   : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0VyZ29uLnppcA==',
     'differential'  : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0RpZmYuZHdmeA==',
     'suspension'    : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1N1c3BlbnNpb24uZHdm',
     'house'         : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2hvdXNlLmR3Zng=',
@@ -178,7 +179,6 @@ function onSection(event) {
 //
 
 function onFileSelect() {
-    $('#upload-button').html('Uploading...');
     var el = document.getElementById('fileElem');
     if (el) {
         el.click();
@@ -188,10 +188,14 @@ function onFileSelect() {
 
 function cancel() {
     $(this).dialog('close');
+    $('#upload-button').html('Upload file');
 }
 
 
 function upload() {
+
+    $('#upload-button').html('Uploading...');
+    
     var filteredForUpload = new Array();
 
     $(':checkbox').each(function() {
@@ -234,6 +238,7 @@ function initializeSelectFilesDialog() {
     var dlg = document.getElementsByName("upload-files");
 
     if (dlg.length == 0) {
+
         var dlgDiv = document.createElement("div");
         dlgDiv.id = "upload-files";
         dlgDiv.title='Uploading files';
@@ -292,8 +297,11 @@ function createCheckBox(fileName) {
     label.htmlFor = id;
     label.appendChild(document.createTextNode(fileName));
 
+    var br = document.createElement('br');
+
     $('#checkboxes').append(checkbox);
     $('#checkboxes').append(label);
+    $('#checkboxes').append(br);
 }
 
 
