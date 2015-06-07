@@ -17,7 +17,7 @@ var _default_models = {
     'column'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL3RhYmxldDIuemlw',
     'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
 };
-
+var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 //
 //  Init
 //
@@ -36,10 +36,10 @@ function initialize() {
         }
     
         var base_url = window.location.origin;
-        if (window.location.hostname === 'vr-party.herokuapp.com') {
+        if (_hosts.indexOf(window.location.hostname) > -1) {
             // Apparently some phone browsers don't like the mix of http and https
             // Default to https on Heroku deployment
-            base_url = 'https://vr-party.herokuapp.com'
+            base_url = 'https://' + window.location.hostname;
         }
     
         var url = base_url + '/participant.html?session=' + _sessionId;
