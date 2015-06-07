@@ -8,29 +8,30 @@
   </head>
   <body>
     <h1>Welcome to Vrok-it!</h1>
-    <p>
-      "Vrok" is a combination of <em>Virtual Reality Online Collaboration</em> and the verb <em>to grok</em>. Vrok-it allows you to grok a 3D model in a way that simply wasn’t possible before.
+    <p class="desc">
+      "Vrok" is a combination of <em>Virtual Reality Online Collaboration</em> and the verb <em>to grok</em>. Vrok-it allows multiple people to grok a 3D model in a way that simply wasn’t possible before.
     </p>
+    <h2>Using Vrok-it</h2>
     <p>
-      Start a Vrok-it session as a presenter and have any number of participants connect in to that session via the handy QR code. You can then guide them through the VR experience – whether in the room or remotely – making changes to the 3D design that everyone connected to the session will see, while each individual maintains their ability to view the model from the angle they choose.
+      Start a Vrok-it session as a presenter and have any number of participants connect to it via the handy QR code. You can then guide them through the VR experience – whether in the room or remotely – highlighting parts of the 3D design that everyone connected to the session will see, while each individual maintains their ability to view the model from the angle they choose. You can also upload your own models, although for best results these should be under 2MB in size.
     </p>
+    <h2>Origins</h2>
     <p>
-      Vrok-it was born in May 2015, when three software engineers from Autodesk entered a team in the VR Hackathon in San Francisco. The goal of the "VR Party" team was to enable a guide to assist someone immersed in a virtual reality, essentially curating the VR experience. The guide would perform actions that the VR participant might otherwise find cumbersome, perhaps exploding a 3D model, zooming in on it, or cutting it with a section plane. Making VR more personal and social makes it an ideal tool for communicating design information, for architectural fly-throughs, site walk-throughs and model review.
-    </p>
-    <p style="align-content:center">
-      <a href="img/team.jpg"><img src="img/team.jpg" /></a>
+      Vrok-it was born in May 2015, when three software engineers from <a href="http://autodesk.com">Autodesk</a> entered a team in the <a href="vrhackathon.com/san-francisco.html">VR Hackathon in San Francisco</a>. The goal of the "VR Party" team was to enable a guide to assist someone immersed in virtual reality, essentially curating the VR experience. The guide would perform actions that the VR participant might otherwise find cumbersome, perhaps exploding a 3D model, zooming in on it, or cutting it with a section plane. Making VR more personal and social makes it an ideal tool for communicating design information, for architectural fly-throughs, site walk-throughs and model review.
     </p>
     <p>
       The team soon realized it would be easy to allow the guide to curate the VR experience for multiple participants, much in the same way as proposed by Google Expeditions, announced just the week after at Google I/O 2015.
     </p>
+    <figure>
+      <a href="img/team.jpg"><img src="img/team.jpg" /></a>
+      <figcaption>The team behind Vrok-it is (left to right) <a href="http://twitter.com/kit3bus">Lars Schneider</a>, <a href="http://twitter.com/keanw">Kean Walmsley</a> and Oleg Dedkow.</figcaption>
+    </figure>
     <p>
       Over the following weeks the team implemented additional features, such as making it possible for people to create and manage simultaneous sessions. When launched "VR Party" became Vrok-it.
     </p>
+    <h2>Technology</h2>
     <p>
-      At its core, the project makes use of the <a href="http://developer.autodesk.com">Autodesk View & Data API</a>, a web-based infrastructure for viewing 3D models. The complete source code for Vrok-it is <a href="https://github.com/KeanW/vr-party">posted on GitHub</a>.
-    </p>
-    <p>
-      The team behind Vrok-it is <a href="http://twitter.com/keanw">Kean Walmsley</a>, <a href="http://twitter.com/kit3bus">Lars Schneider</a> and Oleg Dedkow.
+      At its core, the project makes use of the <a href="http://developer.autodesk.com">Autodesk View & Data API</a>, a web-based infrastructure for viewing 3D models, and leverages work previously <a href="http://through-the-interface.typepad.com/through_the_interface/2014/10/creating-a-stereoscopic-viewer-for-google-cardboard-using-the-autodesk-360-viewer-part-3.html">published on Kean's blog</a>. It has a <a href="http://nodejs.org">Node.js</a> back-end, with <a href="http://socket.io">Socket.io</a> handling the communication between presenter and participants. The site is hosted on <a href="http://heroku.com">Heroku</a> and the complete source code for Vrok-it is <a href="https://github.com/KeanW/vr-party">available on GitHub</a>.
     </p>
   </body>
 </html>

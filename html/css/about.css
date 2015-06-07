@@ -1,13 +1,20 @@
 body {
-  font-family: 'Open Sans', Arial, sans-serif; !important;
+  font-family: 'Open Sans', Arial, sans-serif;
   padding-top: 0px;
   margin: 0px 200px;
   text-align: justify;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Lato', Arial, sans-serif; !important;
+h1, h2, h3, h4, h5, h6, p.desc {
+  font-family: 'Lato', Arial, sans-serif;
+}
+
+h1, p.desc {
   text-align: center;
+}
+
+p.desc {
+  font-size: 22px;  
 }
 
 a, a:link, a:visited, a:visited:hover, a:hover {
@@ -27,7 +34,19 @@ a:active, a:hover {
 }
 
 img {
-  margin: 50px auto;
+  margin: 20px auto;
   display:block;
-  width: 50%;
+  width: 60%;
+  border-color: #555;
+  border-style: solid;
+  border-width: 10px;
+}
+
+figure {
+  margin: 30px;
+}
+
+figcaption {
+  font-style: italic;
+  text-align: center;
 }
