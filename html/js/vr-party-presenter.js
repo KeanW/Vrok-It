@@ -25,7 +25,7 @@ var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 
 function initialize() {
     
-    $('#aboutDiv').hide();
+    showAbout();
 
     _sessionId = getURLParameter('session');
     if (_sessionId) {        
@@ -117,15 +117,16 @@ function addButton(panel, buttonName, loadFunction) {
 
 function launchUrn(urn) {
 
-    $('#aboutDiv').hide();
-    $('#3dViewDiv').show();
-    
     // Uninitializing the viewer helps with stability
     if (_viewer) {
         _viewer = null;
     }
     
     if (urn) {
+        
+        $('#aboutDiv').hide();
+        $('#3dViewDiv').show();
+        
         _socket.emit('lmv-command', { session: _sessionId, name: 'load', value: urn });
     
         urn = urn.ensurePrefix('urn:');
@@ -159,9 +160,14 @@ function launchUrn(urn) {
     }
 }
 
-function resetSize(elem) {
-    elem.style.width = $('#3dViewDiv').width() + 'px';
-    elem.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
+function resetSize(elem, fullHeight) {
+    elem.style.width = window.innerWidth - 360 + 'px';
+    if (fullHeight) {
+        elem.style.height = ''; //(window.innerHeight - 40) + 'px';
+    }
+    else {
+        elem.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
+    }
 }
 
 
@@ -534,7 +540,13 @@ function readCookiesForCustomModel() {
 
 
 function showAbout() {
-    resetSize($('#aboutDiv')[0]);
+    resetSize($('#layer2')[0], true);
     $('#3dViewDiv').hide();
     $('#aboutDiv').show();
+}
+
+function resize() {
+    var div = $('#3dViewDiv');
+    var viewing = div.is(':visible');
+    resetSize(viewing ? _viewer.container : $('#layer2')[0], !viewing);
 }
