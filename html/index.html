@@ -15,22 +15,15 @@
         <script src="js/vr-party-common.js"></script>
         <script src="js/vr-party-presenter.js"></script>
     </head>
-    <body onload="initialize();" onunload="terminate();">
+    <body onload="initialize();" onunload="terminate();" onresize="resize();">
         <table cellpadding="10px">
             <tr>
-                <td style="width:20%;">
+                <td valign="top" style="width:300px;text-align:center;">
                     <a id="url" target="_blank" title="Scan this QR code to connect to this session from your mobile device: the browser will create a Google Cardboard-compatible 3D view"><div id="qrcode"></div></a>
                     <p class="info">Scan to connect with Google Cardboard<br/>then load a model from the list below</p>
                     <br/>
                     <input type="file" id="fileElem" style="display:none" onchange="onFilesDialogCalled(this.files);" multiple/>
                     <center>
-                        <div
-                            id="about-button"
-                            type="button"
-                            class="cmd-btn-small-x"
-                            onclick="showAbout();">About Vrok-it
-                        </div>
-                        <br />
                         <div
                             id="upload-button"
                             type="button"
@@ -46,15 +39,22 @@
                             class="cmd-btn-small-x"
                             onclick="window.location.href = window.location.origin;">New session
                         </div>
+                        <br />
+                        <div
+                            id="about-button"
+                            type="button"
+                            class="cmd-btn-small-x"
+                            onclick="showAbout();">About Vrok-it
+                        </div>
                     </center>
                 </td>
-                <td valign="top">
+                <td width="auto" valign="top">
                     <div id="layer1" class="viewLayer">
                         <div id="3dViewDiv"></div>
                     </div>
                     <div id="layer2" class="aboutLayer">
                         <div id="aboutDiv">
-                            <object class="full" type="text/html" data="about.html" ></object>
+                            <embed class="full" src="about.html"></embed>
                         </div>
                     </div>
                 </td>
