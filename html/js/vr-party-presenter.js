@@ -25,6 +25,8 @@ var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 
 function initialize() {
     
+    $('#aboutDiv').hide();
+
     _sessionId = getURLParameter('session');
     if (_sessionId) {        
         // Only generate the UI is a session ID was passed in via the URL
