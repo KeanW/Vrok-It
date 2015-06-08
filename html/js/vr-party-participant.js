@@ -29,8 +29,6 @@ function initialize() {
     
             launchFullscreen($('#layer2')[0]);
             
-            var urn = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=';
-            
             if (LMV_VIEWER_VERSION === '1.2.13') {
                 $.get(
                     window.location.origin + '/api/token',
@@ -46,7 +44,6 @@ function initialize() {
                             avp.onDemandLoading = false;
                 
                             _socket.emit('join-session', { id: _sessionId });
-                            //launchViewer(urn);
                             initConnection();
                       });
                     });
@@ -58,7 +55,6 @@ function initialize() {
                     avp.onDemandLoading = false;
         
                     _socket.emit('join-session', { id: _sessionId });
-                    //launchViewer(urn);
                     initConnection();
                 });
             }
@@ -76,52 +72,60 @@ function launchViewer(urn) {
     _updatingLeft = _updatingRight = false;
     _upVector = new THREE.Vector3(0, 1, 0);
 
-    // Remove all event listeners
-    unwatchTilt;
-    unwatchProgress();
-    unwatchCameras();
-
-    urn = urn.ensurePrefix('urn:');
+    if (urn) {
+        // Remove all event listeners
+        unwatchTilt;
+        unwatchProgress();
+        unwatchCameras();
     
-    Autodesk.Viewing.Document.load(
-        urn,
-        function(documentData) {
-            var model = getModel(documentData);
-            if (!model) return;
-
-            // Uninitializing the viewers helps with stability
-            if (_viewerLeft) {
-                _viewerLeft.uninitialize();
-                _viewerLeft = null;
+        urn = urn.ensurePrefix('urn:');
+        
+        Autodesk.Viewing.Document.load(
+            urn,
+            function(documentData) {
+                var model = getModel(documentData);
+                if (!model) return;
+    
+                // Uninitializing the viewers helps with stability
+                if (_viewerLeft) {
+                    _viewerLeft.uninitialize();
+                    _viewerLeft = null;
+                }
+                if (_viewerRight) {
+                    _viewerRight.uninitialize();
+                    _viewerRight = null;
+                }
+                
+                if (!_viewerLeft) {
+                    _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
+                    _viewerLeft.start();
+    
+                    // The settings are loaded by the 2nd viewer automatically
+                    _viewerLeft.setQualityLevel(false, false);
+                    _viewerLeft.setGroundShadow(true);
+                    _viewerLeft.setGroundReflection(false);
+                    _viewerLeft.setGhosting(false);
+                }
+    
+                if (!_viewerRight) {
+                    _viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);
+                    _viewerRight.start();
+                }
+    
+                watchProgress();
+                forceWidth(_viewerLeft);
+                loadModel(_viewerLeft, model);
+                forceWidth(_viewerRight);
+                loadModel(_viewerRight, model);
             }
-            if (_viewerRight) {
-                _viewerRight.uninitialize();
-                _viewerRight = null;
-            }
-            
-            if (!_viewerLeft) {
-                _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
-                _viewerLeft.start();
-
-                // The settings are loaded by the 2nd viewer automatically
-                _viewerLeft.setQualityLevel(false, false);
-                _viewerLeft.setGroundShadow(true);
-                _viewerLeft.setGroundReflection(false);
-                _viewerLeft.setGhosting(false);
-            }
-
-            if (!_viewerRight) {
-                _viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);
-                _viewerRight.start();
-            }
-
-            watchProgress();
-            forceWidth(_viewerLeft);
-            loadModel(_viewerLeft, model);
-            forceWidth(_viewerRight);
-            loadModel(_viewerRight, model);
-        }
-    );
+        );
+    }
+    else {
+        _viewerLeft.uninitialize();
+        _viewerRight.uninitialize();
+        _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
+        _viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);        
+    }
 }
 
 function forceWidth(viewer) {

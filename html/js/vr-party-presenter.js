@@ -18,8 +18,9 @@ var _default_models = {
     'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
 };
 var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
+
 //
-//  Init
+//  Initialize
 //
 
 function initialize() {
@@ -95,6 +96,17 @@ function initialize() {
 }
 
 
+//
+//  Terminate
+//
+
+function terminate() {
+    if (_sessionId) {
+        _socket.emit('close-session', { id: _sessionId });
+    }
+}
+
+
 function addButton(panel, buttonName, loadFunction) {
     var button = document.createElement('div');
     button.classList.add('cmd-btn-small');
@@ -152,10 +164,10 @@ function resetSize(viewer) {
     viewer.container.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
 }
 
+
 //
 //  Viewer3D events
 //
-
 
 function onCameraChange(event) {
     
