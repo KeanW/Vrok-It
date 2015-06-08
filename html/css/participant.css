@@ -4,6 +4,7 @@ html, body {
     padding: 0;
     margin: -1px;
 }
+
 .cmd-btn {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 48px;
@@ -16,11 +17,13 @@ html, body {
     padding: 15px;
     width: 350px;
 }
+
 .cmd-btn:hover {
     cursor: pointer;
     color: #fff;
     background-color: #555;
 }
+
 .layer1 {
     z-index: 2;
     margin: 3px;
@@ -31,6 +34,7 @@ html, body {
     width: 100%;
     height: 100%;
 }
+
 .layer2 {
     z-index: 1;
     position: absolute;
@@ -41,9 +45,11 @@ html, body {
     width: 100%;
     height: 100%;
 }
+
 .spacer {
     height: 10%;
 }
+
 .outer {
     position: relative;
     margin: 0;
