@@ -42,8 +42,8 @@ console.log('Listening on port ' + port + '...');
 var sessionIds = [];
 var models = [];
 var zoomFactors = [];
-var isolateIds = [];
 var explodeFactors = [];
+var isolateIds = [];
 var sectionPlanes = [];
 
 var defZoom = null;
@@ -64,6 +64,7 @@ io.on('connection', function(socket) {
         zoomFactors.unshift(defZoom);
         explodeFactors.unshift(defExplode);
         isolateIds.unshift(defIsolate);
+        sectionPlanes.unshift(defSection);
     });
     
     socket.on('join-session', function(session) {
@@ -102,11 +103,14 @@ io.on('connection', function(socket) {
             // Clear the model for participants
             emitToGroupAndLog({ session: session.id, name: 'load', value: '' });
             
+            // Clean up state
             sessionIds = sessionIds.slice(idx, 1);
             models = models.slice(idx, 1);
             zoomFactors = zoomFactors.slice(idx, 1);
             explodeFactors = explodeFactors.slice(idx, 1);
             isolateIds = isolateIds.slice(idx, 1);
+            sectionPlanes = sectionPlanes.slice(idx, 1);
+
             console.log('session closed (id=' + session.id +')');
         }
     });
