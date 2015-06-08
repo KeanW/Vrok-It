@@ -1,2 +1,2 @@
 # vr-party
-![About](html/about.html)
+![About](http://www.vrok.it/about.html)
