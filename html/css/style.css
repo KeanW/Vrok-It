@@ -8,6 +8,13 @@ body {
   position: relative;
 }
 
+p.info {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
 .cmd-btn-small, .cmd-btn-small-x {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 12px;
