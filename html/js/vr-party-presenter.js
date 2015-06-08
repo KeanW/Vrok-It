@@ -1,5 +1,6 @@
 var _socket = io();
 var _sessionId;
+var _participantUrl;
 var _viewer;
 var _last_distance_to_target;
 var _view_data_bucket = 'vrparty';
@@ -8,12 +9,12 @@ var _default_models = {
     'ergon chair'   : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0VyZ29uLnppcA==',
     'differential'  : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0RpZmYuZHdmeA==',
     'suspension'    : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1N1c3BlbnNpb24uZHdm',
-    'house'         : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2hvdXNlLmR3Zng=',
-    'flyer one'     : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0ZseWVyT25lLmR3Zng=',
-    'motorcycle'    : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL01vdG9yY3ljbGUuZHdmeA==',
+    //'house'         : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2hvdXNlLmR3Zng=',
+    //'flyer one'     : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0ZseWVyT25lLmR3Zng=',
+    //'motorcycle'    : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL01vdG9yY3ljbGUuZHdmeA==',
     'V8 engine'     : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1Y4RW5naW5lLnN0cA==',
-    'aotea'         : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2FvdGVhMy5kd2Y=',
-    'dinghy'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2RpbmdoeS5mM2Q=',
+    //'aotea'         : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2FvdGVhMy5kd2Y=',
+    //'dinghy'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2RpbmdoeS5mM2Q=',
     'column'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL3RhYmxldDIuemlw',
     'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
 };
@@ -45,10 +46,16 @@ function initialize() {
             base_url = 'https://' + window.location.hostname;
         }
     
-        var url = base_url + '/participant.html?session=' + _sessionId;
-        $('#url').attr('href', url);
-        $('#qrcode').qrcode(url);
+        _participantUrl = base_url + '/participant.html?session=' + _sessionId;
+        $('#url').attr('href', _participantUrl);
+        $('#qrcode').qrcode(_participantUrl);
+        
+        var b = $('#tweetButton');
+        
+        $('#tweetButton').attr('data-url', _participantUrl);
     
+        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
         // If the provided session exists then load its data (right now just its URN)
         $.get(
             window.location.origin + '/api/getSession/' + _sessionId,
@@ -159,6 +166,7 @@ function launchUrn(urn) {
         resetSize(_viewer.container);
     }
 }
+
 
 function resetSize(elem, fullHeight) {
     elem.style.width = window.innerWidth - 360 + 'px';
