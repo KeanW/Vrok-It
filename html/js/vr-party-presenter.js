@@ -67,11 +67,6 @@ function initialize() {
                         // but it's actually a nice way to create sessions
                         // with custom names)
                         _socket.emit('create-session', { id: _sessionId });
-
-                        //var div = $('#3dViewDiv')[0];
-                        //div.style.width = $('#3dViewDiv').width() + 'px';
-                        //div.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
-                        //div.style.backgroundColor = "#aaa";
                         
                         Autodesk.Viewing.Initializer(getViewingOptions(), function() {
                             launchUrn();
@@ -119,6 +114,9 @@ function addButton(panel, buttonName, loadFunction) {
 
 
 function launchUrn(urn) {
+
+    $('#aboutDiv').hide();
+    $('#3dViewDiv').show();
     
     // Uninitializing the viewer helps with stability
     if (_viewer) {
@@ -146,7 +144,7 @@ function launchUrn(urn) {
                 _viewer.addEventListener(Autodesk.Viewing.EXPLODE_CHANGE_EVENT, onExplode);
                 _viewer.addEventListener(Autodesk.Viewing.CUTPLANES_CHANGE_EVENT,onSection);
 
-                resetSize(_viewer);
+                resetSize(_viewer.container);
                     
                 loadModel(_viewer, model);
             }
@@ -155,13 +153,13 @@ function launchUrn(urn) {
     else {
         // Create a blank viewer on first load
         _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#3dViewDiv')[0]);
-        resetSize(_viewer);
+        resetSize(_viewer.container);
     }
 }
 
-function resetSize(viewer) {
-    viewer.container.style.width = $('#3dViewDiv').width() + 'px';
-    viewer.container.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
+function resetSize(elem) {
+    elem.style.width = $('#3dViewDiv').width() + 'px';
+    elem.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
 }
 
 
@@ -530,4 +528,11 @@ function readCookiesForCustomModel() {
             }
         }
     }
+}
+
+
+function showAbout() {
+    resetSize($('#aboutDiv')[0]);
+    $('#3dViewDiv').hide();
+    $('#aboutDiv').show();
 }
