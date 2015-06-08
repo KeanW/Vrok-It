@@ -61,13 +61,8 @@ a:hover {
   color: white;
 }
 
-.viewLayer {
-    z-index: 1;
-}
-
 .aboutLayer {
-    z-index: 2;
-    overflow: hidden;
+    text-indent: -1000px;
 }
 
 .full {

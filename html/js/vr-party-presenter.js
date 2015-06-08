@@ -1,6 +1,5 @@
 var _socket = io();
 var _sessionId;
-var _participantUrl;
 var _viewer;
 var _last_distance_to_target;
 var _view_data_bucket = 'vrparty';
@@ -26,8 +25,6 @@ var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 
 function initialize() {
     
-    showAbout();
-
     _sessionId = getURLParameter('session');
     if (_sessionId) {        
         // Only generate the UI is a session ID was passed in via the URL
@@ -46,16 +43,10 @@ function initialize() {
             base_url = 'https://' + window.location.hostname;
         }
     
-        _participantUrl = base_url + '/participant.html?session=' + _sessionId;
-        $('#url').attr('href', _participantUrl);
-        $('#qrcode').qrcode(_participantUrl);
+        var url = base_url + '/participant.html?session=' + _sessionId;
+        $('#url').attr('href', url);
+        $('#qrcode').qrcode(url);
         
-        var b = $('#tweetButton');
-        
-        $('#tweetButton').attr('data-url', _participantUrl);
-    
-        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-
         // If the provided session exists then load its data (right now just its URN)
         $.get(
             window.location.origin + '/api/getSession/' + _sessionId,
@@ -79,6 +70,8 @@ function initialize() {
                         
                         Autodesk.Viewing.Initializer(getViewingOptions(), function() {
                             launchUrn();
+                            showAbout();
+                            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
                         });
 	                }
                 }
@@ -548,6 +541,7 @@ function readCookiesForCustomModel() {
 
 
 function showAbout() {
+    $('#aboutDiv').css('text-indent', 0);
     resetSize($('#layer2')[0], true);
     $('#3dViewDiv').hide();
     $('#aboutDiv').show();
