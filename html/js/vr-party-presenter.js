@@ -117,8 +117,11 @@ function addButton(panel, buttonName, loadFunction) {
 
 function launchUrn(urn) {
 
+    var viewerToClose;
+    
     // Uninitializing the viewer helps with stability
     if (_viewer) {
+        viewerToClose = _viewer;
         _viewer = null;
     }
     
@@ -137,9 +140,6 @@ function launchUrn(urn) {
                 var model = getModel(documentData);
                 if (!model) return;
     
-                if (_viewer) {
-                    _viewer.uninitialize();
-                }
                 _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#3dViewDiv')[0]);
                 _viewer.start();
                 _viewer.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, onCameraChange);
@@ -149,6 +149,10 @@ function launchUrn(urn) {
 
                 resetSize(_viewer.container);
                     
+                if (viewerToClose) {
+                    viewerToClose.uninitialize();
+                }
+                
                 loadModel(_viewer, model);
             }
         );
