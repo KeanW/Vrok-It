@@ -1,8 +1,12 @@
 body {
-  font-family: 'Merriweather', Helvetica, serif;
+  font-family: 'Merriweather', Times, serif;
   padding-top: 0px;
   margin: 0px 100px;
   text-align: justify;
+}
+
+p {
+  line-height: 170%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -15,6 +19,7 @@ h1, p.desc {
 
 p.desc {
   font-size: 22px;  
+  line-height: 150%;
 }
 
 a, a:link, a:visited, a:visited:hover, a:hover {
@@ -53,16 +58,19 @@ figcaption {
 
 .container {
     position: relative;
-    width: 100%;
+    left: 10%;
+    width: 80%;
     height: 0;
-    padding-bottom: 56.25%;
+    padding-bottom: 45%;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .video {
     position: absolute;
-    top: 0;
-    left: 10%;
-    width: 80%;
-    height: 80%;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
     box-shadow: 8px 8px 4px #888888;
 }
