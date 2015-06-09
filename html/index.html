@@ -19,7 +19,7 @@
     <body onload="initialize();" onunload="terminate();" onresize="resize();">
         <table cellpadding="10px">
             <tr>
-                <td valign="top" style="width:300px;text-align:center;">
+                <td valign="top" style="min-width:300px;text-align:center;">
                     <a id="url" target="_blank" title="Scan this QR code to connect to this session from your mobile device: the browser will create a Google Cardboard-compatible 3D view"><div id="qrcode"></div></a>
                     <p class="info">Scan to connect with Google Cardboard<br/>then load a model from the list below</p>
                     <br/>
@@ -51,7 +51,7 @@
                         <a id="tweetButton" href="https://twitter.com/share" class="twitter-share-button" data-url="http://vrok.it" data-text="Vrok a 3D model, online with your friends!" data-size="large" data-hashtags="Vrok-it,VR,WebVR" data-dnt="true">Tweet this</a>
                     </center>
                 </td>
-                <td width="auto" valign="top">
+                <td valign="top">
                     <div id="layer1">
                         <div id="3dViewDiv"></div>
                     </div>

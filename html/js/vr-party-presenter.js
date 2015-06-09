@@ -547,8 +547,10 @@ function showAbout() {
     $('#aboutDiv').show();
 }
 
-function resize() {
+// Prevent resize from being called too frequently
+// (might want to adjust the timeout from 50ms)
+var resize = debounce(function() {
     var div = $('#3dViewDiv');
     var viewing = div.is(':visible');
     resetSize(viewing ? _viewer.container : $('#layer2')[0], !viewing);
-}
+}, 50);
