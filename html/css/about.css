@@ -1,11 +1,11 @@
 body {
-  font-family: 'Open Sans', Arial, sans-serif;
+  font-family: 'Merriweather', Helvetica, serif;
   padding-top: 0px;
   margin: 0px 100px;
   text-align: justify;
 }
 
-h1, h2, h3, h4, h5, h6, p.desc {
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Lato', Arial, sans-serif;
 }
 
