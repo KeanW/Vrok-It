@@ -71,6 +71,7 @@ function launchViewer(urn) {
     _leftLoaded = _rightLoaded = false;
     _updatingLeft = _updatingRight = false;
     _upVector = new THREE.Vector3(0, 1, 0);
+    _orbitInitialPosition = null;
 
     if (urn) {
         // Remove all event listeners
