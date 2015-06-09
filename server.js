@@ -77,7 +77,7 @@ io.on('connection', function(socket) {
             
             if (models[idx]) {
                 // Bring this user up to speed with the state of the session
-                emitAndLog(socket, { name: 'load', value: models[idx] });
+                emitDirectAndLog(socket, { name: 'load', value: models[idx] });
                 if (zoomFactors[idx] !== defZoom) {
                     emitDirectAndLog(socket, { name: 'zoom', value: zoomFactors[idx] });
                 }
