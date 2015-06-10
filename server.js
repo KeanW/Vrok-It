@@ -44,11 +44,15 @@ var models = [];
 var zoomFactors = [];
 var explodeFactors = [];
 var isolateIds = [];
+var hideIds = [];
+var showIds = [];
 var sectionPlanes = [];
 
 var defZoom = null;
 var defExplode = 0;
 var defIsolate = [];
+var defHide = [];
+var defShow = [];
 var defSection = [];
 
 // WEB SOCKETS
@@ -64,13 +68,15 @@ io.on('connection', function(socket) {
         zoomFactors.unshift(defZoom);
         explodeFactors.unshift(defExplode);
         isolateIds.unshift(defIsolate);
+        hideIds.unshift(defHide);
+        showIds.unshift(defShow);
         sectionPlanes.unshift(defSection);
     });
     
     socket.on('join-session', function(session) {
         console.log('user joined session (id=' + session.id +')');
         var idx = sessionIds.indexOf(session.id);
-        if (idx >= 0) {
+        if (idx > -1) {
             
             // Add our user to the room for this session
             socket.join(session.id);
@@ -87,6 +93,12 @@ io.on('connection', function(socket) {
                 if (isolateIds[idx] !== defIsolate) {
                     emitDirectAndLog(socket, { name: 'isolate', value: isolateIds[idx] });
                 }
+                if (hideIds[idx] !== defHide) {
+                    emitDirectAndLog(socket, { name: 'hide', value: hideIds[idx] });
+                }
+                if (showIds[idx] !== defShow) {
+                    emitDirectAndLog(socket, { name: 'show', value: showIds[idx] });
+                }
                 if (sectionPlanes[idx] !== defSection) {
                     emitDirectAndLog(socket, { name: 'section', value: sectionPlanes[idx] });
                 }
@@ -99,17 +111,19 @@ io.on('connection', function(socket) {
 
     socket.on('close-session', function(session) {        
         var idx = sessionIds.indexOf(session.id);
-        if (idx >= 0) {
+        if (idx > -1) {
             // Clear the model for participants
             emitToGroupAndLog({ session: session.id, name: 'load', value: '' });
             
             // Clean up state
-            sessionIds = sessionIds.slice(idx, 1);
-            models = models.slice(idx, 1);
-            zoomFactors = zoomFactors.slice(idx, 1);
-            explodeFactors = explodeFactors.slice(idx, 1);
-            isolateIds = isolateIds.slice(idx, 1);
-            sectionPlanes = sectionPlanes.slice(idx, 1);
+            sessionIds.splice(idx, 1);
+            models.splice(idx, 1);
+            zoomFactors.splice(idx, 1);
+            explodeFactors.splice(idx, 1);
+            isolateIds.splice(idx, 1);
+            hideIds.splice(idx, 1);
+            showIds.splice(idx, 1);
+            sectionPlanes.splice(idx, 1);
 
             console.log('session closed (id=' + session.id +')');
         }
@@ -121,19 +135,21 @@ io.on('connection', function(socket) {
 
     socket.on('lmv-command', function(command) {
         var idx = sessionIds.indexOf(command.session);
-        if (idx >= 0) {
+        if (idx > -1) {
             if (command.name === 'load') {
                 // Create our default settings for the model
                 models[idx] = command.value;
                 zoomFactors[idx] = defZoom;
                 explodeFactors[idx] = defExplode;
                 isolateIds[idx] = defIsolate;
+                hideIds[idx] = defHide;
+                showIds[idx] = defShow;
                 sectionPlanes[idx] = defSection;
 
                 // Emit the load command
                 emitToGroupAndLog(command);
 
-                // Emit the defaults to the group participants                
+                // Emit the defaults to the group participants (no need for hide/show)
                 emitToGroupAndLog({ session: command.session, name: 'zoom', value: defZoom });
                 emitToGroupAndLog({ session: command.session, name: 'explode', value: defExplode });
                 emitToGroupAndLog({ session: command.session, name: 'isolate', value: defIsolate });
@@ -148,6 +164,18 @@ io.on('connection', function(socket) {
                 }
                 else if (command.name === 'isolate') {
                     isolateIds[idx] = command.value;
+                    if (command.value == defIsolate) {
+                        hideIds[idx] = defHide;
+                        showIds[idx] = defShow;
+                    }
+                }
+                else if (command.name === 'hide') {
+                    hideIds[idx] = hideIds[idx].concat(command.value);
+                    showIds[idx] = stripIds(showIds[idx], command.value);
+                }
+                else if (command.name === 'show') {
+                    showIds[idx] = showIds[idx].concat(command.value);
+                    hideIds[idx] = stripIds(hideIds[idx], command.value);
                 }
                 else if (command.name === 'section') {
                     sectionPlanes[idx] = command.value;
@@ -160,6 +188,16 @@ io.on('connection', function(socket) {
         }
     });
 });
+
+function stripIds(existing, ids) {
+    for (var i = 0; i < ids.length; i++) {
+        var idx = existing.indexOf(ids[i]);
+        if (idx > -1) {
+            existing.splice(idx, 1);
+        }
+    }
+    return existing;
+}
 
 function emitDirectAndLog(socket, command) {
     socket.emit('lmv-command', command);

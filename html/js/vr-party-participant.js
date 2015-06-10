@@ -145,7 +145,13 @@ function initConnection() {
             _model_state.explode_factor = parseFloat(msg.value);
         }
         else if (msg.name === 'isolate') {
-            _model_state.isolate_id = msg.value;
+            _model_state.isolate_ids = msg.value;
+        }
+        else if (msg.name === 'hide') {
+            _model_state.hide_ids = msg.value;
+        }
+        else if (msg.name === 'show') {
+            _model_state.show_ids = msg.value;
         }
         else if (msg.name == 'section') {
             _model_state.cut_planes = msg.value.map(function(vec) {
@@ -190,6 +196,8 @@ function viewersApplyState() {
         if (_lastVert && _lastHoriz) {
             orbitViews(_lastVert, _lastHoriz);
         }
+
+        console.log('Applied zoom');
             
         watchTilt();
     }
@@ -197,32 +205,46 @@ function viewersApplyState() {
     if (_model_state.explode_factor !== undefined) {
         viewersApply('explode', _model_state.explode_factor);
         _model_state.explode_factor = undefined;
+        console.log('Applied explode');
     }
 
-    if (_model_state.isolate_id !== undefined) {
-        var isolate_not_ready = false;        
-        var ids = _model_state.isolate_id;
-        if ((LMV_VIEWER_VERSION === '1.2.13' || LMV_VIEWER_VERSION === '1.2.14') &&
-            ids.length > 0 && typeof ids[0] === 'number') {
-                // getNodesByIds can throw an exception when the model isn't sufficiently loaded
-                // Catch it and try to apply the viewer state again in a second
-                 try {
-                    ids = _viewerLeft.model.getNodesByIds(ids);
-                }
-                catch (ex) {
-                    isolate_not_ready = true;
-                }
-            }
-        if (!isolate_not_ready) {
-            viewersApply('isolate', ids);
-            _model_state.isolate_id = undefined;
+    if (_model_state.isolate_ids !== undefined) {
+        var worked = tryToApplyIds('isolate', _model_state.isolate_ids);
+        if (worked) {
+            _model_state.isolate_ids = undefined;
+            console.log('Applied isolate');
         }
-        not_ready = not_ready || isolate_not_ready;
+        else
+            console.log('Not ready to isolate');
+        not_ready = not_ready || !worked;
+    }
+
+    if (!not_ready && _model_state.show_ids !== undefined) {
+        var worked = tryToApplyIds('show', _model_state.show_ids);
+        if (worked) {
+            _model_state.show_ids = undefined;
+            console.log('Applied show');
+        }
+        else
+            console.log('Not ready to show');
+        not_ready = not_ready || !worked;
+    }
+
+    if (!not_ready && _model_state.hide_ids !== undefined) {
+        var worked = tryToApplyIds('hide', _model_state.hide_ids);
+        if (worked) {
+            _model_state.hide_ids = undefined;
+            console.log('Applied hide');
+        }
+        else
+            console.log('Not ready to hide');
+        not_ready = not_ready || !worked;
     }
 
     if (_model_state.cut_planes !== undefined) {
         viewersApply('setCutPlanes', _model_state.cut_planes);
         _model_state.cut_planes = undefined;
+        console.log('Applied section');
     }
 
     if (not_ready) {
@@ -231,12 +253,38 @@ function viewersApplyState() {
 }
 
 
+function tryToApplyIds(prop, ids) {
+    var success = true;        
+    if ((LMV_VIEWER_VERSION === '1.2.13' || LMV_VIEWER_VERSION === '1.2.14') &&
+        ids.length > 0 && typeof ids[0] === 'number') {
+
+        // getNodesByIds can throw an exception when the model isn't sufficiently loaded
+        // Catch it and try to apply the viewer state again in a second
+         try {
+            ids = _viewerLeft.model.getNodesByIds(ids);
+        }
+        catch (ex) {
+            success = false;
+        }
+    }
+    if (success) {
+        try {
+            viewersApply(prop, ids);
+        }
+        catch (ex) {
+            success = false;
+        }
+    }
+    return success;
+}
+
+
 function viewersApply(func){
-    if (_viewerLeft && _viewerRight && _leftLoaded && _rightLoaded) {
+    //if (_viewerLeft && _viewerRight && _leftLoaded && _rightLoaded) {
         var val = Array.prototype.slice.call(arguments, 1);
         _viewerLeft[func].apply(_viewerLeft, val);
         _viewerRight[func].apply(_viewerRight, val);
-    }
+    //}
 }
 
 
@@ -246,20 +294,46 @@ function viewersApply(func){
 function progressListener(e) {
     if (e.percent >= 10) {
         if (e.target.clientContainer.id === 'viewerLeft') {
-            _leftLoaded = true;
+            _viewerLeft.model.getObjectTree(
+                function() {
+                    _leftLoaded = true;
+                    console.log('Left has an instance tree');
+                    finishProgress();
+                },
+                function() {
+                    _leftLoaded = false;
+                    console.log('Cannot get left instance tree');
+                }
+            );
+            _viewerLeft.removeEventListener('progress', progressListener);
         }
         else if (e.target.clientContainer.id === 'viewerRight') {
-            _rightLoaded = true;
+            _viewerRight.model.getObjectTree(
+                function() {
+                    _rightLoaded = true;
+                    console.log('Right has an instance tree');
+                    finishProgress();
+                },
+                function() {
+                    _rightLoaded = false;
+                    console.log('Cannot get right instance tree');
+                }
+            );
+            _viewerRight.removeEventListener('progress', progressListener);
         }
     }
+}
 
+
+function finishProgress() {
+    
     if (_leftLoaded && _rightLoaded) {
 
         if (!_orbitInitialPosition) {
             _orbitInitialPosition = _viewerLeft.navigation.getPosition();
         }
 
-        unwatchProgress();
+        //unwatchProgress();
         watchCameras();
         watchTilt();
 

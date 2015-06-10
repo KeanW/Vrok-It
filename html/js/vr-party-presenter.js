@@ -144,6 +144,8 @@ function launchUrn(urn) {
                 _viewer.start();
                 _viewer.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, onCameraChange);
                 _viewer.addEventListener(Autodesk.Viewing.ISOLATE_EVENT, onIsolate);
+                _viewer.addEventListener(Autodesk.Viewing.HIDE_EVENT, onHide);
+                _viewer.addEventListener(Autodesk.Viewing.SHOW_EVENT, onShow);
                 _viewer.addEventListener(Autodesk.Viewing.EXPLODE_CHANGE_EVENT, onExplode);
                 _viewer.addEventListener(Autodesk.Viewing.CUTPLANES_CHANGE_EVENT,onSection);
 
@@ -193,14 +195,27 @@ function onCameraChange(event) {
 }
 
 
-function onIsolate(event) {
-    // Translate a list of objects (for R13 & R14) to a list of IDs
-    // Socket.io prefers not to have binary content to transfer, it seems
-    var ids = event.nodeIdArray;
+// Translate a list of objects (for R13 & R14) to a list of IDs
+// Socket.io prefers not to have binary content to transfer, it seems
+function getIdList(ids) {
     if (ids.length > 0 && typeof ids[0] === 'object') {
-        ids = ids.map(function(obj) { return obj.dbId;});
+       ids = ids.map(function(obj) { return obj.dbId;});
     }
-    _socket.emit('lmv-command', { session: _sessionId, name: 'isolate', value: ids });
+    return ids;
+}
+
+function onIsolate(event) {
+    _socket.emit('lmv-command', { session: _sessionId, name: 'isolate', value: getIdList(event.nodeIdArray) });
+}
+
+
+function onHide(event) {
+    _socket.emit('lmv-command', { session: _sessionId, name: 'hide', value: getIdList(event.nodeIdArray) });
+}
+
+
+function onShow(event) {
+    _socket.emit('lmv-command', { session: _sessionId, name: 'show', value: getIdList(event.nodeIdArray) });
 }
 
 
