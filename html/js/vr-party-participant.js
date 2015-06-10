@@ -39,19 +39,22 @@ function connect() {
             window.location.origin + '/api/token',
             function (accessTokenResponse) {
         
-              var options = {};
-              options.env = 'AutodeskProduction';
-              options.accessToken = accessTokenResponse.access_token;
-              options.document = urn;
-              Autodesk.Viewing.Initializer(options, function() {
+                var options = {};
+                options.env = 'AutodeskProduction';
+                options.accessToken = accessTokenResponse.access_token;
+                Autodesk.Viewing.Initializer(options, function() {
                     var avp = Autodesk.Viewing.Private;
                     avp.GPU_OBJECT_LIMIT = 100000;
                     avp.onDemandLoading = false;
         
+                    showMessage('Waiting...');
+        
                     _socket.emit('join-session', { id: _sessionId });
+                    
                     initConnection();
-              });
-            });
+                });
+            }
+        );
     }
     else {
         Autodesk.Viewing.Initializer(getViewingOptions(), function() {
@@ -59,13 +62,30 @@ function connect() {
             avp.GPU_OBJECT_LIMIT = 100000;
             avp.onDemandLoading = false;
 
+            showMessage('Waiting...');
+
             _socket.emit('join-session', { id: _sessionId });
+
             initConnection();
         });
     }
 }
 
-       
+
+function showMessage(text) {
+    $('#layer2').hide();
+    $('#messageLeft').html(text);    
+    $('#messageRight').html(text);    
+    $('#layer3').show();
+}
+
+
+function clearMessage() {
+    $('#layer3').hide();
+    $('#layer2').show();
+}
+
+
 function launchViewer(urn) {
     _baseDir = null;
     _leftLoaded = _rightLoaded = false;
@@ -79,6 +99,8 @@ function launchViewer(urn) {
         unwatchProgress();
         unwatchCameras();
     
+        clearMessage();
+        
         urn = urn.ensurePrefix('urn:');
         
         Autodesk.Viewing.Document.load(
@@ -122,6 +144,9 @@ function launchViewer(urn) {
         );
     }
     else {
+                
+        showMessage('Disconnected');
+        
         _viewerLeft.uninitialize();
         _viewerRight.uninitialize();
         _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
@@ -136,7 +161,7 @@ function forceWidth(viewer) {
 function initConnection() {
     _socket.on('lmv-command', function(msg) {
         if (msg.name === 'load') {
-            launchViewer(msg.value);
+            launchViewer(msg.value, msg.disconnecting);
         }
         else if (msg.name === 'zoom') {
             _model_state.zoom_factor = parseFloat(msg.value);

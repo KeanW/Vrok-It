@@ -168,9 +168,9 @@ function launchUrn(urn) {
 
 
 function resetSize(elem, fullHeight) {
-    elem.style.width = window.innerWidth - 360 + 'px';
+    elem.style.width = window.innerWidth - 360 + 'px'; // subtract the left column
     if (fullHeight) {
-        elem.style.height = ''; //(window.innerHeight - 40) + 'px';
+        elem.style.height = '';
     }
     else {
         elem.style.height = (window.innerHeight - 40) + 'px'; // subtract the table padding
@@ -565,6 +565,7 @@ function showAbout() {
     $('#3dViewDiv').hide();
     $('#aboutDiv').show();
 }
+
 
 // Prevent resize from being called too frequently
 // (might want to adjust the timeout from 50ms)
