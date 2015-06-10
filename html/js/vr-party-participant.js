@@ -22,50 +22,50 @@ function initialize() {
         button.classList.add('cmd-btn');
     
         button.innerHTML = buttonName;
-        button.onclick = (function (buttonName) {
-            return function() { buttonName(); };
-        })(function() {
-            $('#layer1').hide();
-    
-            launchFullscreen($('#layer2')[0]);
+        button.onclick = connect;
             
-            if (LMV_VIEWER_VERSION === '1.2.13') {
-                $.get(
-                    window.location.origin + '/api/token',
-                    function (accessTokenResponse) {
-                
-                      var options = {};
-                      options.env = 'AutodeskProduction';
-                      options.accessToken = accessTokenResponse.access_token;
-                      options.document = urn;
-                      Autodesk.Viewing.Initializer(options, function() {
-                            var avp = Autodesk.Viewing.Private;
-                            avp.GPU_OBJECT_LIMIT = 100000;
-                            avp.onDemandLoading = false;
-                
-                            _socket.emit('join-session', { id: _sessionId });
-                            initConnection();
-                      });
-                    });
-            }
-            else {
-                Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+        panel.appendChild(button);
+    }
+}
+
+
+function connect() {
+    $('#layer1').hide();
+
+    launchFullscreen($('#layer2')[0]);
+    
+    if (LMV_VIEWER_VERSION === '1.2.13') {
+        $.get(
+            window.location.origin + '/api/token',
+            function (accessTokenResponse) {
+        
+              var options = {};
+              options.env = 'AutodeskProduction';
+              options.accessToken = accessTokenResponse.access_token;
+              options.document = urn;
+              Autodesk.Viewing.Initializer(options, function() {
                     var avp = Autodesk.Viewing.Private;
                     avp.GPU_OBJECT_LIMIT = 100000;
                     avp.onDemandLoading = false;
         
                     _socket.emit('join-session', { id: _sessionId });
                     initConnection();
-                });
-            }
+              });
+            });
+    }
+    else {
+        Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+            var avp = Autodesk.Viewing.Private;
+            avp.GPU_OBJECT_LIMIT = 100000;
+            avp.onDemandLoading = false;
+
+            _socket.emit('join-session', { id: _sessionId });
+            initConnection();
         });
-    
-        panel.appendChild(button);
-        panel.appendChild(document.createTextNode('\u00a0'));
     }
 }
 
-
+       
 function launchViewer(urn) {
     _baseDir = null;
     _leftLoaded = _rightLoaded = false;
@@ -294,11 +294,11 @@ function viewersApply(func){
 function progressListener(e) {
     if (e.percent >= 10) {
         if (e.target.clientContainer.id === 'viewerLeft') {
-            _viewerLeft.model.getObjectTree(
+            _viewerLeft.getObjectTree(
                 function() {
                     _leftLoaded = true;
                     console.log('Left has an instance tree');
-                    finishProgress();
+                    setTimeout(finishProgress, 100);
                 },
                 function() {
                     _leftLoaded = false;
@@ -308,11 +308,11 @@ function progressListener(e) {
             _viewerLeft.removeEventListener('progress', progressListener);
         }
         else if (e.target.clientContainer.id === 'viewerRight') {
-            _viewerRight.model.getObjectTree(
+            _viewerRight.getObjectTree(
                 function() {
                     _rightLoaded = true;
                     console.log('Right has an instance tree');
-                    finishProgress();
+                    setTimeout(finishProgress, 100);
                 },
                 function() {
                     _rightLoaded = false;
