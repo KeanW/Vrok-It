@@ -145,7 +145,13 @@ function initConnection() {
             _model_state.explode_factor = parseFloat(msg.value);
         }
         else if (msg.name === 'isolate') {
-            _model_state.isolate_id = msg.value;
+            _model_state.isolate_ids = msg.value;
+        }
+        else if (msg.name === 'hide') {
+            _model_state.hide_ids = msg.value;
+        }
+        else if (msg.name === 'show') {
+            _model_state.show_ids = msg.value;
         }
         else if (msg.name == 'section') {
             _model_state.cut_planes = msg.value.map(function(vec) {
@@ -199,25 +205,28 @@ function viewersApplyState() {
         _model_state.explode_factor = undefined;
     }
 
-    if (_model_state.isolate_id !== undefined) {
-        var isolate_not_ready = false;        
-        var ids = _model_state.isolate_id;
-        if ((LMV_VIEWER_VERSION === '1.2.13' || LMV_VIEWER_VERSION === '1.2.14') &&
-            ids.length > 0 && typeof ids[0] === 'number') {
-                // getNodesByIds can throw an exception when the model isn't sufficiently loaded
-                // Catch it and try to apply the viewer state again in a second
-                 try {
-                    ids = _viewerLeft.model.getNodesByIds(ids);
-                }
-                catch (ex) {
-                    isolate_not_ready = true;
-                }
-            }
-        if (!isolate_not_ready) {
-            viewersApply('isolate', ids);
-            _model_state.isolate_id = undefined;
+    if (_model_state.isolate_ids !== undefined) {
+        var did_not_work = tryToApplyIds('isolate', _model_state.isolate_ids);
+        if (!did_not_work) {
+            _model_state.isolate_ids = undefined;
         }
-        not_ready = not_ready || isolate_not_ready;
+        not_ready = not_ready || did_not_work;
+    }
+
+    if (!not_ready && _model_state.show_ids !== undefined) {
+        var did_not_work = tryToApplyIds('show', _model_state.show_ids);
+        if (!did_not_work) {
+            _model_state.show_ids = undefined;
+        }
+        not_ready = not_ready || did_not_work;
+    }
+
+    if (!not_ready && _model_state.hide_ids !== undefined) {
+        var did_not_work = tryToApplyIds('hide', _model_state.hide_ids);
+        if (!did_not_work) {
+            _model_state.hide_ids = undefined;
+        }
+        not_ready = not_ready || did_not_work;
     }
 
     if (_model_state.cut_planes !== undefined) {
@@ -228,6 +237,32 @@ function viewersApplyState() {
     if (not_ready) {
         setTimeout(function() { viewersApplyState(); }, 1000);
     }
+}
+
+
+function tryToApplyIds(prop, ids) {
+    var viewer_not_ready = false;        
+    if ((LMV_VIEWER_VERSION === '1.2.13' || LMV_VIEWER_VERSION === '1.2.14') &&
+        ids.length > 0 && typeof ids[0] === 'number') {
+
+        // getNodesByIds can throw an exception when the model isn't sufficiently loaded
+        // Catch it and try to apply the viewer state again in a second
+         try {
+            ids = _viewerLeft.model.getNodesByIds(ids);
+        }
+        catch (ex) {
+            viewer_not_ready = true;
+        }
+    }
+    if (!viewer_not_ready) {
+        try {
+            viewersApply(prop, ids);
+        }
+        catch (ex) {
+            viewer_not_ready = true;
+        }
+    }
+    return viewer_not_ready;
 }
 
 
