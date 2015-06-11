@@ -23,15 +23,46 @@ html, body {
     position:absolute; 
  }
 
-.message {
-    font-size: 18px;
-    color: #555;
+.message1, .message2 {
+    font-size: 30px;
+    color: #888;
     background: transparent;
     text-transform: uppercase;
     text-align: center;
     top: 50%;
     width: 50%;
     position: absolute; 
+}
+
+.message1 {
+    text-shadow: -0.03em 0 #333
+}
+
+.message2 {
+    text-shadow: 0.03em 0 #333
+}
+
+.blink {
+  -webkit-animation: blink 2s step-end infinite;
+  -moz-animation: blink 2s step-end infinite;
+  -o-animation: blink 2s step-end infinite;
+  animation: blink 2s step-end infinite;
+}
+ 
+@-webkit-keyframes blink {
+  67% { opacity: 0 }
+}
+ 
+@-moz-keyframes blink {
+  67% { opacity: 0 }
+}
+ 
+@-o-keyframes blink {
+  67% { opacity: 0 }
+}
+ 
+@keyframes blink {
+  67% { opacity: 0 }
 }
 
 .control {
