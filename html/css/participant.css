@@ -24,7 +24,7 @@ html, body {
  }
 
 .message1, .message2 {
-    font-size: 30px;
+    font-size: 26px;
     color: #888;
     background: transparent;
     text-transform: uppercase;
@@ -35,11 +35,11 @@ html, body {
 }
 
 .message1 {
-    text-shadow: -0.03em 0 #333
+    text-shadow: -0.035em 0 #333
 }
 
 .message2 {
-    text-shadow: 0.03em 0 #333
+    text-shadow: 0.035em 0 #333
 }
 
 .blink {

@@ -72,10 +72,13 @@ function connect() {
 }
 
 
-function showMessage(text) {
+function showMessage(text, removeBlink) {
     $('#layer2').hide();
-    $('#messageLeft').html(text);    
-    $('#messageRight').html(text);    
+    var messages = $('#messageLeft,#messageRight');
+    if (removeBlink) {
+        messages.removeClass('blink');
+    }
+    messages.html(text);    
     $('#layer3').show();
 }
 
@@ -145,7 +148,7 @@ function launchViewer(urn) {
     }
     else {
                 
-        showMessage('Disconnected');
+        showMessage('Disconnected', true);
         
         _viewerLeft.uninitialize();
         _viewerRight.uninitialize();

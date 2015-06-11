@@ -106,6 +106,7 @@ io.on('connection', function(socket) {
         }
         else {
             console.log('could not find session (id=' + session.id +')');
+            emitDirectAndLog(socket, { name: 'load' });
         }
     });
 
