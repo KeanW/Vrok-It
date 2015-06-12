@@ -67,9 +67,9 @@ function initialize() {
                         // but it's actually a nice way to create sessions
                         // with custom names)
                         _socket.emit('create-session', { id: _sessionId });
-                        
+
+                        // Initialize viewing but don't start a viewer                        
                         Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-                            launchUrn();
                             showAbout();
                             !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
                         });
