@@ -114,11 +114,11 @@ function launchViewer(urn) {
     
                 // Uninitializing the viewers helps with stability
                 if (_viewerLeft) {
-                    _viewerLeft.uninitialize();
+                    _viewerLeft.finish();
                     _viewerLeft = null;
                 }
                 if (_viewerRight) {
-                    _viewerRight.uninitialize();
+                    _viewerRight.finish();
                     _viewerRight = null;
                 }
                 

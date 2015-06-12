@@ -152,7 +152,7 @@ function launchUrn(urn) {
                 resetSize(_viewer.container);
                     
                 if (viewerToClose) {
-                    viewerToClose.uninitialize();
+                    viewerToClose.finish();
                 }
                 
                 loadModel(_viewer, model);
