@@ -15,7 +15,8 @@ var _default_models = {
     //'aotea'         : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2FvdGVhMy5kd2Y=',
     //'dinghy'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2RpbmdoeS5mM2Q=',
     'column'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL3RhYmxldDIuemlw',
-    'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
+    'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA=',
+    'cake'          : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9IQkM0LmR3Zng='
 };
 var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 
@@ -27,7 +28,7 @@ function initialize() {
     
     _sessionId = getURLParameter('session');
     if (_sessionId) {        
-        // Only generate the UI is a session ID was passed in via the URL
+        // Only generate the UI if a session ID was passed in via the URL
 
         // Populate our initial UI with a set of buttons, one for each function in the Buttons object
         var panel = document.getElementById('control');
