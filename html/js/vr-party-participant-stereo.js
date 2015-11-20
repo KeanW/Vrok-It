@@ -130,10 +130,10 @@ function launchViewer(urn) {
                     _viewerLeft.setQualityLevel(false, false);
                     _viewerLeft.setGroundShadow(true);
                     _viewerLeft.setGroundReflection(false);
-                    //_viewerLeft.setGhosting(true);
+                    _viewerLeft.setGhosting(true);
                     _viewerLeft.setProgressiveRendering(false);
                     _viewerLeft.loadExtension('Autodesk.VR');
-                    //_viewerLeft.setActiveNavigationTool('vr');
+                    _viewerLeft.setActiveNavigationTool('vr');
                     //_viewerLeft.displayViewCube(false);                
                 }    
                 if (!_viewerRight) {
