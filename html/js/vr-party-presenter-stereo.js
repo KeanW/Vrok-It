@@ -21,10 +21,6 @@ var _default_models = {
 };
 var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 //
 //  Initialize
 //
