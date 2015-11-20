@@ -87,7 +87,7 @@ function initialize() {
             window.location.origin + '/api/sessionId',
             function(res) {
                 _sessionId = res;
-                window.location.href = window.location.origin + "?session=" + _sessionId;
+                window.location.href = window.location.origin + "index2.html?session=" + _sessionId;
                 //window.location.replace(window.location.origin + "?session=" + _sessionId);
             }
         );    
