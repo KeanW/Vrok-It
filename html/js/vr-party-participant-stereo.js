@@ -123,7 +123,8 @@ function launchViewer(urn) {
                 }
                 
                 if (!_viewerLeft) {
-                    _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
+                    _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0]);
+                    //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
                     _viewerLeft.start();
     
                     // The settings are loaded by the 2nd viewer automatically
@@ -137,7 +138,8 @@ function launchViewer(urn) {
                     //_viewerLeft.displayViewCube(false);                
                 }    
                 if (!_viewerRight) {
-                    _viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);
+                    _viewerRight = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerRight')[0]);
+                    //_viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);
                     _viewerRight.start();
                 }
     
