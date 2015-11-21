@@ -135,7 +135,7 @@ function launchViewer(urn) {
                     _viewerLeft.setProgressiveRendering(false);
                     _viewerLeft.loadExtension('Autodesk.VR');
                     //_viewerLeft.displayViewCube(false); 
-                    _viewerLeft.setActiveNavigationTool('vr');
+                    //_viewerLeft.setActiveNavigationTool('vr');
                 }
                 /*
                 if (!_viewerRight) {
