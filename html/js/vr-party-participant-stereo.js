@@ -125,7 +125,7 @@ function launchViewer(urn) {
                 if (!_viewerLeft) {
                     _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0]);
                     //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
-                    _viewerLeft.start();
+                    _viewerLeft.initialize();
     
                     // The settings are loaded by the 2nd viewer automatically
                     _viewerLeft.setQualityLevel(false, false);
