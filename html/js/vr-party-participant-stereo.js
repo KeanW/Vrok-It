@@ -134,8 +134,8 @@ function launchViewer(urn) {
                     _viewerLeft.setGhosting(true);
                     _viewerLeft.setProgressiveRendering(false);
                     _viewerLeft.loadExtension('Autodesk.VR');
-                    _viewerLeft.setActiveNavigationTool('vr');
-                    _viewerLeft.displayViewCube(false);                
+                    _viewerLeft.displayViewCube(false); 
+                    //_viewerLeft.setActiveNavigationTool('vr');
                 }    
                 if (!_viewerRight) {
                     _viewerRight = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerRight')[0]);
