@@ -136,18 +136,20 @@ function launchViewer(urn) {
                     _viewerLeft.loadExtension('Autodesk.VR');
                     //_viewerLeft.displayViewCube(false); 
                     //_viewerLeft.setActiveNavigationTool('vr');
-                }    
+                }
+                /*
                 if (!_viewerRight) {
                     _viewerRight = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerRight')[0]);
                     //_viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);
                     _viewerRight.start();
                 }
-    
+                */
+       
                 watchProgress();
-                forceWidth(_viewerLeft);
+                //forceWidth(_viewerLeft);
                 loadModel(_viewerLeft, model);
-                forceWidth(_viewerRight);
-                loadModel(_viewerRight, model);
+                //forceWidth(_viewerRight);
+                //loadModel(_viewerRight, model);
             }
         );
     }
@@ -156,9 +158,9 @@ function launchViewer(urn) {
         showMessage('Disconnected', true);
         
         _viewerLeft.uninitialize();
-        _viewerRight.uninitialize();
+        //_viewerRight.uninitialize();
         _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
-        _viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);        
+        //_viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);        
     }
 }
 
@@ -199,7 +201,7 @@ function initConnection() {
 function viewersApplyState() {
     var not_ready = false;
 
-    if (!_leftLoaded || !_rightLoaded || !_readyToApplyEvents) {
+    if (!_leftLoaded || /*!_rightLoaded ||*/ !_readyToApplyEvents) {
         return;
     }
 
@@ -208,7 +210,7 @@ function viewersApplyState() {
         unwatchTilt();
         
         var previousUpdatingLeft = _updatingLeft;
-        var previousUpdatingRight = _updatingRight;
+        //var previousUpdatingRight = _updatingRight;
 
         var direction = new THREE.Vector3();
         var target = new THREE.Vector3(); //_viewerLeft.navigation.getTarget();
@@ -217,12 +219,12 @@ function viewersApplyState() {
         direction.multiplyScalar(_model_state.zoom_factor);
         var newPos = direction.add(target);
         _viewerLeft.navigation.setPosition(newPos);
-        transferCameras(true);
+        //transferCameras(true);
 
         _orbitInitialPosition = newPos;
 
         _updatingLeft = previousUpdatingLeft;
-        _updatingRight = previousUpdatingRight;
+        //_updatingRight = previousUpdatingRight;
 
         _model_state.zoom_factor = undefined;
         
@@ -316,7 +318,7 @@ function viewersApply(func){
     //if (_viewerLeft && _viewerRight && _leftLoaded && _rightLoaded) {
         var val = Array.prototype.slice.call(arguments, 1);
         _viewerLeft[func].apply(_viewerLeft, val);
-        _viewerRight[func].apply(_viewerRight, val);
+        //_viewerRight[func].apply(_viewerRight, val);
     //}
 }
 
@@ -340,6 +342,7 @@ function progressListener(e) {
             );
             _viewerLeft.removeEventListener('progress', progressListener);
         }
+        /*
         else if (e.target.clientContainer.id === 'viewerRight') {
             _viewerRight.getObjectTree(
                 function() {
@@ -354,13 +357,14 @@ function progressListener(e) {
             );
             _viewerRight.removeEventListener('progress', progressListener);
         }
+        */
     }
 }
 
 
 function finishProgress() {
     
-    if (_leftLoaded && _rightLoaded) {
+    if (_leftLoaded /*&& _rightLoaded*/) {
 
         if (!_orbitInitialPosition) {
             _orbitInitialPosition = _viewerLeft.navigation.getPosition();
@@ -378,7 +382,7 @@ function finishProgress() {
 
 function watchProgress() {
     _viewerLeft.addEventListener('progress', progressListener);
-    _viewerRight.addEventListener('progress', progressListener);
+    //_viewerRight.addEventListener('progress', progressListener);
 }
 
 
@@ -386,15 +390,17 @@ function unwatchProgress() {
     if (_viewerLeft) {
         _viewerLeft.removeEventListener('progress', progressListener);
     }
+    /*
     if (_viewerRight) {
         _viewerRight.removeEventListener('progress', progressListener);
     }
+    */
 }
 
 
 function watchCameras() {
     _viewerLeft.addEventListener('cameraChanged', left2right);
-    _viewerRight.addEventListener('cameraChanged', right2left);
+    //_viewerRight.addEventListener('cameraChanged', right2left);
 }
 
 
@@ -403,9 +409,11 @@ function unwatchCameras() {
         _viewerLeft.removeEventListener('cameraChanged', left2right);
     }
 
+    /*
     if (_viewerRight) {
         _viewerRight.removeEventListener('cameraChanged', right2left);
     }
+    */
 }
 
 
@@ -545,10 +553,10 @@ function orbitViews(vert, horiz) {
     zoom(_viewerLeft, pos, trg, camUp);
 
     // Get a camera slightly to the right
-    var pos2 = offsetCameraPos(_viewerLeft, pos, trg, true);
+    //var pos2 = offsetCameraPos(_viewerLeft, pos, trg, true);
 
     // And zoom in with that on the righthand view, too
-    zoom(_viewerRight, pos2, trg, camUp);
+    //zoom(_viewerRight, pos2, trg, camUp);
 }
 
 
