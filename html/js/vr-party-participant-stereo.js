@@ -135,7 +135,8 @@ function launchViewer(urn) {
                     _viewerLeft.setGhosting(true);
                     _viewerLeft.setProgressiveRendering(false);
                     _viewerLeft.loadExtension('Autodesk.Viewing.Oculus');
-                    //ext.toggleOculus();
+                    var ext = _viewerLeft.getExtension('Autodesk.Viewing.Oculus');
+                    ext.toggleOculus();
                     //_viewerLeft.displayViewCube(false); 
                     //_viewerLeft.setActiveNavigationTool('vr');
                 }
