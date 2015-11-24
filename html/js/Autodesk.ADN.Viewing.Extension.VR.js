@@ -62,7 +62,7 @@ Autodesk.ADN.Viewing.Extension.VR = function (viewer, options) {
       });
     });
     
-    $('homeViewWrapper').css({ 'display':'none' });
+    $('.homeViewWrapper').css({ 'display':'none' });
   }
 
   /////////////////////////////////////////////////////////////////
