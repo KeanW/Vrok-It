@@ -98,6 +98,7 @@ function launchViewer(urn) {
     _orbitInitialPosition = null;
 
     window.launchFullscreen = function() {};
+    window.setOrientationControls = function() {};
     
     if (urn) {
         // Remove all event listeners
