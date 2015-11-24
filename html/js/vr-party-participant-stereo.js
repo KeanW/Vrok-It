@@ -123,9 +123,10 @@ function launchViewer(urn) {
                 }
                 
                 if (!_viewerLeft) {
-                    _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0]);
-                    //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
-                    _viewerLeft.initialize();
+                    //_viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0]);
+                    _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
+                    _viewerLeft.start();
+                    _viewerLeft.displayViewCube = function(){};
     
                     // The settings are loaded by the 2nd viewer automatically
                     _viewerLeft.setQualityLevel(false, false);
@@ -133,7 +134,8 @@ function launchViewer(urn) {
                     _viewerLeft.setGroundReflection(false);
                     _viewerLeft.setGhosting(true);
                     _viewerLeft.setProgressiveRendering(false);
-                    _viewerLeft.loadExtension('Autodesk.VR');
+                    var ext = _viewerLeft.loadExtension('Autodesk.VR');
+                    ext.toggleOculus();
                     //_viewerLeft.displayViewCube(false); 
                     //_viewerLeft.setActiveNavigationTool('vr');
                 }
