@@ -218,6 +218,8 @@ function viewersApplyState() {
         var newPos = zoomInOrOut(_viewerLeft, _orbitInitialPosition, _model_state.zoom_factor);
         _viewerLeft.navigation.setPosition(newPos);
 
+        console.log("Zoomed: " + _model_state.zoom_factor);
+
         //transferCameras(true);
 
         _orbitInitialPosition = newPos;
@@ -372,8 +374,9 @@ function finishProgress() {
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
         //_noSleepVR = new window.NoSleep();
         //_noSleepVR.enable();    
-
-        zoomInOrOut(_viewerLeft, _orbitInitialPosition, 100);
+        
+        var newPos = zoomInOrOut(_viewerLeft, _orbitInitialPosition, 10);
+        _viewerLeft.navigation.setPosition(newPos);
         
         Autodesk.Viewing.Private.HudMessage.instances.push({});
         
