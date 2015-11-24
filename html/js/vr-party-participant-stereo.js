@@ -373,7 +373,7 @@ function finishProgress() {
         //_noSleepVR = new window.NoSleep();
         //_noSleepVR.enable();    
 
-        zoomInOrOut(_viewerLeft, _orbitInitialPosition, 10);
+        zoomInOrOut(_viewerLeft, _orbitInitialPosition, 100);
         
         Autodesk.Viewing.Private.HudMessage.instances.push({});
         
