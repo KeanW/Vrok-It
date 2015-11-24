@@ -9,3 +9,9 @@ THREE.DeviceOrientationControls = function () {
 	this.connect = function() {};
 	this.disconnect = function() {};
 };
+
+VideoHelper = function () {
+	this.start = function() {};
+	this.isStarted = function() { return false };
+	this.stop = function() {};
+};
