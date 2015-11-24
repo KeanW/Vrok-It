@@ -371,14 +371,14 @@ function finishProgress() {
             _orbitInitialPosition = _viewerLeft.navigation.getPosition();
         }
 
+        Autodesk.Viewing.Private.HudMessage.instances.push({});
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
         //_noSleepVR = new window.NoSleep();
         //_noSleepVR.enable();    
         
-        var newPos = zoomInOrOut(_viewerLeft, _orbitInitialPosition, 10);
+        var newPos = zoomInOrOut(_viewerLeft, _orbitInitialPosition, 50);
         _viewerLeft.navigation.setPosition(newPos);
         
-        Autodesk.Viewing.Private.HudMessage.instances.push({});
         
         //unwatchProgress();
         watchCameras();
