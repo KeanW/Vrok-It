@@ -114,11 +114,11 @@ function launchViewer(urn) {
                 if (!model) return;
     
                 // Uninitializing the viewers helps with stability
-                /*
                 if (_viewerLeft) {
                     _viewerLeft.finish();
                     _viewerLeft = null;
                 }
+                /*
                 if (_viewerRight) {
                     _viewerRight.finish();
                     _viewerRight = null;
@@ -141,10 +141,6 @@ function launchViewer(urn) {
                     //ext.toggleOculus(true);
                     //_viewerLeft.displayViewCube(false); 
                     //_viewerLeft.setActiveNavigationTool('vr');
-                }
-                else {
-                    _viewerLeft.uninitialize();
-                    _viewerLeft.initialize();
                 }
                 /*
                 if (!_viewerRight) {
