@@ -97,6 +97,8 @@ function launchViewer(urn) {
     _upVector = new THREE.Vector3(0, 1, 0);
     _orbitInitialPosition = null;
 
+    Autodesk.Viewing.UI.launchFullscreen = functionI() {};
+    
     if (urn) {
         // Remove all event listeners
         unwatchTilt;
