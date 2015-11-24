@@ -372,6 +372,10 @@ function finishProgress() {
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
         _noSleepVR = new window.NoSleep();
         _noSleepVR.enable();    
+
+        zoomInOrOut(_viewerLeft, _orbitInitialPosition, 1.5);
+        
+        Autodesk.Viewing.Private.HudMessage.instances.push({});
         
         //unwatchProgress();
         watchCameras();
