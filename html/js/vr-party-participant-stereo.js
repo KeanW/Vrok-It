@@ -142,6 +142,10 @@ function launchViewer(urn) {
                     //_viewerLeft.displayViewCube(false); 
                     //_viewerLeft.setActiveNavigationTool('vr');
                 }
+                else {
+                    _viewerLeft.uninitialize();
+                    _viewerLeft.initialize();
+                }
                 /*
                 if (!_viewerRight) {
                     _viewerRight = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerRight')[0]);
@@ -152,7 +156,6 @@ function launchViewer(urn) {
        
                 watchProgress();
                 //forceWidth(_viewerLeft);
-                
                 loadModel(_viewerLeft, model);
 
                 /*
