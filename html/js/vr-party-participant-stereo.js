@@ -99,6 +99,7 @@ function launchViewer(urn) {
     _orbitInitialPosition = null;
 
     window.launchFullscreen = function() {};
+    window.exitFullscreen = function() {};
     
     if (urn) {
         // Remove all event listeners
