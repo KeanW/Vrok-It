@@ -134,7 +134,6 @@ function launchViewer(urn) {
                     _viewerLeft.setGroundReflection(false);
                     _viewerLeft.setGhosting(true);
                     _viewerLeft.setProgressiveRendering(false);
-                    _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
                     //var ext = _viewerLeft.getExtension('Autodesk.Viewing.Oculus');
                     //ext.toggleOculus(true);
                     //_viewerLeft.displayViewCube(false); 
@@ -373,6 +372,8 @@ function finishProgress() {
             _orbitInitialPosition = _viewerLeft.navigation.getPosition();
         }
 
+        _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
+    
         //unwatchProgress();
         watchCameras();
         watchTilt();
