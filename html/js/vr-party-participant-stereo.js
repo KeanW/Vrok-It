@@ -551,6 +551,10 @@ function orb(e) {
 function orbitViews(vert, horiz) {
     // We'll rotate our position based on the initial position
     // and the target will stay the same
+    
+    if (_orbitInitialPosition == null)
+        return;
+    
     var pos = _orbitInitialPosition.clone();
     var trg = _viewerLeft.navigation.getTarget();
 
