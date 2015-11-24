@@ -150,7 +150,18 @@ function launchViewer(urn) {
        
                 watchProgress();
                 //forceWidth(_viewerLeft);
-                loadModel(_viewerLeft, model);
+                //loadModel(_viewerLeft, model);
+
+                _viewerLeft.loadModel(
+                    model,
+                    null,
+                    function() {
+                        viewer.navigation.setZoomTowardsPivot(true);
+                        viewer.navigation.setReverseZoomDirection(true);
+                        viewer.setLightPreset(0);
+                    }
+                );
+
                 //forceWidth(_viewerRight);
                 //loadModel(_viewerRight, model);
             }
@@ -162,7 +173,8 @@ function launchViewer(urn) {
         
         _viewerLeft.uninitialize();
         //_viewerRight.uninitialize();
-        _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
+        //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
+        _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0], { wantInfoButton : false});
         //_viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);        
     }
 }
