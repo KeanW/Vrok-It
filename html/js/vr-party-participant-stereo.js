@@ -375,11 +375,7 @@ function finishProgress() {
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
         //_noSleepVR = new window.NoSleep();
         //_noSleepVR.enable();    
-        
-        var newPos = zoomInOrOut(_viewerLeft, _orbitInitialPosition, 50);
-        _viewerLeft.navigation.setPosition(newPos);
-        
-        
+                
         //unwatchProgress();
         watchCameras();
         watchTilt();
@@ -594,6 +590,6 @@ function zoomInOrOut(viewer, pos, factor) {
     var target = new THREE.Vector3(); //_viewerLeft.navigation.getTarget();
     direction.subVectors(pos, target);
     direction.normalize();
-    direction.multiplyScalar(factor);
+    direction.multiplyScalar(factor - 30);
     return direction.add(target);
 }
