@@ -370,8 +370,8 @@ function finishProgress() {
         }
 
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
-        _noSleepVR = new window.NoSleep();
-        _noSleepVR.enable();    
+        //_noSleepVR = new window.NoSleep();
+        //_noSleepVR.enable();    
 
         zoomInOrOut(_viewerLeft, _orbitInitialPosition, 0.5);
         
