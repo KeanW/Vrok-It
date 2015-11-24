@@ -156,9 +156,9 @@ function launchViewer(urn) {
                     model,
                     null,
                     function() {
-                        viewer.navigation.setZoomTowardsPivot(true);
-                        viewer.navigation.setReverseZoomDirection(true);
-                        viewer.setLightPreset(0);
+                        _viewerLeft.navigation.setZoomTowardsPivot(true);
+                        _viewerLeft.navigation.setReverseZoomDirection(true);
+                        _viewerLeft.setLightPreset(0);
                     }
                 );
 
