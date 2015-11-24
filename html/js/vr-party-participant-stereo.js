@@ -123,8 +123,8 @@ function launchViewer(urn) {
                 }
                 
                 if (!_viewerLeft) {
-                    //_viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0]);
-                    _viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
+                    _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0]);
+                    //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
                     _viewerLeft.start();
                     _viewerLeft.displayViewCube = function(){};
     
