@@ -98,7 +98,6 @@ function launchViewer(urn) {
     _orbitInitialPosition = null;
 
     window.launchFullscreen = function() {};
-    window.setOrientationControls = function() {};
     
     if (urn) {
         // Remove all event listeners
@@ -392,6 +391,8 @@ function finishProgress() {
 
         //Autodesk.Viewing.Private.HudMessage.instances.push({});
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
+        window.setOrientationControls = function() {};
+
         //_noSleepVR = new window.NoSleep();
         //_noSleepVR.enable();    
                 
