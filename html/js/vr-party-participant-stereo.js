@@ -114,6 +114,7 @@ function launchViewer(urn) {
                 if (!model) return;
     
                 // Uninitializing the viewers helps with stability
+                /*
                 if (_viewerLeft) {
                     _viewerLeft.finish();
                     _viewerLeft = null;
@@ -122,6 +123,7 @@ function launchViewer(urn) {
                     _viewerRight.finish();
                     _viewerRight = null;
                 }
+                */
                 
                 if (!_viewerLeft) {
                     _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0], { wantInfoButton : false});
