@@ -130,8 +130,6 @@ function launchViewer(urn) {
                 
                 if (!_viewerLeft) {
                     _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0], { wantInfoButton : false });
-                    _viewerLeft.prefs.remove("fusionOrbit", false);
-                    _viewerLeft.prefs.remove("fusionOrbitConstrained", false);
                     //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
                     _viewerLeft.start();
                     //_viewerLeft.displayViewCube = function(){};
@@ -157,6 +155,10 @@ function launchViewer(urn) {
        
                 watchProgress();
                 //forceWidth(_viewerLeft);
+
+                _viewerLeft.prefs.remove("fusionOrbit", false);
+                _viewerLeft.prefs.remove("fusionOrbitConstrained", false);
+
                 loadModel(_viewerLeft, model);
 
                 /*
