@@ -152,8 +152,10 @@ function launchViewer(urn) {
        
                 watchProgress();
                 //forceWidth(_viewerLeft);
-                //loadModel(_viewerLeft, model);
+                
+                loadModel(_viewerLeft, model);
 
+                /*
                 _viewerLeft.loadModel(
                     model,
                     null,
@@ -163,6 +165,7 @@ function launchViewer(urn) {
                         _viewerLeft.setLightPreset(0);
                     }
                 );
+                */
 
                 //forceWidth(_viewerRight);
                 //loadModel(_viewerRight, model);
