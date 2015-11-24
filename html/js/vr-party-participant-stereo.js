@@ -380,9 +380,6 @@ function progressListener(e) {
     }
 }
 
-THREE.DeviceOrientationControls = {};
-THREE.DeviceOrientationControls.connect = function() {};
-
 function finishProgress() {
     
     if (_leftLoaded /*&& _rightLoaded*/) {
