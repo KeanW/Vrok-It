@@ -225,7 +225,7 @@ function viewersApplyState() {
         return;
     }
 
-    if (_model_state.zoom_factor !== undefined) {
+    if (_model_state.zoom_factor !== undefined && !isNaN(_model_state.zoom_factor)) {
         
         unwatchTilt();
         
