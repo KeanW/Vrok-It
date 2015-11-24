@@ -7,6 +7,7 @@
 
 THREE.DeviceOrientationControls = function () {
 	this.connect = function() {};
+	this.update = function() { return null };
 	this.disconnect = function() {};
 };
 
