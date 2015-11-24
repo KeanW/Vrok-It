@@ -46,7 +46,7 @@ function getViewingOptions() {
 
 
 function loadModel(viewer, documentData) {
-    //viewer.resize();
+    viewer.resize();
     viewer.load(
         documentData,
         null,
