@@ -35,6 +35,7 @@ function connect() {
 
     launchFullscreen($('#layer2')[0]);
     
+    
     if (LMV_VIEWER_VERSION === '1.2.13') {
         $.get(
             window.location.origin + '/api/token',
@@ -128,7 +129,7 @@ function launchViewer(urn) {
                 */
                 
                 if (!_viewerLeft) {
-                    _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0], { wantInfoButton : false});
+                    _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0], { wantInfoButton : false, fusionOrbit : false });
                     //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
                     _viewerLeft.start();
                     //_viewerLeft.displayViewCube = function(){};
