@@ -11,6 +11,7 @@ var _orbitInitialPosition;
 var _lastVert, _lastHoriz;
 var _socket = io();
 var _sessionId;
+var _noSleepVR;
 
 function initialize() {
     
@@ -126,13 +127,13 @@ function launchViewer(urn) {
                     _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0]);
                     //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
                     _viewerLeft.start();
-                    _viewerLeft.displayViewCube = function(){};
+                    //_viewerLeft.displayViewCube = function(){};
     
                     // The settings are loaded by the 2nd viewer automatically
                     _viewerLeft.setQualityLevel(false, false);
                     _viewerLeft.setGroundShadow(true);
                     _viewerLeft.setGroundReflection(false);
-                    _viewerLeft.setGhosting(true);
+                    //_viewerLeft.setGhosting(true);
                     _viewerLeft.setProgressiveRendering(false);
                     //var ext = _viewerLeft.getExtension('Autodesk.Viewing.Oculus');
                     //ext.toggleOculus(true);
@@ -214,13 +215,9 @@ function viewersApplyState() {
         var previousUpdatingLeft = _updatingLeft;
         //var previousUpdatingRight = _updatingRight;
 
-        var direction = new THREE.Vector3();
-        var target = new THREE.Vector3(); //_viewerLeft.navigation.getTarget();
-        direction.subVectors(_orbitInitialPosition, target);
-        direction.normalize();
-        direction.multiplyScalar(_model_state.zoom_factor);
-        var newPos = direction.add(target);
+        var newPos = zoomInOrOut(_viewerLeft, _orbitInitialPosition, _model_state.zoom_factor);
         _viewerLeft.navigation.setPosition(newPos);
+
         //transferCameras(true);
 
         _orbitInitialPosition = newPos;
@@ -373,7 +370,9 @@ function finishProgress() {
         }
 
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
-    
+        _noSleepVR = new window.NoSleep();
+        _noSleepVR.enable();    
+        
         //unwatchProgress();
         watchCameras();
         watchTilt();
@@ -580,4 +579,14 @@ function zoom(viewer, pos, trg, up) {
     viewer.navigation.setWorldUpVector(_upVector, true);
     viewer.navigation.setView(pos, trg);
     viewer.navigation.setCameraUpVector(up);
+}
+
+
+function zoomInOrOut(viewer, pos, factor) {
+    var direction = new THREE.Vector3();
+    var target = new THREE.Vector3(); //_viewerLeft.navigation.getTarget();
+    direction.subVectors(pos, target);
+    direction.normalize();
+    direction.multiplyScalar(factor);
+    return direction.add(target);
 }
