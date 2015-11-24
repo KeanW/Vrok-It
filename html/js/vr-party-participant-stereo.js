@@ -371,7 +371,7 @@ function finishProgress() {
             _orbitInitialPosition = _viewerLeft.navigation.getPosition();
         }
 
-        Autodesk.Viewing.Private.HudMessage.instances.push({});
+        //Autodesk.Viewing.Private.HudMessage.instances.push({});
         _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
         //_noSleepVR = new window.NoSleep();
         //_noSleepVR.enable();    
