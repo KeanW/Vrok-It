@@ -128,19 +128,6 @@ function launchViewer(urn) {
                     _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false });
                     _viewer.start();
     
-                    $('.adsk-control-group').each(function(){
-                
-                    $(this).find('>.adsk-button').each(function(){
-                
-                        $(this).css({
-                        'display':'none'
-                        });
-                    });
-                    });
-                    
-                    $('.homeViewWrapper').css({ 'display':'none' });
-    
-                        // The settings are loaded by the 2nd viewer automatically
                     _viewer.setQualityLevel(false, false);
                     _viewer.setGroundShadow(true);
                     _viewer.setGroundReflection(false);
@@ -153,6 +140,18 @@ function launchViewer(urn) {
                 _viewer.prefs.remove("fusionOrbitConstrained", false);
 
                 loadModel(_viewer, model);
+                
+                $('.adsk-control-group').each(function(){
+            
+                $(this).find('>.adsk-button').each(function(){
+            
+                    $(this).css({
+                    'display':'none'
+                    });
+                });
+                });
+                
+                $('.homeViewWrapper').css({ 'display':'none' });
             }
         );
     }
