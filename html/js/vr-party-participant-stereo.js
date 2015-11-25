@@ -98,6 +98,10 @@ function launchViewer(urn) {
     _upVector = new THREE.Vector3(0, 1, 0);
     _orbitInitialPosition = null;
 
+    // Make sure the VR extension doesn't change the fullscreen settings
+    // when it loads ot unloads (these can only be called from a UI callback)
+    // Also stub out the HUD message function, to stop those from being shown
+    
     window.launchFullscreen = function() {};
     window.exitFullscreen = function() {};
     Autodesk.Viewing.Private.HudMessage.displayMessage = function() {};
@@ -107,7 +111,7 @@ function launchViewer(urn) {
         unwatchTilt;
         unwatchProgress();
     
-        clearMessage();
+        showMessage('Loading...');
         
         urn = urn.ensurePrefix('urn:');
         
@@ -140,6 +144,8 @@ function launchViewer(urn) {
                 _viewer.prefs.remove("fusionOrbitConstrained", false);
 
                 loadModel(_viewer, model);
+                
+                // Hide the viewer's toolbar and home button
                 
                 $('.adsk-control-group').each(function(){            
                     $(this).find('>.adsk-button').each(function(){                
@@ -339,6 +345,8 @@ function finishProgress() {
         _viewer.loadExtension('Autodesk.ADN.Viewing.Extension.VR', {});
 
         watchTilt();
+
+        clearMessage();
 
         _readyToApplyEvents = true;
         viewerApplyState();
