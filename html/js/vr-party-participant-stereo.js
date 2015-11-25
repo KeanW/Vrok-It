@@ -100,6 +100,7 @@ function launchViewer(urn) {
 
     window.launchFullscreen = function() {};
     window.exitFullscreen = function() {};
+    Autodesk.Viewing.Private.HudMessage.displayMessage = function() {};
     
     if (urn) {
         // Remove all event listeners
