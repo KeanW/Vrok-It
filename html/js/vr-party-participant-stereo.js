@@ -141,14 +141,10 @@ function launchViewer(urn) {
 
                 loadModel(_viewer, model);
                 
-                $('.adsk-control-group').each(function(){
-            
-                $(this).find('>.adsk-button').each(function(){
-            
-                    $(this).css({
-                    'display':'none'
+                $('.adsk-control-group').each(function(){            
+                    $(this).find('>.adsk-button').each(function(){                
+                        $(this).css({ 'display':'none' });
                     });
-                });
                 });
                 
                 $('.homeViewWrapper').css({ 'display':'none' });
@@ -162,10 +158,6 @@ function launchViewer(urn) {
         _viewer.uninitialize();
         _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false});
     }
-}
-
-function forceWidth(viewer) {
-    viewer.container.style.width = '50%';
 }
 
 function initConnection() {
@@ -193,12 +185,12 @@ function initConnection() {
                 return new THREE.Vector4(vec.x, vec.y, vec.z, vec.w);
             });
         }
-        viewersApplyState();
+        viewerApplyState();
     });
 }
 
 
-function viewersApplyState() {
+function viewerApplyState() {
     var not_ready = false;
 
     if (!_loaded || !_readyToApplyEvents) {
@@ -277,7 +269,7 @@ function viewersApplyState() {
     }
 
     if (not_ready) {
-        setTimeout(function() { viewersApplyState(); }, 1000);
+        setTimeout(function() { viewerApplyState(); }, 1000);
     }
 }
 
@@ -344,13 +336,12 @@ function finishProgress() {
             _orbitInitialPosition = _viewer.navigation.getPosition();
         }
 
-        _viewer.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
-        window.setOrientationControls = function() {};
+        _viewer.loadExtension('Autodesk.ADN.Viewing.Extension.VR', {});
 
         watchTilt();
 
         _readyToApplyEvents = true;
-        viewersApplyState();
+        viewerApplyState();
     }
 }
 
@@ -470,6 +461,6 @@ function zoomInOrOut(viewer, pos, factor) {
     var target = new THREE.Vector3(); //_viewer.navigation.getTarget();
     direction.subVectors(pos, target);
     direction.normalize();
-    direction.multiplyScalar(factor - 30);
+    direction.multiplyScalar(factor * 0.5);
     return direction.add(target);
 }
