@@ -1,6 +1,6 @@
-var _viewerLeft, _viewerRight;
-var _updatingLeft, _updatingRight;
-var _leftLoaded, _rightLoaded;
+var _viewer;
+var _updating;
+var _loaded;
 var _baseDir;
 var _upVector;
 var _deg2rad = Math.PI / 180;
@@ -93,8 +93,8 @@ function clearMessage() {
 
 function launchViewer(urn) {
     _baseDir = null;
-    _leftLoaded = _rightLoaded = false;
-    _updatingLeft = _updatingRight = false;
+    _loaded = false;
+    _updating = false;
     _upVector = new THREE.Vector3(0, 1, 0);
     _orbitInitialPosition = null;
 
@@ -106,7 +106,6 @@ function launchViewer(urn) {
         // Remove all event listeners
         unwatchTilt;
         unwatchProgress();
-        unwatchCameras();
     
         clearMessage();
         
@@ -119,64 +118,41 @@ function launchViewer(urn) {
                 if (!model) return;
     
                 // Uninitializing the viewers helps with stability
-                if (_viewerLeft) {
-                    _viewerLeft.finish();
-                    _viewerLeft = null;
-                }
-                /*
-                if (_viewerRight) {
-                    _viewerRight.finish();
-                    _viewerRight = null;
-                }
-                */
                 
-                if (!_viewerLeft) {
-                    _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0], { wantInfoButton : false });
-                    //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
-                    _viewerLeft.start();
-                    //_viewerLeft.displayViewCube = function(){};
+                if (_viewer) {
+                    _viewer.finish();
+                    _viewer = null;
+                }
+                
+                if (!_viewer) {
+                    _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false });
+                    _viewer.start();
     
-                    // The settings are loaded by the 2nd viewer automatically
-                    _viewerLeft.setQualityLevel(false, false);
-                    _viewerLeft.setGroundShadow(true);
-                    _viewerLeft.setGroundReflection(false);
-                    //_viewerLeft.setGhosting(true);
-                    _viewerLeft.setProgressiveRendering(false);
-                    //var ext = _viewerLeft.getExtension('Autodesk.Viewing.Oculus');
-                    //ext.toggleOculus(true);
-                    //_viewerLeft.displayViewCube(false); 
-                    //_viewerLeft.setActiveNavigationTool('vr');
+                    $('.adsk-control-group').each(function(){
+                
+                    $(this).find('>.adsk-button').each(function(){
+                
+                        $(this).css({
+                        'display':'none'
+                        });
+                    });
+                    });
+                    
+                    $('.homeViewWrapper').css({ 'display':'none' });
+    
+                        // The settings are loaded by the 2nd viewer automatically
+                    _viewer.setQualityLevel(false, false);
+                    _viewer.setGroundShadow(true);
+                    _viewer.setGroundReflection(false);
+                    _viewer.setProgressiveRendering(false);
                 }
-                /*
-                if (!_viewerRight) {
-                    _viewerRight = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerRight')[0]);
-                    //_viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);
-                    _viewerRight.start();
-                }
-                */
        
                 watchProgress();
-                //forceWidth(_viewerLeft);
 
-                _viewerLeft.prefs.remove("fusionOrbit", false);
-                _viewerLeft.prefs.remove("fusionOrbitConstrained", false);
+                _viewer.prefs.remove("fusionOrbit", false);
+                _viewer.prefs.remove("fusionOrbitConstrained", false);
 
-                loadModel(_viewerLeft, model);
-
-                /*
-                _viewerLeft.loadModel(
-                    model,
-                    null,
-                    function() {
-                        _viewerLeft.navigation.setZoomTowardsPivot(true);
-                        _viewerLeft.navigation.setReverseZoomDirection(true);
-                        _viewerLeft.setLightPreset(0);
-                    }
-                );
-                */
-
-                //forceWidth(_viewerRight);
-                //loadModel(_viewerRight, model);
+                loadModel(_viewer, model);
             }
         );
     }
@@ -184,11 +160,8 @@ function launchViewer(urn) {
                 
         showMessage('Disconnected', true);
         
-        _viewerLeft.uninitialize();
-        //_viewerRight.uninitialize();
-        //_viewerLeft = new Autodesk.Viewing.Viewer3D($('#viewerLeft')[0]);
-        _viewerLeft = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerLeft')[0], { wantInfoButton : false});
-        //_viewerRight = new Autodesk.Viewing.Viewer3D($('#viewerRight')[0]);        
+        _viewer.uninitialize();
+        _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false});
     }
 }
 
@@ -229,7 +202,7 @@ function initConnection() {
 function viewersApplyState() {
     var not_ready = false;
 
-    if (!_leftLoaded || /*!_rightLoaded ||*/ !_readyToApplyEvents) {
+    if (!_loaded || !_readyToApplyEvents) {
         return;
     }
 
@@ -237,20 +210,16 @@ function viewersApplyState() {
         
         unwatchTilt();
         
-        var previousUpdatingLeft = _updatingLeft;
-        //var previousUpdatingRight = _updatingRight;
+        var previousUpdating = _updating;
 
-        var newPos = zoomInOrOut(_viewerLeft, _orbitInitialPosition, _model_state.zoom_factor);
-        _viewerLeft.navigation.setPosition(newPos);
+        var newPos = zoomInOrOut(_viewer, _orbitInitialPosition, _model_state.zoom_factor);
+        _viewer.navigation.setPosition(newPos);
 
         console.log("Zoomed: " + _model_state.zoom_factor);
 
-        //transferCameras(true);
-
         _orbitInitialPosition = newPos;
 
-        _updatingLeft = previousUpdatingLeft;
-        //_updatingRight = previousUpdatingRight;
+        _updating = previousUpdating;
 
         _model_state.zoom_factor = undefined;
         
@@ -322,7 +291,7 @@ function tryToApplyIds(prop, ids) {
         // getNodesByIds can throw an exception when the model isn't sufficiently loaded
         // Catch it and try to apply the viewer state again in a second
          try {
-            ids = _viewerLeft.model.getNodesByIds(ids);
+            ids = _viewer.model.getNodesByIds(ids);
         }
         catch (ex) {
             success = false;
@@ -341,11 +310,8 @@ function tryToApplyIds(prop, ids) {
 
 
 function viewersApply(func){
-    //if (_viewerLeft && _viewerRight && _leftLoaded && _rightLoaded) {
-        var val = Array.prototype.slice.call(arguments, 1);
-        _viewerLeft[func].apply(_viewerLeft, val);
-        //_viewerRight[func].apply(_viewerRight, val);
-    //}
+    var val = Array.prototype.slice.call(arguments, 1);
+    _viewer[func].apply(_viewer, val);
 }
 
 
@@ -354,56 +320,34 @@ function viewersApply(func){
 // need to ignore - it comes too soon)
 function progressListener(e) {
     if (e.percent >= 10) {
-        if (e.target.clientContainer.id === 'viewerLeft') {
-            _viewerLeft.getObjectTree(
+        if (e.target.clientContainer.id === 'viewer') {
+            _viewer.getObjectTree(
                 function() {
-                    _leftLoaded = true;
-                    console.log('Left has an instance tree');
+                    _loaded = true;
+                    console.log('Viewer has an instance tree');
                     setTimeout(finishProgress, 100);
                 },
                 function() {
-                    _leftLoaded = false;
-                    console.log('Cannot get left instance tree');
+                    _loaded = false;
+                    console.log('Cannot get instance tree');
                 }
             );
-            _viewerLeft.removeEventListener('progress', progressListener);
+            _viewer.removeEventListener('progress', progressListener);
         }
-        /*
-        else if (e.target.clientContainer.id === 'viewerRight') {
-            _viewerRight.getObjectTree(
-                function() {
-                    _rightLoaded = true;
-                    console.log('Right has an instance tree');
-                    setTimeout(finishProgress, 100);
-                },
-                function() {
-                    _rightLoaded = false;
-                    console.log('Cannot get right instance tree');
-                }
-            );
-            _viewerRight.removeEventListener('progress', progressListener);
-        }
-        */
     }
 }
 
 function finishProgress() {
     
-    if (_leftLoaded /*&& _rightLoaded*/) {
+    if (_loaded) {
 
         if (!_orbitInitialPosition) {
-            _orbitInitialPosition = _viewerLeft.navigation.getPosition();
+            _orbitInitialPosition = _viewer.navigation.getPosition();
         }
 
-        //Autodesk.Viewing.Private.HudMessage.instances.push({});
-        _viewerLeft.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
+        _viewer.loadExtension('Autodesk.ADN.Viewing.Extension.VR', { });
         window.setOrientationControls = function() {};
 
-        //_noSleepVR = new window.NoSleep();
-        //_noSleepVR.enable();    
-                
-        //unwatchProgress();
-        watchCameras();
         watchTilt();
 
         _readyToApplyEvents = true;
@@ -413,39 +357,14 @@ function finishProgress() {
 
 
 function watchProgress() {
-    _viewerLeft.addEventListener('progress', progressListener);
-    //_viewerRight.addEventListener('progress', progressListener);
+    _viewer.addEventListener('progress', progressListener);
 }
 
 
 function unwatchProgress() {
-    if (_viewerLeft) {
-        _viewerLeft.removeEventListener('progress', progressListener);
+    if (_viewer) {
+        _viewer.removeEventListener('progress', progressListener);
     }
-    /*
-    if (_viewerRight) {
-        _viewerRight.removeEventListener('progress', progressListener);
-    }
-    */
-}
-
-
-function watchCameras() {
-    _viewerLeft.addEventListener('cameraChanged', left2right);
-    //_viewerRight.addEventListener('cameraChanged', right2left);
-}
-
-
-function unwatchCameras() {
-    if (_viewerLeft) {
-        _viewerLeft.removeEventListener('cameraChanged', left2right);
-    }
-
-    /*
-    if (_viewerRight) {
-        _viewerRight.removeEventListener('cameraChanged', right2left);
-    }
-    */
 }
 
 
@@ -463,62 +382,11 @@ function unwatchTilt() {
 }
 
 
-// Event handlers for the cameraChanged events
-
-
-function left2right() {
-    if (_viewerLeft && _viewerRight && !_updatingRight) {
-        _updatingLeft = true;
-        transferCameras(true);
-        setTimeout(function() { _updatingLeft = false; }, 500);
-    }
-}
-
-
-function right2left() {
-    if (_viewerLeft && _viewerRight && !_updatingLeft) {
-        _updatingRight = true;
-        transferCameras(false);
-        setTimeout(function() { _updatingRight = false; }, 500);
-    }
-}
-
-
-function transferCameras(leftToRight) {
-    // The direction argument dictates the source and target
-    var source = leftToRight ? _viewerLeft : _viewerRight;
-    var target = leftToRight ? _viewerRight : _viewerLeft;
-
-    var pos = source.navigation.getPosition();
-    var trg = source.navigation.getTarget();
-
-    // Set the up vector manually for both cameras
-    source.navigation.setWorldUpVector(_upVector);
-    target.navigation.setWorldUpVector(_upVector);
-
-    // Get the new position for the target camera
-    var up = source.navigation.getCameraUpVector();
-
-    // Get the position of the target camera
-    var newPos = offsetCameraPos(source, pos, trg, leftToRight);
-
-    // Zoom to the new camera position in the target
-    zoom(target, newPos, trg, up);
-}
-
-
 // And for the deviceorientation event
 
 
 function orb(e) {
-    if (!e.alpha || !e.beta || !e.gamma || _updatingLeft || _updatingRight) return;
-
-    // Remove our handlers watching for camera updates,
-    // as we'll make any changes manually
-    // (we won't actually bother adding them back, afterwards,
-    // as this means we're in mobile mode and probably inside
-    // a Google Cardboard holder)
-    unwatchCameras();
+    if (!e.alpha || !e.beta || !e.gamma || _updating) return;
 
     // gamma is the front-to-back in degrees (with
     // this screen orientation) with +90/-90 being
@@ -564,7 +432,7 @@ function orbitViews(vert, horiz) {
         return;
     
     var pos = _orbitInitialPosition.clone();
-    var trg = _viewerLeft.navigation.getTarget();
+    var trg = _viewer.navigation.getTarget();
 
     // Start by applying the left/right orbit
     // (we need to check the up/down value, though)
@@ -585,25 +453,8 @@ function orbitViews(vert, horiz) {
     var camUp = pos.clone().sub(trg).normalize();
     camUp.cross(axis).normalize();
 
-    // Zoom in with the lefthand view
-    zoom(_viewerLeft, pos, trg, camUp);
-
-    // Get a camera slightly to the right
-    //var pos2 = offsetCameraPos(_viewerLeft, pos, trg, true);
-
-    // And zoom in with that on the righthand view, too
-    //zoom(_viewerRight, pos2, trg, camUp);
-}
-
-
-function offsetCameraPos(source, pos, trg, leftToRight) {
-    // Use a small fraction of the distance for the camera offset
-    var disp = pos.distanceTo(trg) * 0.04;
-
-    // Clone the camera and return its X translated position
-    var clone = source.autocamCamera.clone();
-    clone.translateX(leftToRight ? disp : -disp);
-    return clone.position;
+    // Zoom in to this location
+    zoom(_viewer, pos, trg, camUp);
 }
 
 
@@ -617,7 +468,7 @@ function zoom(viewer, pos, trg, up) {
 
 function zoomInOrOut(viewer, pos, factor) {
     var direction = new THREE.Vector3();
-    var target = new THREE.Vector3(); //_viewerLeft.navigation.getTarget();
+    var target = new THREE.Vector3(); //_viewer.navigation.getTarget();
     direction.subVectors(pos, target);
     direction.normalize();
     direction.multiplyScalar(factor - 30);
