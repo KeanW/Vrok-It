@@ -111,7 +111,7 @@ function launchViewer(urn) {
         unwatchTilt;
         unwatchProgress();
     
-        showMessage('Loading...');
+        clearMessage();
         
         urn = urn.ensurePrefix('urn:');
         
@@ -145,7 +145,7 @@ function launchViewer(urn) {
 
                 loadModel(_viewer, model);
                 
-                // Hide the viewer's toolbar and home button
+                // Hide the viewer's toolbar and the home button
                 
                 $('.adsk-control-group').each(function(){            
                     $(this).find('>.adsk-button').each(function(){                
@@ -345,8 +345,6 @@ function finishProgress() {
         _viewer.loadExtension('Autodesk.ADN.Viewing.Extension.VR', {});
 
         watchTilt();
-
-        clearMessage();
 
         _readyToApplyEvents = true;
         viewerApplyState();
