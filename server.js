@@ -15,6 +15,8 @@ app.use(function (req, res, next) {
     next();
 });
 app.use('/', express.static(__dirname + '/html'));
+app.use('/v2', express.static(__dirname + '/html/index2.html'));
+
 app.get('/api/token', api.getToken);
 
 app.get('/api/sessionId', function(req, res) {  
