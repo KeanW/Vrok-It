@@ -153,6 +153,9 @@ function launchViewer(urn) {
                     });
                 });
                 
+                // Needed for v2.2
+                
+                $('#guiviewer3d-toolbar').css({ 'display':'none' });
                 $('.homeViewWrapper').css({ 'display':'none' });
             }
         );
