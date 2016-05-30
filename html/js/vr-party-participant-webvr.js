@@ -40,7 +40,7 @@ function initialize() {
 function connect() {
     $('#layer1').hide();
 
-    _vrDisplay.requestPresent([{source: $('#layer2')[0]}]);
+    _vrDisplay.requestPresent([$('#layer2')[0]]);
     //launchFullscreen($('#layer2')[0]);
     
     if (LMV_VIEWER_VERSION === '1.2.13') {
