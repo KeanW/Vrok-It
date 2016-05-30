@@ -1,0 +1,69 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vrok-it</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/flick/jquery-ui.css">
+        <link rel="stylesheet" href="https://autodeskviewer.com/viewers/2.2/style.css?v=v2.2">
+        <script src="https://autodeskviewer.com/viewers/2.2/viewer3D.min.js?v=v2.2"></script>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        <script src="js/jquery.qrcode.min.js"></script>
+        <script src="js/socket.io.js"></script>
+        <script src="js/Autodesk.ADN.Toolkit.ViewData.js"></script>
+        <script src="js/vr-party-common.js"></script>
+        <script src="js/vr-party-presenter-webvr.js"></script>
+    </head>
+    <body onload="initialize();" onbeforeunload="terminate();" onresize="resize();">
+        <table cellpadding="10px">
+            <tr>
+                <td valign="top" style="min-width:300px;text-align:center;">
+                    <a id="url" target="_blank" title="Scan this QR code to connect to this session from your mobile device: the browser will create a Google Cardboard-compatible 3D view"><div id="qrcode"></div></a>
+                    <p class="info">Scan to connect with Google Cardboard<br/>then load a model from the list below</p>
+                    <br/>
+                    <input type="file" id="fileElem" style="display:none" onchange="onFilesDialogCalled(this.files);" multiple/>
+                    <center>
+                        <div
+                            id="upload-button"
+                            type="button"
+                            class="cmd-btn-small-x"
+                            onclick="onFileSelect();">Upload file
+                        </div>
+                        <br/>
+                        <div id="control"></div>
+                        <br/>
+                        <div
+                            id="restart-button"
+                            type="button"
+                            class="cmd-btn-small-x"
+                            onclick="window.location.href = window.location.origin;">New session
+                        </div>
+                        <br />
+                        <!--div
+                            id="about-button"
+                            type="button"
+                            class="cmd-btn-small-x"
+                            onclick="showAbout();">About Vrok-it
+                        </div>
+                        <br /-->
+                        <a id="tweetButton" href="https://twitter.com/share" class="twitter-share-button" data-url="http://vrok.it" data-text="Vrok a 3D model, online with your friends!" data-size="large" data-hashtags="Vrok-it,VR,WebVR" data-dnt="true">Tweet this</a>
+                    </center>
+                </td>
+                <td valign="top">
+                    <div id="layer1">
+                        <div id="3dViewDiv"></div>
+                    </div>
+                    <div id="layer2" class="aboutLayer">
+                        <div display="none" id="aboutDiv">
+                            <!--embed class="full" src="about.html"></embed-->
+                            <object type="text/html" class="full" data="about.html"></object>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <script src="js/google-analytics-tracker.js"></script>
+    </body>
+</html>

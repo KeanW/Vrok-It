@@ -1,0 +1,41 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vrok-it</title>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2">
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+        <link rel="stylesheet" href="css/participant.css">
+        <link rel="stylesheet" href="https://autodeskviewer.com/viewers/2.2/style.css?v=v2.2">
+        <script src="https://autodeskviewer.com/viewers/2.2/viewer3D.min.js?v=v2.2"></script>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="js/socket.io.js"></script>
+        <script src="js/webvr-polyfill.js"></script>
+        <script src="js/vr-party-common.js"></script>
+        <script src="js/vr-party-participant-webvr.js"></script>
+    </head>
+    <body onload="initialize();" oncontextmenu="return false;">
+        <div class="outer">
+            <div id="layer1" class="layer1">
+                <div id="control" class="control"></div>
+            </div>
+            <div id="layer2" class="layer2">
+                <table width="100%" height="100%" style="border-spacing:0px">
+                    <tr>
+                        <td width="50%"><div id="viewerLeft" class="viewer"></div></td>
+                        <td width="50%"><div id="viewerRight" class="viewer"></div></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="layer3" class="layer3">
+                <table width="100%" height="100%" style="border-spacing:0px">
+                    <tr>
+                        <td width="50%" class="messageBox"><div id="messageLeft" class="message1 blink"></div></td>
+                        <td width="50%" class="messageBox"><div id="messageRight" class="message2 blink"></div></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <script src="js/google-analytics-tracker.js"></script>
+    </body>
+</html>
