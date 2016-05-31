@@ -453,6 +453,8 @@ function orbitByPose(q) {
     var pitch = Math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
     var yaw = Math.asin(2*x*y + 2*z*w);
     
+    console.log("Roll: " + roll + ", Pitch: " + pitch + ", Yaw: " + yaw);
+
     var e = { alpha: roll * _rad2deg, beta: pitch * _rad2deg, gamma: yaw * _rad2deg };
     orb(e);
     
