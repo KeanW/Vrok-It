@@ -45961,10 +45961,11 @@ function Viewer3DImpl(thecanvas, theapi)
     this.setRenderCallback = function (cb) { this.renderCallback = cb; }
 
     this.run = function () {
+        var self = this;
         //Begin the render loop
         _reqid = 0;
         (function animloop(highResTimeStamp) {
-            _reqid = (cb ? cb(animloop) : window.requestAnimationFrame(animloop));
+          _reqid = (self.renderCallback ? self.renderCallback(animloop) : window.requestAnimationFrame(animloop));
             tick(highResTimeStamp);
         })();
     };
