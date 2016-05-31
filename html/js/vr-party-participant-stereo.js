@@ -455,8 +455,10 @@ function orbitByPose(q) {
     
     console.log("Roll: " + roll + ", Pitch: " + pitch + ", Yaw: " + yaw);
 
-    var e = { alpha: roll * _rad2deg, beta: pitch * _rad2deg, gamma: yaw * _rad2deg };
-    orb(e);
+    orbitViews(pitch, roll);
+    
+    //var e = { alpha: roll * _rad2deg, beta: pitch * _rad2deg, gamma: yaw * _rad2deg };
+    //orb(e);
     
     /*
     var v = pitch;
