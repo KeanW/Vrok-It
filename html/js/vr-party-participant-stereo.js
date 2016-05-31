@@ -11,7 +11,7 @@ var _orbitInitialPosition;
 var _lastVert, _lastHoriz;
 var _socket = io();
 var _sessionId;
-var _noSleepVR;
+var _rotation;
 
 // Get the VRDisplay and save it for later.
 var _vrDisplay = null;
@@ -142,7 +142,12 @@ function launchViewer(urn) {
                     
                     // Added for WebVR support
                     
-                    _viewer.autocam.setAnimateCallback(function(fn) { _vrDisplay.requestAnimationFrame(fn); });
+                    _viewer.autocam.setAnimateCallback(
+                        function(fn) {
+                            _rotation = new THREE.Euler().setFromQuaternion( _vrDisplay.getPose(), "XYZ" );
+                            _vrDisplay.requestAnimationFrame(fn);
+                        }
+                    );
                     _viewer.autocam.animate();
                         
                     _viewer.setQualityLevel(false, false);
