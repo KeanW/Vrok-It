@@ -153,7 +153,7 @@ function launchViewer(urn) {
                     );
                     _viewer.autocam.animate();
                         
-                    _viewer.setQualityLevel(true, true);
+                    _viewer.setQualityLevel(false, true);
                     //_viewer.setQualityLevel(false, false);
                     _viewer.setGroundShadow(true);
                     _viewer.setGroundReflection(false);
@@ -509,6 +509,6 @@ function zoomInOrOut(viewer, pos, factor) {
     var target = new THREE.Vector3(); //_viewer.navigation.getTarget();
     direction.subVectors(pos, target);
     direction.normalize();
-    direction.multiplyScalar(factor * 1.2);
+    direction.multiplyScalar(factor * 0.9);
     return direction.add(target);
 }
