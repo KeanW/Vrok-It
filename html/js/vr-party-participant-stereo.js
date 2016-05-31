@@ -145,7 +145,7 @@ function launchViewer(urn) {
                     _viewer.autocam.setAnimateCallback(
                         function(fn) {
                             var pose = _vrDisplay.getPose();
-                            _rotation = new THREE.Euler().setFromQuaternion( pose, "XYZ" );
+                            _rotation = new THREE.Euler().setFromQuaternion(pose.orientation, "XYZ");
                             _vrDisplay.requestAnimationFrame(fn);
                         }
                     );
