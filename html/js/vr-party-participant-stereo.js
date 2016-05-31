@@ -153,7 +153,8 @@ function launchViewer(urn) {
                     );
                     _viewer.autocam.animate();
                         
-                    _viewer.setQualityLevel(false, false);
+                    _viewer.setQualityLevel(false, true);
+                    //_viewer.setQualityLevel(false, false);
                     _viewer.setGroundShadow(true);
                     _viewer.setGroundReflection(false);
                     _viewer.setProgressiveRendering(false);
@@ -458,7 +459,7 @@ function orbitByPose(q) {
     if (pitch < 0) {
         roll = roll + Math.PI;
     }
-    orbitViews(-pitch, roll);
+    orbitViews(Math.PI - pitch, roll);
 }
 
 function orbitViews(vert, horiz) {
@@ -508,6 +509,6 @@ function zoomInOrOut(viewer, pos, factor) {
     var target = new THREE.Vector3(); //_viewer.navigation.getTarget();
     direction.subVectors(pos, target);
     direction.normalize();
-    direction.multiplyScalar(factor * 0.5);
+    direction.multiplyScalar(factor * 0.2);
     return direction.add(target);
 }
