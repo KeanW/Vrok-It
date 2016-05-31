@@ -13,6 +13,14 @@ var _socket = io();
 var _sessionId;
 var _noSleepVR;
 
+// Get the VRDisplay and save it for later.
+var _vrDisplay = null;
+navigator.getVRDisplays().then(function(displays) {
+  if (displays.length > 0) {
+    _vrDisplay = displays[0];
+  }
+});
+
 function initialize() {
     
     _sessionId = getURLParameter('session');
@@ -33,9 +41,9 @@ function initialize() {
 function connect() {
     $('#layer1').hide();
 
-    launchFullscreen($('#layer2')[0]);
-    
-    
+    _vrDisplay.requestPresent([$('#layer2')[0]]);
+    //launchFullscreen($('#layer2')[0]);
+        
     if (LMV_VIEWER_VERSION === '1.2.13') {
         $.get(
             window.location.origin + '/api/token',
@@ -130,6 +138,11 @@ function launchViewer(urn) {
                 
                 if (!_viewer) {
                     _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false });
+                    
+                    // Added for WebVR support
+                    
+                    _viewer.Autocam.animate(function() { _vrDisplay.requestAnimationFrame(_viewer.Autocam.animate); });
+                    
                     _viewer.start();
     
                     _viewer.setQualityLevel(false, false);
