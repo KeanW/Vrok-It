@@ -142,7 +142,7 @@ function launchViewer(urn) {
                     
                     // Added for WebVR support
                     
-                    _vrDisplay.requestPresent([$('#layer2')[0]]);
+                    _vrDisplay.requestPresent([{source: $('#layer2')[0]}]);
 
                     _viewer.autocam.setAnimateCallback(function(fn) { _vrDisplay.requestAnimationFrame(fn); });
                     _viewer.autocam.animate();
