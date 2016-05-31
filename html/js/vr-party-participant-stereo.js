@@ -145,8 +145,7 @@ function launchViewer(urn) {
                     _viewer.autocam.setAnimateCallback(
                         function(fn) {
                             var pose = _vrDisplay.getPose();
-                            var quat = new THREE.Quaternion().fromArray(pose.orientation);
-                            _rotation = new THREE.Euler().setFromQuaternion(quat, "XYZ");
+                            _rotation = new THREE.Quaternion().fromArray(pose.orientation);
                             orbitByPose(_rotation);
                             _vrDisplay.requestAnimationFrame(fn);
                         }
@@ -443,17 +442,28 @@ function orb(e) {
     orbitViews(vert, horiz);
 }
 
-function orbitByPose(r) {
-    var v = r.x;
-    var h = r.y;
+function orbitByPose(q) {
+    var x = q.x;
+    var y = q.y;
+    var z = q.z;
+    var w = q.w;
+    
+    var roll = Math.atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z);
+    var pitch = Math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
+    var yaw = Math.asin(2*x*y + 2*z*w);
+    
+    var v = pitch;
+    var h = yaw;
+    /*
     if (v < 0) {
         h = h + Math.PI;
     }
     if (Math.abs(r.z) > Math.PI / 2) {
         v = v + Math.PI;
-        h = -h;
+        h = -h;        
     }
-    orbitViews(-v, h);
+    */
+    orbitViews(v, h);
 }
 
 function orbitViews(vert, horiz) {
