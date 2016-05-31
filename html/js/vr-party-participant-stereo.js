@@ -459,7 +459,7 @@ function orbitByPose(q) {
     if (pitch < 0) {
         roll = roll + Math.PI;
     }
-    orbitViews(Math.PI - pitch, roll);
+    orbitViews(-pitch, Math.PI + roll);
 }
 
 function orbitViews(vert, horiz) {
@@ -509,6 +509,6 @@ function zoomInOrOut(viewer, pos, factor) {
     var target = new THREE.Vector3(); //_viewer.navigation.getTarget();
     direction.subVectors(pos, target);
     direction.normalize();
-    direction.multiplyScalar(factor * 0.2);
+    direction.multiplyScalar(factor * 0.8);
     return direction.add(target);
 }
