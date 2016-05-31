@@ -142,7 +142,8 @@ function launchViewer(urn) {
                     
                     // Added for WebVR support
                     
-                    _viewer.autocam.animate(function(fn) { _vrDisplay.requestAnimationFrame(fn); });
+                    _viewer.autocam.setAnimateCallback(function(fn) { _vrDisplay.requestAnimationFrame(fn); });
+                    _viewer.autocam.animate();
                         
                     _viewer.setQualityLevel(false, false);
                     _viewer.setGroundShadow(true);

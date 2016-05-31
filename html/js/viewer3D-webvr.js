@@ -7074,9 +7074,11 @@ var Autocam = Autocam || function(camera, navApi) {
     };
     ***/
 
-    this.animate = function(cb) {
-        if (cb) {
-            cb(this.animate);
+	this.setAnimateCallback = function(cb) { this.animateCallback = cb; }
+    
+    this.animate = function() {
+        if (this.animateCallback) {
+            this.animateCallback(this.animate);
         } else {
             requestAnimationFrame(this.animate);
         }
