@@ -68081,7 +68081,8 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
 
 	// Specific HMD parameters
 	var HMD = (options && options.HMD) ? options.HMD: {
-		// Parameters from the Oculus Rift DK2
+	  // Parameters from the Oculus Rift DK2
+    /*
 		hResolution: 1920,
 		vResolution: 1080,
 		hScreenSize: 0.12576,
@@ -68091,6 +68092,16 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
 		eyeToScreenDistance: 0.041,
 		distortionK : [1.0, 0.22, 0.24, 0.0],
 		chromaAbParameter: [ 0.996, -0.004, 1.014, 0.0]
+    */
+	  hResolution: 1920,
+	  vResolution: 1080,
+	  hScreenSize: 0.115,
+	  vScreenSize: 0.064,
+	  interpupillaryDistance: 0.0635,
+	  lensSeparationDistance: 0.0635,
+	  eyeToScreenDistance: 0.056,
+	  distortionK: [1.0, 0.22, 0.24, 0.0],
+	  chromaAbParameter: [0.996, -0.004, 1.014, 0.0]
 	};
 
 
