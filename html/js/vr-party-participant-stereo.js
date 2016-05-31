@@ -153,11 +153,11 @@ function launchViewer(urn) {
                     );
                     _viewer.autocam.animate();
                         
-                    _viewer.setQualityLevel(false, true);
+                    _viewer.setQualityLevel(true, true);
                     //_viewer.setQualityLevel(false, false);
-                    _viewer.setGroundShadow(true);
+                    _viewer.setGroundShadow(false);
                     _viewer.setGroundReflection(false);
-                    _viewer.setProgressiveRendering(false);
+                    _viewer.setProgressiveRendering(true);
                 }
        
                 watchProgress();
@@ -509,6 +509,6 @@ function zoomInOrOut(viewer, pos, factor) {
     var target = new THREE.Vector3(); //_viewer.navigation.getTarget();
     direction.subVectors(pos, target);
     direction.normalize();
-    direction.multiplyScalar(factor * 0.9);
+    direction.multiplyScalar(factor);
     return direction.add(target);
 }
