@@ -147,7 +147,7 @@ function launchViewer(urn) {
                             var pose = _vrDisplay.getPose();
                             var quat = new THREE.Quaternion().fromArray(pose.orientation);
                             _rotation = new THREE.Euler().setFromQuaternion(quat, "XYZ");
-                            orbitViews(_rotation.X, _rotation.Y);
+                            orbitViews(_rotation.x, _rotation.y);
                             _vrDisplay.requestAnimationFrame(fn);
                         }
                     );
