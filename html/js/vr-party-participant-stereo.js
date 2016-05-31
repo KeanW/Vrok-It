@@ -4,6 +4,7 @@ var _loaded;
 var _baseDir;
 var _upVector;
 var _deg2rad = Math.PI / 180;
+var _rad2deg = 1 / _deg2rad;
 var _wasFlipped;
 var _readyToApplyEvents = false;
 var _model_state = {};
@@ -452,7 +453,7 @@ function orbitByPose(q) {
     var pitch = Math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
     var yaw = Math.asin(2*x*y + 2*z*w);
     
-    var e = { alpha: roll, beta: pitch, gamma: yaw };
+    var e = { alpha: roll * _rad2deg, beta: pitch * _rad2deg, gamma: yaw * _rad2deg };
     orb(e);
     
     /*
