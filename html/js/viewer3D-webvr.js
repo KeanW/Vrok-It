@@ -7074,13 +7074,13 @@ var Autocam = Autocam || function(camera, navApi) {
     };
     ***/
 
-	this.setAnimateCallback = function(cb) { this.animateCallback = cb; }
+    this.setAnimateCallback = function (cb) { this.animateCallback = cb; }
     
     this.animate = function() {
-        if (this.animateCallback) {
-            this.animateCallback(this.animate);
+        if (cam.animateCallback) {
+            cam.animateCallback(cam.animate);
         } else {
-            requestAnimationFrame(this.animate);
+            requestAnimationFrame(cam.animate);
         }
         // Is there an assumption here about the order of animation frame callbacks?
         var now = Date.now();
