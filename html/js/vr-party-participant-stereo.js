@@ -147,7 +147,7 @@ function launchViewer(urn) {
                             var pose = _vrDisplay.getPose();
                             var quat = new THREE.Quaternion().fromArray(pose.orientation);
                             _rotation = new THREE.Euler().setFromQuaternion(quat, "XYZ");
-                            orbitByPose(_rotation.x, _rotation.y);
+                            orbitByPose(_rotation);
                             _vrDisplay.requestAnimationFrame(fn);
                         }
                     );
@@ -443,9 +443,14 @@ function orb(e) {
     orbitViews(vert, horiz);
 }
 
-function orbitByPose(v, h) {
+function orbitByPose(r) {
+    var v = r.x;
+    var h = r.y;
     if (v < 0) {
         h = h + Math.PI;
+    }
+    if (Math.abs(r.z) > Math.PI) {
+        v = v + Math.PI;
     }
     orbitViews(-v, h);
 }
