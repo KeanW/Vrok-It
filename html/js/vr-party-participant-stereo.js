@@ -138,13 +138,12 @@ function launchViewer(urn) {
                 
                 if (!_viewer) {
                     _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false });
+                    _viewer.start();
                     
                     // Added for WebVR support
                     
-                    //_viewer.Autocam.animate(function() { _vrDisplay.requestAnimationFrame(_viewer.Autocam.animate); });
-                    
-                    _viewer.start();
-    
+                    _viewer.autocam.animate(function() { _vrDisplay.requestAnimationFrame(_viewer.autocam.animate); });
+                        
                     _viewer.setQualityLevel(false, false);
                     _viewer.setGroundShadow(true);
                     _viewer.setGroundReflection(false);
