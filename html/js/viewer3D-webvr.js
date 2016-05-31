@@ -45966,7 +45966,7 @@ function Viewer3DImpl(thecanvas, theapi)
         _reqid = 0;
         (function animloop(highResTimeStamp) {
           _reqid = (self.renderCallback ? self.renderCallback(animloop) : window.requestAnimationFrame(animloop));
-            tick(highResTimeStamp);
+            self.tick(highResTimeStamp);
         })();
     };
 
