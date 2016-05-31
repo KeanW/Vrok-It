@@ -41,7 +41,7 @@ function initialize() {
 function connect() {
     $('#layer1').hide();
 
-    _vrDisplay.requestPresent([$('#layer2')[0]]);
+    _vrDisplay.requestPresent([$('#outer')[0]]);
     //launchFullscreen($('#layer2')[0]);
         
     if (LMV_VIEWER_VERSION === '1.2.13') {
@@ -142,7 +142,7 @@ function launchViewer(urn) {
                     
                     // Added for WebVR support
                     
-                    _viewer.autocam.animate(function() { _vrDisplay.requestAnimationFrame(_viewer.autocam.animate); });
+                    _viewer.autocam.animate(function(fn) { _vrDisplay.requestAnimationFrame(fn); });
                         
                     _viewer.setQualityLevel(false, false);
                     _viewer.setGroundShadow(true);
