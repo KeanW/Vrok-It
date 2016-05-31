@@ -145,8 +145,9 @@ function launchViewer(urn) {
                     _viewer.autocam.setAnimateCallback(
                         function(fn) {
                             var pose = _vrDisplay.getPose();
-                            var quat = new THREE.Quaternion().fromArray(pose.orientation);
+                            var quat = new THREE.Quaternion().setFromArray(pose.orientation);
                             _rotation = new THREE.Euler().setFromQuaternion(quat, "XYZ");
+                            orbitViews(_rotation.X, _rotation.Y);
                             _vrDisplay.requestAnimationFrame(fn);
                         }
                     );
@@ -389,14 +390,14 @@ function unwatchProgress() {
 
 function watchTilt() {
     if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', orb);
+        //window.addEventListener('deviceorientation', orb);
     }
 }
 
 
 function unwatchTilt() {
     if (window.DeviceOrientationEvent) {
-        window.removeEventListener('deviceorientation', orb);
+        //window.removeEventListener('deviceorientation', orb);
     }
 }
 
