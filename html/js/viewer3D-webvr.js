@@ -68133,7 +68133,7 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
         //scale applied by the underlying render context
         _w = width;
         _h = height;
-        _dpr = _renderer.getPixelRatio();
+        _dpr = 1.0;//_renderer.getPixelRatio();
 
         computeCameraParams(HMD);
 
