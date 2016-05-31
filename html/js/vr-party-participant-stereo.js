@@ -452,9 +452,12 @@ function orbitByPose(q) {
     var pitch = Math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
     var yaw = Math.asin(2*x*y + 2*z*w);
     
+    var e = { alpha: roll, beta: pitch, gamma: yaw };
+    orb(e);
+    
+    /*
     var v = pitch;
     var h = yaw;
-    /*
     if (v < 0) {
         h = h + Math.PI;
     }
@@ -462,8 +465,8 @@ function orbitByPose(q) {
         v = v + Math.PI;
         h = -h;        
     }
+    orbitViews(-v, h);
     */
-    orbitViews(v, h);
 }
 
 function orbitViews(vert, horiz) {
