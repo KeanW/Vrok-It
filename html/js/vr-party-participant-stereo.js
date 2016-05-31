@@ -152,8 +152,8 @@ function launchViewer(urn) {
                         }
                     );
                         
-                    _viewer.setQualityLevel(false, false);
-                    _viewer.setGroundShadow(true);
+                    //_viewer.setQualityLevel(false, false);
+                    //_viewer.setGroundShadow(true);
                     _viewer.setGroundReflection(false);
                     _viewer.setProgressiveRendering(false);
                 }

@@ -68140,8 +68140,8 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
         _leftContext = new RenderContext();
         _rightContext = new RenderContext();
 
-        _leftContext.settings.sao = _rightContext.settings.sao = true;
-        _leftContext.settings.antialias = _rightContext.settings.antialias = true;
+        _leftContext.settings.sao = _rightContext.settings.sao = false;
+        _leftContext.settings.antialias = _rightContext.settings.antialias = false;
         _leftContext.settings.customPresentPass = _rightContext.settings.customPresentPass = _useWarp;
 
         _leftContext.init(_renderer, _w/2 * distScale / _dpr, _h * distScale / _dpr);
