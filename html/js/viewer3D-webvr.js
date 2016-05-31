@@ -7074,21 +7074,6 @@ var Autocam = Autocam || function(camera, navApi) {
     };
     ***/
 
-    this.setAnimateCallback = function (cb) { this.animateCallback = cb; }
-    
-    this.animate = function() {
-        if (cam.animateCallback) {
-            cam.animateCallback(cam.animate);
-        } else {
-            requestAnimationFrame(cam.animate);
-        }
-        // Is there an assumption here about the order of animation frame callbacks?
-        var now = Date.now();
-        deltaTime = now - startTime;
-        startTime = now;
-        // stderr("ANIMATE: delta = " + deltaTime.toFixed(4));
-    };
-
     //Control variables
     this.ortho = false;
     this.center = camera.target ? camera.target.clone() : new THREE.Vector3(0,0,0);
@@ -45789,7 +45774,7 @@ function Viewer3DImpl(thecanvas, theapi)
 
     //Main animation loop -- update camera,
     //advance animations, render if needed.
-    function tick(highResTimeStamp)
+    this.tick = function(highResTimeStamp)
     {
         //Did the window resize since last tick?
         if (_needsResize) updateCanvasSize();
@@ -45973,15 +45958,17 @@ function Viewer3DImpl(thecanvas, theapi)
         _cameraUpdated = false;
     }
 
+    this.setRenderCallback = function (cb) { this.renderCallback = cb; }
 
-    this.run = function() {
+    this.run = function () {
         //Begin the render loop
         _reqid = 0;
         (function animloop(highResTimeStamp) {
-            _reqid = window.requestAnimationFrame(animloop);
+            _reqid = (cb ? cb(animloop) : window.requestAnimationFrame(animloop));
             tick(highResTimeStamp);
         })();
     };
+
 
     this.toggleProgressive = function(value) {
         this.progressiveRender = value;
