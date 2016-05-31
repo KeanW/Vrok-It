@@ -451,6 +451,7 @@ function orbitByPose(r) {
     }
     if (Math.abs(r.z) > Math.PI / 2) {
         v = v + Math.PI;
+        h = -h;
     }
     orbitViews(-v, h);
 }
