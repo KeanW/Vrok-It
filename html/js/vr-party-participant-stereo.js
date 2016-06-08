@@ -80,6 +80,102 @@ function clearMessage() {
 }
 
 
+function launchScopedViewer(urn) {
+    _baseDir = null;
+    _loaded = false;
+    _updating = false;
+    _upVector = new THREE.Vector3(0, 1, 0);
+    _orbitInitialPosition = null;
+
+    // Make sure the VR extension doesn't change the fullscreen settings
+    // when it loads ot unloads (these can only be called from a UI callback)
+    // Also stub out the HUD message function, to stop those from being shown
+    
+    window.launchFullscreen = function() {};
+    window.exitFullscreen = function() {};
+    Autodesk.Viewing.Private.HudMessage.displayMessage = function() {};
+    
+    if (urn) {
+        // Remove all event listeners
+        unwatchTilt;
+        unwatchProgress();
+    
+        clearMessage();
+        
+        urn = urn.ensurePrefix('urn:');
+        Autodesk.Viewing.Initializer(
+            getScopedViewingOptions(urn),
+            function() {
+                _viewer.initialize();
+                Autodesk.Viewing.Document.load(
+                    urn,
+                    function(documentData) {
+                        var model = getModel(documentData);
+                        if (!model) return;
+            
+                        // Uninitializing the viewers helps with stability
+                        
+                        if (_viewer) {
+                            _viewer.finish();
+                            _viewer = null;
+                        }
+                        
+                        if (!_viewer) {
+                            _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false });
+                            _viewer.start();                    
+
+                            // Added for WebVR support
+                            
+                            _viewer.impl.setRenderCallback(
+                                function(fn) {
+                                    var pose = _vrDisplay.getPose();
+                                    var quat = new THREE.Quaternion().fromArray(pose.orientation);
+                                    orbitByPose(quat);
+                                    _vrDisplay.requestAnimationFrame(fn);
+                                }
+                            );
+                                
+                            //_viewer.setQualityLevel(false, false);
+                            //_viewer.setGroundShadow(true);
+                            _viewer.setGroundReflection(false);
+                            _viewer.setProgressiveRendering(false);
+                        }
+            
+                        watchProgress();
+
+                        _viewer.prefs.remove("fusionOrbit", false);
+                        _viewer.prefs.remove("fusionOrbitConstrained", false);
+
+                        loadModel(_viewer, model);
+                        
+                        // Hide the viewer's toolbar and the home button
+                        
+                        $('.adsk-control-group').each(function(){            
+                            $(this).find('>.adsk-button').each(function(){                
+                                $(this).css({ 'display':'none' });
+                            });
+                        });
+                        
+                        // Needed for v2.2+
+                        
+                        $('#guiviewer3d-toolbar').css({ 'display':'none' });
+                        $('.homeViewWrapper').css({ 'display':'none' });
+                        $('.homeViewMenu').css({ 'display':'none' });
+                    }
+                );
+            }
+        );
+    }
+    else {
+                
+        showMessage('Disconnected', true);
+        
+        _viewer.uninitialize();
+        _viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewer')[0], { wantInfoButton : false});
+    }
+}
+
+
 function launchViewer(urn) {
     _baseDir = null;
     _loaded = false;
@@ -173,7 +269,7 @@ function launchViewer(urn) {
 function initConnection() {
     _socket.on('lmv-command', function(msg) {
         if (msg.name === 'load') {
-            launchViewer(msg.value, msg.disconnecting);
+            launchScopedViewer(msg.value, msg.disconnecting);
         }
         else if (msg.name === 'zoom') {
             _model_state.zoom_factor = parseFloat(msg.value);
