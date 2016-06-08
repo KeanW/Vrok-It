@@ -106,7 +106,7 @@ function launchScopedViewer(urn) {
         Autodesk.Viewing.Initializer(
             getScopedViewingOptions(urn),
             function() {
-                _viewer.initialize();
+                //_viewer.initialize();
                 Autodesk.Viewing.Document.load(
                     urn,
                     function(documentData) {
