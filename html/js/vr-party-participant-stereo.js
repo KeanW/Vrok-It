@@ -45,41 +45,17 @@ function connect() {
     _vrDisplay.requestPresent([{source: $('#layer2')[0]}]);
     //launchFullscreen($('#layer2')[0]);
         
-    if (LMV_VIEWER_VERSION === '1.2.13') {
-        $.get(
-            window.location.origin + '/api/token',
-            function (accessTokenResponse) {
-        
-                var options = {};
-                options.env = 'AutodeskProduction';
-                options.accessToken = accessTokenResponse.access_token;
-                Autodesk.Viewing.Initializer(options, function() {
-                    var avp = Autodesk.Viewing.Private;
-                    avp.GPU_OBJECT_LIMIT = 100000;
-                    avp.onDemandLoading = false;
-        
-                    showMessage('Waiting...');
-        
-                    _socket.emit('join-session', { id: _sessionId });
-                    
-                    initConnection();
-                });
-            }
-        );
-    }
-    else {
-        Autodesk.Viewing.Initializer(getViewingOptions(), function() {
-            var avp = Autodesk.Viewing.Private;
-            avp.GPU_OBJECT_LIMIT = 100000;
-            avp.onDemandLoading = false;
+    Autodesk.Viewing.Initializer(getViewingOptions(), function() {
+        var avp = Autodesk.Viewing.Private;
+        avp.GPU_OBJECT_LIMIT = 100000;
+        avp.onDemandLoading = false;
 
-            showMessage('Waiting...');
+        showMessage('Waiting...');
 
-            _socket.emit('join-session', { id: _sessionId });
+        _socket.emit('join-session', { id: _sessionId });
 
-            initConnection();
-        });
-    }
+        initConnection();
+    });
 }
 
 
@@ -305,25 +281,11 @@ function viewerApplyState() {
 
 function tryToApplyIds(prop, ids) {
     var success = true;        
-    if ((LMV_VIEWER_VERSION === '1.2.13' || LMV_VIEWER_VERSION === '1.2.14') &&
-        ids.length > 0 && typeof ids[0] === 'number') {
-
-        // getNodesByIds can throw an exception when the model isn't sufficiently loaded
-        // Catch it and try to apply the viewer state again in a second
-         try {
-            ids = _viewer.model.getNodesByIds(ids);
-        }
-        catch (ex) {
-            success = false;
-        }
+    try {
+        viewersApply(prop, ids);
     }
-    if (success) {
-        try {
-            viewersApply(prop, ids);
-        }
-        catch (ex) {
-            success = false;
-        }
+    catch (ex) {
+        success = false;
     }
     return success;
 }
