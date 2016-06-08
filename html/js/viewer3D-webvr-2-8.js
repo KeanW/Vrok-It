@@ -7858,7 +7858,6 @@ avp.Autocam = avp.Autocam || function(camera, navApi) {
     };
     ***/
 
-    /* KRW - removed to support WebVR
     (function animate() {
         requestAnimationFrame(animate);
         // Is there an assumption here about the order of animation frame callbacks?
@@ -7866,7 +7865,6 @@ avp.Autocam = avp.Autocam || function(camera, navApi) {
         deltaTime = now - startTime;
         startTime = now;
     }());
-    */
 
     //Control variables
     this.ortho = false;
