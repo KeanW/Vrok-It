@@ -7858,6 +7858,7 @@ avp.Autocam = avp.Autocam || function(camera, navApi) {
     };
     ***/
 
+    /* KRW - removed to support WebVR
     (function animate() {
         requestAnimationFrame(animate);
         // Is there an assumption here about the order of animation frame callbacks?
@@ -7865,6 +7866,7 @@ avp.Autocam = avp.Autocam || function(camera, navApi) {
         deltaTime = now - startTime;
         startTime = now;
     }());
+    */
 
     //Control variables
     this.ortho = false;
@@ -51405,15 +51407,21 @@ function Viewer3DImpl(thecanvas, theapi)
         }
     }
 
+    // KRW - added to support WebVR
 
-    this.run = function() {
+    this.setRenderCallback = function (cb) { this.renderCallback = cb; }
+
+    this.run = function () {
+        var self = this; // Added by KRW
+
         //Begin the render loop (but delay first repaint until the following frame, so that
         //data load gets kicked off as soon as possible
         _reqid = 0;
         setTimeout(function(){
             (function animloop(highResTimeStamp) {
-                _reqid = window.requestAnimationFrame(animloop);
-                tick(highResTimeStamp);
+                // Following 2 lines modified by KRW
+                _reqid = (self.renderCallback ? self.renderCallback(animloop) : window.requestAnimationFrame(animloop));
+                self.tick(highResTimeStamp);
             })();
         }, 1);
     };
@@ -74535,7 +74543,9 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
 
 	// Specific HMD parameters
 	var HMD = (options && options.HMD) ? options.HMD: {
-		// Parameters from the Oculus Rift DK2
+	  // Parameters from the Oculus Rift DK2
+    // Changed by KRW to support Google Cardboard by default (for WebVR)
+    /*
 		hResolution: 1920,
 		vResolution: 1080,
 		hScreenSize: 0.12576,
@@ -74545,6 +74555,16 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
 		eyeToScreenDistance: 0.041,
 		distortionK : [1.0, 0.22, 0.24, 0.0],
 		chromaAbParameter: [ 0.996, -0.004, 1.014, 0.0]
+    */
+	  hResolution: 1920,
+	  vResolution: 1080,
+	  hScreenSize: 0.115,
+	  vScreenSize: 0.064,
+	  interpupillaryDistance: 0.0635,
+	  lensSeparationDistance: 0.0635,
+	  eyeToScreenDistance: 0.056,
+	  distortionK: [1.0, 0.22, 0.24, 0.0],
+	  chromaAbParameter: [0.996, -0.004, 1.014, 0.0]
 	};
 
 
@@ -74564,8 +74584,9 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
 		// Fov is normally computed with:
 		//   THREE.Math.radToDeg( 2*Math.atan2(HMD.vScreenSize,2*HMD.eyeToScreenDistance) );
 		// But with lens distortion it is increased (see Oculus SDK Documentation)
-		var r = -1.0 - (4 * (HMD.hScreenSize/4 - HMD.lensSeparationDistance/2) / HMD.hScreenSize);
-		distScale = (HMD.distortionK[0] + HMD.distortionK[1] * Math.pow(r,2) + HMD.distortionK[2] * Math.pow(r,4) + HMD.distortionK[3] * Math.pow(r,6));
+		var r = -1.0 - (4 * (HMD.hScreenSize / 4 - HMD.lensSeparationDistance / 2) / HMD.hScreenSize);
+    // Next line modified by KRW
+		distScale = 1.0;//(HMD.distortionK[0] + HMD.distortionK[1] * Math.pow(r,2) + HMD.distortionK[2] * Math.pow(r,4) + HMD.distortionK[3] * Math.pow(r,6));
 		fov = THREE.Math.radToDeg(2*Math.atan2(HMD.vScreenSize*distScale, 2*HMD.eyeToScreenDistance));
 
 		// Compute camera projection matrices
@@ -74588,7 +74609,8 @@ Autodesk.Viewing.Extensions.Oculus.StereoRenderContext = function(options) {
         //scale applied by the underlying render context
         _w = width;
         _h = height;
-        _dpr = _renderer.getPixelRatio();
+        // Next line modified by KRW
+        _dpr = 1.0;//_renderer.getPixelRatio();
 
         computeCameraParams(HMD);
 
