@@ -45,6 +45,28 @@ function getViewingOptions() {
 }
 
 
+function getScopedViewingOptions(urn) {
+    var getToken = function() {
+        var token = null;
+        jQuery.ajax({
+            url: window.location.origin + '/api/token',
+            success: function (result) {
+                token = result.access_token;
+            },
+            async: false
+        });
+        return token;
+    };
+    var options = {
+        'document' : urn.ensurePrefix('urn:'),
+        'env' : 'AutodeskProduction',
+        'getAccessToken' : getToken,
+        'refreshToken' : getToken
+    };
+    return options;
+}
+
+
 function loadModel(viewer, documentData) {
     viewer.resize();
     viewer.load(
