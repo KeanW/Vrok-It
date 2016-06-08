@@ -42,7 +42,11 @@ function initialize() {
 function connect() {
     $('#layer1').hide();
 
-    _vrDisplay.requestPresent([{source: $('#layer2')[0]}]);
+    try {
+        _vrDisplay.requestPresent([{source: $('#layer2')[0]}]);
+    }
+    catch (ex) {}
+    
     //launchFullscreen($('#layer2')[0]);
         
     Autodesk.Viewing.Initializer(getViewingOptions(), function() {
@@ -149,10 +153,11 @@ function launchViewer(urn) {
                     });
                 });
                 
-                // Needed for v2.2
+                // Needed for v2.2+
                 
                 $('#guiviewer3d-toolbar').css({ 'display':'none' });
                 $('.homeViewWrapper').css({ 'display':'none' });
+                $('.homeViewMenu').css({ 'display':'none' });
             }
         );
     }
