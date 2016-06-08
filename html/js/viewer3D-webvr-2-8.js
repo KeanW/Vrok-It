@@ -51190,7 +51190,7 @@ function Viewer3DImpl(thecanvas, theapi)
     //Main animation loop -- update camera,
     //advance animations, render if needed.
     // Next line modified by KRW to support WebVR
-    self.tick = function(highResTimeStamp) {
+    this.tick = function(highResTimeStamp) {
 
         //Did the window resize since last tick?
         if (_needsResize) updateCanvasSize();
