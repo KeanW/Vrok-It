@@ -48,6 +48,7 @@ function initialize() {
         var url = base_url + '/participant.html?session=' + _sessionId;
         $('#url').attr('href', url);
         $('#qrcode').qrcode(url);
+        $('#join').text("www.vrok.it/join?id=" + _sessionId);
         
         // If the provided session exists then load its data (right now just its URN)
         $.get(

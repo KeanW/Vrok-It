@@ -29,6 +29,11 @@ app.get('/api/sessionId', function(req, res) {
     res.json(sessionId);
 });
 
+app.get('/join', function(req, res) {
+  var id = req.query.id;
+  res.redirect('/participant.html?session=' + id);
+});
+
 // Currently only return the URN - could also return
 // the various explode, zoom factors, etc.
 app.get('/api/getSession/:id', function(req, res) {  
