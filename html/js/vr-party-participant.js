@@ -64,9 +64,13 @@ function connect() {
 
             showMessage('Waiting...');
 
-            _socket.emit('join-session', { id: _sessionId });
+            if (_sessionId === "demo") {
+                launchViewer("dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=");
+            } else {
+                _socket.emit('join-session', { id: _sessionId });
 
-            initConnection();
+                initConnection();
+            }
         });
     }
 }
