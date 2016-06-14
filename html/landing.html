@@ -12,20 +12,33 @@
             margin: 3px;
             position: relative;
             display: inline-block;
+            height: 70%;
           }
           .cmd-btn {
             position: relative;
-            top: 40%;
+            top: 25%;
+            margin-top: 30px;
+          }
+          .title {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 40px;
+            color: #555;
+            text-align: center;
+          }
+          .footer {
+            text-align: center;
           }
         </style>
     </head>
     <body onload="initialize();" oncontextmenu="return false;">
       <div id="layer1" class="layer1">
+        <p class="title">Mobile VR demos</p>
         <div id="control" class="control">
-            <div class='cmd-btn' onclick="location.href='http://keanw.com/a360vr'">krpano</div>
-            <div class='cmd-btn' onclick="location.href='http://pano.autodesk.com/aframe/final.html'">A-Frame</div>
-            <div class='cmd-btn' onclick="location.href='http://www.vrok.it/join?id=demo'">Vrok-It</div>
+            <div class='cmd-btn' onclick="location.href='http://www.vrok.it/join?id=demo'">3D Viewer</div>
+            <div class='cmd-btn' onclick="location.href='http://pano.autodesk.com/aframe/final.html'">Stereo Pano</div>
+            <!--div class='cmd-btn' onclick="location.href='http://keanw.com/a360vr'">krpano</div-->
         </div>
       </div>
+      <p class="footer"><img src="img/devcon.png"/></p>
     </body>
 </html>
