@@ -5,6 +5,7 @@ var _last_distance_to_target;
 var _view_data_bucket = 'vrparty';
 var _default_models = {
     'robot arm'     : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=',
+    'welding robot' : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9BQkJfcm9ib3QuZHdm',
     'ergon chair'   : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0VyZ29uLnppcA==',
     'differential'  : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0RpZmYuZHdmeA==',
     'suspension'    : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1N1c3BlbnNpb24uZHdm',
@@ -150,6 +151,7 @@ function launchUrn(urn) {
                 _viewer.addEventListener(Autodesk.Viewing.SHOW_EVENT, onShow);
                 _viewer.addEventListener(Autodesk.Viewing.EXPLODE_CHANGE_EVENT, onExplode);
                 _viewer.addEventListener(Autodesk.Viewing.CUTPLANES_CHANGE_EVENT,onSection);
+                _viewer.addEventListener(Autodesk.Viewing.RENDER_OPTION_CHANGED_EVENT, onRenderOption);
 
                 resetSize(_viewer.container);
                     
@@ -228,6 +230,11 @@ function onExplode() {
 
 function onSection(event) {
     _socket.emit('lmv-command', { session: _sessionId, name: 'section', value: _viewer.getCutPlanes() });
+}
+
+
+function onRenderOption(event) {
+    _socket.emit('lmv-command', { session: _sessionId, name: 'render', value: _viewer.impl.currentLightPreset() });
 }
 
 
