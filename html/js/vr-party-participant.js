@@ -135,8 +135,6 @@ function launchViewer(urn) {
                     _viewerLeft.setGroundShadow(true);
                     _viewerLeft.setGroundReflection(false);
                     _viewerLeft.setGhosting(false);
-
-                    _upVector = _viewerLeft.navigation.getCameraUpVector();
                 }
     
                 if (!_viewerRight) {
