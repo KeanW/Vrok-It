@@ -76,7 +76,6 @@ function loadModel(viewer, documentData) {
             viewer.navigation.setZoomTowardsPivot(true);
             viewer.navigation.setReverseZoomDirection(true);
             viewer.setLightPreset(0);
-            _upVector = _viewerLeft.navigation.getCameraUpVector();
         }
     );
 }
