@@ -190,6 +190,9 @@ function initConnection() {
                 return new THREE.Vector4(vec.x, vec.y, vec.z, vec.w);
             });
         }
+        else if (msg.name === 'render') {
+            _model_state.lighting = msg.value;
+        }
         viewersApplyState();
     });
 }
@@ -277,6 +280,12 @@ function viewersApplyState() {
         viewersApply('setCutPlanes', _model_state.cut_planes);
         _model_state.cut_planes = undefined;
         console.log('Applied section');
+    }
+
+    if (_model_state.lighting !== undefined) {
+        viewersApply('setLightPreset', _model_state.lighting);
+        _model_state.lighting = undefined;
+        console.log('Applied lighting');
     }
 
     if (not_ready) {
