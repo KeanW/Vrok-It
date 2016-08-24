@@ -373,7 +373,8 @@ function finishProgress() {
         if (!_orbitInitialPosition) {
             _orbitInitialPosition = _viewerLeft.navigation.getPosition();
         }
-        _upVector = _viewerLeft.model.getUpVector().clone();
+        var vec = _viewerLeft.model.getUpVector();
+        _upVector = new THREE.Vector3(vec[0], vec[1], vec[2]);
 
         //unwatchProgress();
         watchCameras();
