@@ -532,7 +532,7 @@ function orbitViews(vert, horiz) {
 
     // Start by applying the left/right orbit
     // (we need to check the up/down value, though)
-    if (vert < 0 && !isIOSDevice()) {
+    if (vert < 0 && !Autodesk.Viewing.isIOSDevice()) {
         horiz = horiz + Math.PI;
     }
 
