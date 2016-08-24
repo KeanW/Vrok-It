@@ -436,6 +436,8 @@ function finishProgress() {
         if (!_orbitInitialPosition) {
             _orbitInitialPosition = _viewer.navigation.getPosition();
         }
+        var vec = _viewerLeft.model.getUpVector();
+        _upVector = new THREE.Vector3(vec[0], vec[1], vec[2]);
 
         _viewer.loadExtension('Autodesk.ADN.Viewing.Extension.VR', {});
 
@@ -536,7 +538,7 @@ function orbitViews(vert, horiz) {
     // We'll rotate our position based on the initial position
     // and the target will stay the same
     
-    if (_orbitInitialPosition == null)
+    if (_orbitInitialPosition === null)
         return;
     
     var pos = _orbitInitialPosition.clone();
