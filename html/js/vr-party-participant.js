@@ -528,36 +528,39 @@ function orb(e) {
 function orbitViews(vert, horiz) {
     // We'll rotate our position based on the initial position
     // and the target will stay the same
-    var pos = _orbitInitialPosition.clone();
-    var trg = _viewerLeft.navigation.getTarget();
 
-    // Start by applying the left/right orbit
-    // (we need to check the up/down value, though)
-    if (vert < 0 && !Autodesk.Viewing.isIOSDevice()) {
-        horiz = horiz + Math.PI;
+    if (_orbitInitialPosition) {
+        var pos = _orbitInitialPosition.clone();
+        var trg = _viewerLeft.navigation.getTarget();
+
+        // Start by applying the left/right orbit
+        // (we need to check the up/down value, though)
+        if (vert < 0 && !Autodesk.Viewing.isIOSDevice()) {
+            horiz = horiz + Math.PI;
+        }
+
+        var zAxis = _upVector.clone();
+        pos.applyAxisAngle(zAxis, horiz);
+
+        // Now add the up/down rotation
+        var axis = trg.clone().sub(pos).normalize();
+        axis.cross(zAxis);
+        pos.applyAxisAngle(axis, -vert);
+
+        // Determine the camera up vector: this is important if
+        // getting to the extremities, to stop direction flipping
+        var camUp = pos.clone().sub(trg).normalize();
+        camUp.cross(axis).normalize();
+
+        // Zoom in with the lefthand view
+        zoom(_viewerLeft, pos, trg, camUp);
+
+        // Get a camera slightly to the right
+        var pos2 = offsetCameraPos(_viewerLeft, pos, trg, true);
+
+        // And zoom in with that on the righthand view, too
+        zoom(_viewerRight, pos2, trg, camUp);
     }
-
-    var zAxis = _upVector.clone();
-    pos.applyAxisAngle(zAxis, horiz);
-
-    // Now add the up/down rotation
-    var axis = trg.clone().sub(pos).normalize();
-    axis.cross(zAxis);
-    pos.applyAxisAngle(axis, -vert);
-
-    // Determine the camera up vector: this is important if
-    // getting to the extremities, to stop direction flipping
-    var camUp = pos.clone().sub(trg).normalize();
-    camUp.cross(axis).normalize();
-
-    // Zoom in with the lefthand view
-    zoom(_viewerLeft, pos, trg, camUp);
-
-    // Get a camera slightly to the right
-    var pos2 = offsetCameraPos(_viewerLeft, pos, trg, true);
-
-    // And zoom in with that on the righthand view, too
-    zoom(_viewerRight, pos2, trg, camUp);
 }
 
 
