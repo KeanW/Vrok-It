@@ -373,7 +373,7 @@ function finishProgress() {
         if (!_orbitInitialPosition) {
             _orbitInitialPosition = _viewerLeft.navigation.getPosition();
         }
-        _upVector = _viewerLeft.navigation.getCameraUpVector();
+        _upVector = _viewerLeft.model.getUpVector();
 
         //unwatchProgress();
         watchCameras();
