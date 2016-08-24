@@ -97,7 +97,7 @@ function launchViewer(urn) {
     _baseDir = null;
     _leftLoaded = _rightLoaded = false;
     _updatingLeft = _updatingRight = false;
-    _upVector = new THREE.Vector3(0, 1, 0);
+    //_upVector = new THREE.Vector3(0, 1, 0);
     _orbitInitialPosition = null;
 
     if (urn) {
@@ -135,6 +135,8 @@ function launchViewer(urn) {
                     _viewerLeft.setGroundShadow(true);
                     _viewerLeft.setGroundReflection(false);
                     _viewerLeft.setGhosting(false);
+
+                    _upVector = _viewerLeft.navigation.getCameraUpVector();
                 }
     
                 if (!_viewerRight) {
