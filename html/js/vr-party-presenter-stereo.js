@@ -16,9 +16,10 @@ var _default_models = {
     //'aotea'         : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2FvdGVhMy5kd2Y=',
     //'dinghy'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2RpbmdoeS5mM2Q=',
     'column'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL3RhYmxldDIuemlw',
-    'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA='
+    'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA=',
     //'trophy'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9Ucm9waHlfQW5nZWxIYWNrLmYzZA==',
     //'cake'          : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9IQkM0LmR3Zng='
+    'movement'      : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9FVEFfNjQ5Ny0xX01vdmVtZW50LmR3Zg'
 };
 var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 
@@ -469,7 +470,7 @@ function uploadFiles(viewDataClient, bucket, files) {
                             // add new button
                             var panel = document.getElementById('control');
                             var name = truncateName(response.file.name);
-                            addButton(panel, name, function() { launchUrn(urn); });
+                            addButton(panel, name, function(urn) { return function() { launchUrn(urn); } }(urn));
 
                             // open it in a viewer
                             launchUrn(urn);
@@ -559,9 +560,9 @@ function readCookiesForCustomModel() {
             var nameValue = c.split('=');
             if (nameValue) {
                 var panel = document.getElementById('control');
-                addButton(panel, truncateName(nameValue[0]), function() {
-                    launchUrn(decodeURIComponent(nameValue[1]));
-                });
+                addButton(panel, truncateName(nameValue[0]), function(urn) {
+                    return function() { launchUrn(urn); }
+                }(decodeURIComponent(nameValue[1])));
             }
         }
     }
