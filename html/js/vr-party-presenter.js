@@ -19,7 +19,7 @@ var _default_models = {
     'tablet'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL2VneXB0NC56aXA=',
     //'trophy'        : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9Ucm9waHlfQW5nZWxIYWNrLmYzZA==',
     //'cake'          : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9IQkM0LmR3Zng='
-    'movement'      : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9FVEFfNjQ5Ny0xX01vdmVtZW50LmR3Zg'
+    'movement'      : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9FVEFfNjQ5Ny0xX01vdmVtZW50X0NvcnJlY3RlZF8zLmR3Zg'
 };
 var _hosts = [ 'vr-party.herokuapp.com', 'www.vrok.it' ];
 
