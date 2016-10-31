@@ -4,6 +4,7 @@ var _viewer;
 var _last_distance_to_target;
 var _view_data_bucket = 'vrparty';
 var _default_models = {
+    'pumpkin'       : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9wdW1rcGluX3YxLjcyODk1MjAzLTIzZTQtNGRkZi05MThlLWZhNjliOTlhYWJiOC5mM2Q',
     'robot arm'     : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL1JvYm90QXJtLmR3Zng=',
     'welding robot' : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dnJwYXJ0eS9BQkJfcm9ib3QuZHdm',
     'ergon chair'   : 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6c3RlYW1idWNrL0VyZ29uLnppcA==',
