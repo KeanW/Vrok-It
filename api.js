@@ -20,18 +20,7 @@ var BASE_URL = 'https://developer.api.autodesk.com';
 
 var request = require('request');
 
-///////////////////////////////////////////////////////////////////
-//
-//
-///////////////////////////////////////////////////////////////////
-exports.getToken = function (req, res) {
-
-  var params = {
-    client_id: process.env.CONSUMER_KEY,
-    client_secret: process.env.CONSUMER_SECRET,
-    grant_type: 'client_credentials'
-  }
-
+function getScopedToken(res, params) {
   request.post(BASE_URL + '/authentication/v1/authenticate',
     { form: params },
     function (error, response, body) {
@@ -47,4 +36,27 @@ exports.getToken = function (req, res) {
       }
     }
   );
+}
+
+exports.getToken = function (req, res) {
+
+  var params = {
+    client_id: process.env.CONSUMER_KEY,
+    client_secret: process.env.CONSUMER_SECRET,
+    grant_type: 'client_credentials',
+    scope: 'data:read'
+  }
+  getScopedToken(res, params);
 };
+
+exports.getUploadToken = function (req, res) {
+
+  var params = {
+    client_id: process.env.CONSUMER_KEY,
+    client_secret: process.env.CONSUMER_SECRET,
+    grant_type: 'client_credentials',
+    scope: 'data:write'
+  }
+  getScopedToken(res, params);
+};
+

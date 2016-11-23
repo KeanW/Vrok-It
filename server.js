@@ -19,6 +19,8 @@ app.use('/v2', express.static(__dirname + '/html/index2.html'));
 
 app.get('/api/token', api.getToken);
 
+app.get('/api/uploadtoken', api.getUploadToken);
+
 app.get('/api/sessionId', function(req, res) {  
     var sessionId;  
     do {
