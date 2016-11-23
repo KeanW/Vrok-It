@@ -55,7 +55,7 @@ exports.getUploadToken = function (req, res) {
     client_id: process.env.CONSUMER_KEY,
     client_secret: process.env.CONSUMER_SECRET,
     grant_type: 'client_credentials',
-    scope: 'data:write'
+    scope: 'data:read data:write bucket:read bucket:create'
   }
   getScopedToken(res, params);
 };
