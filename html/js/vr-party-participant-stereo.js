@@ -126,6 +126,7 @@ function launchScopedViewer(urn) {
 
                             // Added for WebVR support
                             
+                            /*
                             _viewer.impl.setRenderCallback(
                                 function(fn) {
                                     var pose = _vrDisplay.getPose();
@@ -134,6 +135,7 @@ function launchScopedViewer(urn) {
                                     _vrDisplay.requestAnimationFrame(fn);
                                 }
                             );
+                            */
                                 
                             //_viewer.setQualityLevel(false, false);
                             //_viewer.setGroundShadow(true);
