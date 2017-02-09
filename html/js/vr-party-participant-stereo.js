@@ -442,7 +442,7 @@ function finishProgress() {
         if (!_orbitInitialPosition) {
             _orbitInitialPosition = _viewer.navigation.getPosition();
         }
-        var vec = _viewerLeft.model.getUpVector();
+        var vec = _viewer.model.getUpVector();
         _upVector = new THREE.Vector3(vec[0], vec[1], vec[2]);
 
         _viewer.loadExtension('Autodesk.ADN.Viewing.Extension.VR', {});
