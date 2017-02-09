@@ -45,7 +45,7 @@ Autodesk.ADN.Viewing.Extension.VR = function (viewer, options) {
     viewer.setGroundReflection(false);
     viewer.setGroundShadow(false);
 
-    viewer.loadExtension('Autodesk.Viewing.WebVR');
+    viewer.loadExtension('Autodesk.Viewing.WebVR', { experimental: [ 'webVR_orbitModel' ] });
 
     viewer.setActiveNavigationTool('vr');
 
