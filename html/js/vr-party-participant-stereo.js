@@ -26,6 +26,7 @@ function initialize() {
     
     _sessionId = getURLParameter('session');
     if (_sessionId) {
+        /*
         var buttonName = 'Connect';
         var panel = document.getElementById('control');
         var button = document.createElement('div');
@@ -35,6 +36,8 @@ function initialize() {
         button.onclick = connect;
             
         panel.appendChild(button);
+        */
+        connect();
     }
 }
 
@@ -43,7 +46,7 @@ function connect() {
     $('#layer1').hide();
 
     try {
-        _vrDisplay.requestPresent([{source: $('#layer2')[0]}]);
+        // _vrDisplay.requestPresent([{source: $('#layer2')[0]}]);
     }
     catch (ex) {}
     
