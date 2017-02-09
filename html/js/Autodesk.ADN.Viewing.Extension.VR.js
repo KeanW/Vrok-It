@@ -41,9 +41,20 @@ Autodesk.ADN.Viewing.Extension.VR = function (viewer, options) {
   /////////////////////////////////////////////////////////////////
   function activateVR() {
 
-    viewer.setProgressiveRendering(false);
-    viewer.setGroundReflection(false);
-    viewer.setGroundShadow(false);
+    // viewer.setProgressiveRendering(false);
+
+    //hide controls
+    $('.adsk-control-group').each(function(){
+
+      $(this).find('>.adsk-button').each(function(){
+
+        $(this).css({
+          'display':'none'
+        });
+      });
+    });
+  
+    $('.homeViewWrapper').css({ 'display':'none' });
 
     viewer.loadExtension('Autodesk.Viewing.WebVR', { experimental: [ 'webVR_orbitModel' ] });
 
@@ -51,22 +62,7 @@ Autodesk.ADN.Viewing.Extension.VR = function (viewer, options) {
 
     setTimeout(function() {
 
-      /*
-      //hide controls
-      $('.adsk-control-group').each(function(){
-
-        $(this).find('>.adsk-button').each(function(){
-
-          $(this).css({
-            'display':'none'
-          });
-        });
-      });
-    
-      $('.homeViewWrapper').css({ 'display':'none' });
-      */
-
-      viewer.setActiveNavigationTool('vr');
+      //viewer.setActiveNavigationTool('vr');
 
     }, 3000);      
   }
