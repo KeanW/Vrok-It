@@ -66,7 +66,7 @@ Autodesk.ADN.Viewing.Extension.VR = function (viewer, options) {
 
       viewer.setActiveNavigationTool('vr');
 
-    }, 3000);      
+    }, 5000);      
   }
 
   /////////////////////////////////////////////////////////////////
