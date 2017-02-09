@@ -51,6 +51,7 @@ Autodesk.ADN.Viewing.Extension.VR = function (viewer, options) {
 
     setTimeout(function() {
 
+      /*
       //hide controls
       $('.adsk-control-group').each(function(){
 
@@ -63,10 +64,11 @@ Autodesk.ADN.Viewing.Extension.VR = function (viewer, options) {
       });
     
       $('.homeViewWrapper').css({ 'display':'none' });
+      */
 
       viewer.setActiveNavigationTool('vr');
 
-    }, 7000);      
+    }, 3000);      
   }
 
   /////////////////////////////////////////////////////////////////
