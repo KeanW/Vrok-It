@@ -30,6 +30,7 @@ function getURLParameter(param) {
 function getViewingOptions() {
     var options = {};
     options.env = 'AutodeskProduction';
+    options.useConsolidation = true;
     options.getAccessToken = function(onSuccess) {
         $.get(
             window.location.origin + '/api/token',
