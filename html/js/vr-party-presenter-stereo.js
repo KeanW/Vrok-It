@@ -410,7 +410,7 @@ function onFilesDialogCalled(files) {
 
 function onUpload(files) {
     $.get(
-        window.location.origin + '/api/token',
+        window.location.origin + '/api/uploadtoken',
         function(accessTokenResponse) {
             var viewDataClient = new Autodesk.ADN.Toolkit.ViewData.AdnViewDataClient(
                 'https://developer.api.autodesk.com',
