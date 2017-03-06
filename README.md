@@ -24,15 +24,15 @@ At its core, the project makes use of Autodesk's Forge platform, a web-based inf
 
 Here are some blog posts tracking the evolution of Vrok-It:
 
-* http://through-the-interface.typepad.com/through_the_interface/2015/05/cooling-down-after-the-sf-vr-hackathon.html
-* http://through-the-interface.typepad.com/through_the_interface/2015/06/our-collaborative-vr-demo-from-the-recent-hackathon.html
-* http://through-the-interface.typepad.com/through_the_interface/2015/06/a-fun-collaborative-vr-tool-can-you-vrok-it.html
-* http://through-the-interface.typepad.com/through_the_interface/2017/02/webvr-in-chrome-and-forge.html
+* [Cooling down after the SF VR Hackathon] (http://through-the-interface.typepad.com/through_the_interface/2015/05/cooling-down-after-the-sf-vr-hackathon.html)
+* [Our collaborative VR demo from the recent Hackathon] (http://through-the-interface.typepad.com/through_the_interface/2015/06/our-collaborative-vr-demo-from-the-recent-hackathon.html)
+* [A fun, collaborative VR tool: can you Vrok-it?] (http://through-the-interface.typepad.com/through_the_interface/2015/06/a-fun-collaborative-vr-tool-can-you-vrok-it.html)
+* [WebVR in Chrome and Forge] (http://through-the-interface.typepad.com/through_the_interface/2017/02/webvr-in-chrome-and-forge.html)
 
 The project built on work done previously related to using the Forge viewer for VR:
 
-* http://through-the-interface.typepad.com/through_the_interface/2014/10/gearing-up-for-the-vr-hackathon.html
-* http://through-the-interface.typepad.com/through_the_interface/2014/10/creating-a-stereoscopic-viewer-for-google-cardboard-using-the-autodesk-360-viewer-part-1.html
-* http://through-the-interface.typepad.com/through_the_interface/2014/10/creating-a-stereoscopic-viewer-for-google-cardboard-using-the-autodesk-360-viewer-part-2.html
-* http://through-the-interface.typepad.com/through_the_interface/2014/10/creating-a-stereoscopic-viewer-for-google-cardboard-using-the-autodesk-360-viewer-part-3.html
+* [Gearing up for the VR Hackathon] (http://through-the-interface.typepad.com/through_the_interface/2014/10/gearing-up-for-the-vr-hackathon.html)
+* [Creating a stereoscopic viewer for Google Cardboard using the Autodesk 360 viewer - Part 1] (http://through-the-interface.typepad.com/through_the_interface/2014/10/creating-a-stereoscopic-viewer-for-google-cardboard-using-the-autodesk-360-viewer-part-1.html)
+* [Creating a stereoscopic viewer for Google Cardboard using the Autodesk 360 viewer - Part 2] (http://through-the-interface.typepad.com/through_the_interface/2014/10/creating-a-stereoscopic-viewer-for-google-cardboard-using-the-autodesk-360-viewer-part-2.html)
+* [Creating a stereoscopic viewer for Google Cardboard using the Autodesk 360 viewer - Part 3] (http://through-the-interface.typepad.com/through_the_interface/2014/10/creating-a-stereoscopic-viewer-for-google-cardboard-using-the-autodesk-360-viewer-part-3.html)
 
