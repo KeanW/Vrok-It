@@ -16,7 +16,7 @@ Over the following weeks the team implemented additional features, such as makin
 
 # How to use Vrok-It?
 On your "master" system - typically a PC or tablet - head on over to http://vrok.it (or http://www.vrok.it/v2 for the experimental, single-viewer version).
-Click the QR code – or scan it from your phone – to launch a stereoscopic 3D viewer (typically n a secondary device, such as a phone ready for Google Cardboard) connected to this session. The 3D models you load via the master page – and operations you perform on them – will be visible to all connected viewers. You can upload your own models, but for best results keep these under 2MB in size.
+Click the QR code – or scan it from your phone – to launch a stereoscopic 3D viewer (typically on a secondary device, such as a Google Cardboard-ready smartphone) connected to this session. The 3D models you load via the master page – and operations you perform on them – will be visible to all connected viewers. You can upload your own models, but for best results keep these under 2MB in size.
 
 # Technology
 At its core, the project makes use of Autodesk's Forge platform, a web-based infrastructure that can be used for viewing 3D models, and leverages work previously published on Kean's blog. It has a Node.js back-end, with Socket.io handling the communication between presenter and participants. The site is hosted on Heroku and the complete source code for Vrok-it is available in this repository on GitHub.
