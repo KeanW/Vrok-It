@@ -1,5 +1,4 @@
 # Vrok-It
-=========
 _View and collaborate on 3D models inside Virtual Reality using Autodesk's Forge platform._
 
 ## What does Vrok mean?
